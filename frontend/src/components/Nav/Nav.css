@@ -3,15 +3,10 @@
     grid-template-columns: repeat(3, 1fr);
     justify-content: space-between;
     align-items: center;
-    background-color: black;
-    color: white;
-    padding: 10px 40px;
+    color: #666666;
+    padding: 0px 40px;
+    height: 72px;
     font-size: 15px;
-}
-
-.navLogo {
-    font-size: 36px;
-    font-weight: 700;
 }
 
 .navSearchDiv {
@@ -23,9 +18,9 @@
     background-color: rgba(255, 255, 255, 0.226);
     border-radius: 30px;
     padding: 8px 16px;
-    padding-left: 40px;
+    padding-right: 40px;
     width: 100%;
-    border: 1px solid transparent;
+    border: 1px solid #CFCFCF;
     height: 100%;
 }
 
@@ -40,8 +35,6 @@
 }
 
 .navBtn {
-    background-color: rgb(255, 173, 143);
-    color: black;
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
@@ -49,21 +42,8 @@
 
 .navBtn:hover {
     /* font-weight: 600; */
-    background-color: rgb(252, 185, 161);
+    /* background-color: rgb(252, 185, 161); */
 }
-
-.navBtn2 {
-    /* padding: 8px; */
-    border-radius: 6px;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.541);
-}
-
-.navBtn2:hover {
-    color: white;
-}
-
-
 
 .suggestions-dropdown {
     position: absolute;
@@ -96,6 +76,11 @@
 
 .suggestion-item:hover {
     color: white;
+}
+
+
+.navStrip{
+    background: linear-gradient(-90deg, #10130D 0%, #4B8166 100%);
 }
 
 @media only screen and (max-width: 768px) {

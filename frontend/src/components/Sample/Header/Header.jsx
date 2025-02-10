@@ -1,6 +1,5 @@
 import React from 'react'
 import './Header.css'
-import vid from '../../assets/water_ocean.mp4'
 
 const Header = ({ searchQuery, setSearchQuery }) => {
     return (

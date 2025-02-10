@@ -1,8 +1,9 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import Layout from './Layout';
-import Home from './components/Home/Home';
+import Home from './components/Sample/Home/Home';
 import { useState } from 'react';
+import HomePage from './components/HomePage/HomePage';
 
 function App() {
 
@@ -16,7 +17,7 @@ const [searchQuery, setSearchQuery] = useState("");
 
         <Route path="/" element={<Layout searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}>
 
-          <Route index element={<Home searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+          <Route index element={<HomePage />} />
 
           {/* <Route path="ourstory" element={<OurStory />} /> */}
 

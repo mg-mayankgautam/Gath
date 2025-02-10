@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import './Nav.css'
 import { GoSearch } from "react-icons/go";
 import { FiMenu } from "react-icons/fi";
+import './Nav.css';
+import logo from '../../assets/logo.png';
+import icon from '../../assets/icons/search.png';
 
 const Nav = ({ searchQuery, setSearchQuery }) => {
 
@@ -41,18 +43,21 @@ const Nav = ({ searchQuery, setSearchQuery }) => {
 
 
   return (
+    <>
     <div className='Nav'>
-      <div className='navLogo'>Gath</div>
+      <div className='navLogo'>
+        <img src={logo} className='object-contain'/>
+      </div>
 
       <div className='hidden md:block navSearchDiv relative'>
         <input className='navSearch'
-          placeholder='Search'
+          placeholder='What are you looking for?'
           value={input}
           onChange={(e) => handleSearch(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        <GoSearch className='absolute inset-0 my-auto left-3' />
+        <img src={icon} className='absolute my-auto right-1 cursor-pointer top-1 bottom-1' />
 
         {suggestions.length > 0 && (
           <div className="suggestions-dropdown"
@@ -76,8 +81,7 @@ const Nav = ({ searchQuery, setSearchQuery }) => {
       </div>
 
       <div className='hidden md:flex gap-6 items-center ml-auto'>
-        <div className='navBtn2'>Join</div>
-        <div className='navBtn2'>Contact</div>
+        <div className='navBtn'>Pricing</div>
         <div className='navBtn'>Sign In</div>
       </div>
 
@@ -135,6 +139,16 @@ const Nav = ({ searchQuery, setSearchQuery }) => {
       )}
 
     </div>
+
+    <div className='navStrip h-10 px-10 flex items-center justify-evenly text-white text-sm'>
+      <div className='cursor-pointer'>Video Themes</div>
+      <div className='cursor-pointer'>Shot Types</div>
+      <div className='cursor-pointer'>People</div>
+      <div className='cursor-pointer'>Collections</div>
+      <div className='cursor-pointer'>Filmmakers</div>
+    </div>
+
+    </>
   )
 }
 
