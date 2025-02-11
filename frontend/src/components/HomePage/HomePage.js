@@ -1,8 +1,12 @@
 import React from 'react'
+import './HomePage.css'
+import Banner from './Banner'
 
-const HomePage = () => {
+const HomePage = ({searchQuery, setSearchQuery}) => {
   return (
-    <div>HomePage</div>
+    <div className='bigscreen'>
+      <Banner searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+    </div>
   )
 }
 

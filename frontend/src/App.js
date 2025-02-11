@@ -15,9 +15,9 @@ const [searchQuery, setSearchQuery] = useState("");
   return (
       <Routes>
 
-        <Route path="/" element={<Layout searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}>
+        <Route path="/" element={<Layout />}>
 
-          <Route index element={<HomePage />} />
+          <Route index element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>} />
 
           {/* <Route path="ourstory" element={<OurStory />} /> */}
 
