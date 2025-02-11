@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { IoBookmarksOutline } from "react-icons/io5";
 import { MdOutlineFileDownload } from "react-icons/md";
-import './Video.css'
 
 const Video = ({ src }) => {
     const videoRef = useRef(null);
