@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import Nav from './components/Nav/Nav';
+import Footer from './components/Footer/Footer';
 
 const Layout = () => {
 
@@ -10,10 +11,11 @@ const Layout = () => {
 
     <div className="App">
 
-      <Nav/>
+      <Nav />
 
-      <Outlet/>
+      <Outlet />
 
+      <Footer />
 
     </div>
 

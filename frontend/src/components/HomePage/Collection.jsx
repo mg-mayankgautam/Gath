@@ -125,29 +125,29 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
 
   const filteredVideos = videoData
-    // .filter((video) =>
-    //   (selectedFilters.length === 0 ||
-    //     selectedFilters.every((filter) => video.categories.includes(filter))) &&
-    //   (video.categories.some((category) =>
-    //     category?.toLowerCase()?.includes(searchQuery.toLowerCase())
-    //   ) || video.keywords.some((keyword) =>
-    //     keyword?.toLowerCase()?.includes(searchQuery.toLowerCase())
-    //   ))
-    // )
-    // .sort((a, b) => {
-    //   if (sortOrder === "Ascending") {
-    //     return a.src.localeCompare(b.src);
-    //   } else {
-    //     return b.src.localeCompare(a.src);
-    //   }
-    // });
+  // .filter((video) =>
+  //   (selectedFilters.length === 0 ||
+  //     selectedFilters.every((filter) => video.categories.includes(filter))) &&
+  //   (video.categories.some((category) =>
+  //     category?.toLowerCase()?.includes(searchQuery.toLowerCase())
+  //   ) || video.keywords.some((keyword) =>
+  //     keyword?.toLowerCase()?.includes(searchQuery.toLowerCase())
+  //   ))
+  // )
+  // .sort((a, b) => {
+  //   if (sortOrder === "Ascending") {
+  //     return a.src.localeCompare(b.src);
+  //   } else {
+  //     return b.src.localeCompare(a.src);
+  //   }
+  // });
 
 
   return (
     <>
 
       <div className="Home">
-        <div className="homeHeader">
+        {/* <div className="homeHeader">
           <div className="flex items-center gap-2 font-semibold cursor-pointer"
             onClick={() => setShowFilters((prev) => !prev)}
           >
@@ -163,11 +163,23 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
               <option value="Descending" className=" cursor-pointer">Descending</option>
             </select>
           </div>
-        </div>
+        </div> */}
 
-        <div className={showFilters ? "flex gap-4 md:gap-10 mt-6" : "flex mt-6"}>
+        <div className={showFilters ? "flex gap-4 md:gap-10 mt-0" : "flex mt-0"}>
           <div className={showFilters ? "FiltersDiv" : "FiltersDiv hide"}>
-            <div className="font-semibold">Categories</div>
+
+            <div className="font-medium">Video Themes</div>
+            <div className="font-medium">Shot Types</div>
+            <div className="font-medium">People</div>
+            <div className="font-medium">Collections</div>
+            <div className="font-medium">Filmmakers</div>
+
+            <div className="mx-auto mt-auto">
+              <div className="greenButton mb-4">Start free now</div>
+              <div className="text-[var(--primary)] underline cursor-pointer text-center">Pricing</div>
+            </div>
+
+            {/* <div className="font-semibold">Categories</div>
             <div className="flex flex-col gap-4">
               {[
                 "Nature",
@@ -208,15 +220,24 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
                   {category}
                 </label>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-            {filteredVideos.map((video) => (
+            {filteredVideos.slice(0, 9).map((video) => (
               <Video key={video.src} src={video.src} />
             ))}
           </div>
         </div>
+
+        <div className="flex justify-center mt-10 items-center gap-10">
+          <div className="text-[#666666] text-sm">Trending Searches:</div>
+          <button className="lightGreenButton">🔥 background</button>
+          <button className="lightGreenButton">🔥 AI</button>
+          <button className="lightGreenButton">🔥 abstract</button>
+          <button className="lightGreenButton">🔥 3D particles</button>
+        </div>
+
       </div>
     </>
   );

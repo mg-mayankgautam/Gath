@@ -2,6 +2,7 @@ import React from 'react'
 import './HomePage.css'
 import Banner from './Banner'
 import Collection from './Collection'
+import CollectionSlider from './CollectionSlider'
 
 const HomePage = ({searchQuery, setSearchQuery}) => {
   return (
@@ -9,6 +10,8 @@ const HomePage = ({searchQuery, setSearchQuery}) => {
       <Banner searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
 
       <Collection/>
+
+      <CollectionSlider/>
     </div>
   )
 }
