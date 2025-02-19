@@ -2,3 +2,19 @@
     max-width: 1400px;
     margin: 0 auto;
 }
+
+.input{
+    border-radius: 8px;
+    border: none;
+    padding: 8px 16px;
+    color: var(--grey);
+    background-color: #ECECEC;
+    font-size: 14px;
+}
+
+.line{
+    /* h-[1px] w-full bg-[#CBCBCB] */
+    height: 1px;
+    width: 100%;
+    background-color: #CBCBCB;
+}

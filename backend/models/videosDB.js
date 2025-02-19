@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const videoSchema = new Schema({
     
-    name:{type:String},
+    URL:{type:String},
     tags:{type:Array}
     //
 });

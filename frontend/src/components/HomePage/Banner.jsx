@@ -78,6 +78,11 @@ const Banner = ({ searchQuery, setSearchQuery }) => {
 
                 </div>
             </div>
+
+            <div className='absolute bottom-10 right-10 left-[65%] flex items-center gap-8'>
+                <button className="greenButton flex-grow">Start free now</button>
+                <button className="button flex-grow">Pricing</button>
+            </div>
         </div>
     )
 }
@@ -98,4 +103,4 @@ const uniqueKeywords = [
     "fairy lights", "crowd", "christmas", "pile of cucumber", "stacked vegetables",
     "sorting", "healthy", "water",
     "Rituals", "Food", "Agriculture", "Nature", "Festival"
-  ];
+];

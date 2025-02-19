@@ -2,56 +2,67 @@ import React, { useState } from 'react'
 import { FiMenu } from "react-icons/fi";
 import './Nav.css';
 import logo from '../../assets/logo.png';
+import { Link, useLocation } from 'react-router-dom';
 
 const Nav = () => {
 
-  
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
 
   return (
     <>
-    <div className='Nav bigscreen'>
-      <div className='navLogo'>
-        <img src={logo} className='object-contain h-full'/>
-      </div>
+      <div className='Nav bigscreen'>
+        <Link className='navLogo' to='/'>
+          <img src={logo} className='object-contain h-full' />
+        </Link>
 
-      <div className='hidden md:flex gap-6 items-center ml-auto'>
-        <div className='navBtn'>Pricing</div>
-        <div className='navBtn'>Sign In</div>
-      </div>
+        <div className='hidden md:flex gap-6 items-center ml-auto'>
+          <div className='navBtn'>Pricing</div>
 
-      <FiMenu
-        className="md:hidden text-2xl text-white cursor-pointer"
-        onClick={() => setMenuOpen(!menuOpen)}
-      />
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="absolute top-12 left-0 w-full bg-black shadow-lg flex flex-col items-start p-4 space-y-2 md:hidden">
-
-          <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
-            Join
-          </button>
-          <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
-            Contact
-          </button>
-          {/* Sign In Button */}
-          <button className="w-full text-left px-4 py-2 bg-[rgb(255,173,143)] text-black rounded-lg hover:bg-[rgb(252,185,161)]">
-            Sign In
-          </button>
+          {location.pathname === '/admin/dashboard' ?
+            <div className='navBtn'>Logout</div>
+            :
+            <div className='navBtn'>Sign In</div>
+          }
         </div>
-      )}
 
-    </div>
+        <FiMenu
+          className="md:hidden text-2xl text-white cursor-pointer"
+          onClick={() => setMenuOpen(!menuOpen)}
+        />
 
-    <div className='navStrip h-10 px-10 flex items-center justify-evenly text-white text-sm'>
-      <div className='cursor-pointer'>Video Themes</div>
-      <div className='cursor-pointer'>Shot Types</div>
-      <div className='cursor-pointer'>People</div>
-      <div className='cursor-pointer'>Collections</div>
-      <div className='cursor-pointer'>Filmmakers</div>
-    </div>
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="absolute top-12 left-0 w-full bg-black shadow-lg flex flex-col items-start p-4 space-y-2 md:hidden">
+
+            <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
+              Join
+            </button>
+            <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
+              Contact
+            </button>
+            {/* Sign In Button */}
+            <button className="w-full text-left px-4 py-2 bg-[rgb(255,173,143)] text-black rounded-lg hover:bg-[rgb(252,185,161)]">
+              Sign In
+            </button>
+          </div>
+        )}
+
+      </div>
+
+      {location.pathname == '/admin/dashboard' ?
+        <></>
+        :
+        <div className='navStrip h-10 px-10 flex items-center justify-evenly text-white text-sm'>
+          <div className='cursor-pointer'>Video Themes</div>
+          <div className='cursor-pointer'>Shot Types</div>
+          <div className='cursor-pointer'>People</div>
+          <div className='cursor-pointer'>Collections</div>
+          <div className='cursor-pointer'>Filmmakers</div>
+        </div>
+      }
 
     </>
   )

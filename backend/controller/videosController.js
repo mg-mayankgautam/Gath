@@ -1,26 +1,61 @@
 const videosDB = require("../models/videosDB.js")
+// const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+// const { GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+// require('dotenv').config();
+// const bucketName = process.env.BUCKET_NAME
+// const bucketRegion = process.env.BUCKET_REGION
+// const accessKeyId = process.env.ACCESS_KEY_ID
+// const secretAccessKey = process.env.SECRET_ACCESS_KEY
+
+// const s3Client = new S3Client({
+//     region: bucketRegion,
+//     credentials: {
+//         accessKeyId,
+//         secretAccessKey
+//     }
+// })
+
+// const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
+// const crypto = require('crypto');
+
 
 module.exports.postVideo = async (req, res) => {
-    
+
     console.log("Reached post video controller");
 
-    const { name, message } = req.body;
-    // console.log(name, message);
+    const { tags } = req.body;
 
-  
-        // let loveLetter = new videosDB({ name, message });
-         
-        // loveLetter.save().then(savedletter => {
-        //     console.log(savedletter);
-        //     res.send('Love letter posted');
+    const video = req.files[0];
+    console.log(tags, video);
 
 
-        //  })
-        //  .catch ((error)=> {
-        //     console.log(error);
-        // res.status(500).json({ error: "Failed to post love letter" });
-    // })
-    
+    // const fileName = generateFileName();
+
+    // const uploadParams = {
+    //     Bucket: bucketName,
+    //     Body: compressedImageBuffer,
+    //     Key: `${fileName}.webp`, // Save as WebP
+    //     ContentType: 'image/webp',
+    // };
+
+    // await s3Client.send(new PutObjectCommand(uploadParams));
+    // const URL = `https://${bucketName}.s3.ap-south-1.amazonaws.com/${fileName}.webp`;
+
+
+    // let newvideo = new videosDB({ URL, tags });
+
+    // newvideo.save()
+    //     .then(video => {
+    //         console.log(video);
+    //         res.send(true);
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //         res.status(500).json({ error: "Failed to post love letter" });
+    //     })
+    res.send(false);
+
+
 };
 
 

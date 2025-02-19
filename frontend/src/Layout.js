@@ -7,16 +7,21 @@ import Footer from './components/Footer/Footer';
 
 const Layout = () => {
 
+  const location = useLocation();
+
   return (
 
     <div className="App">
 
-      <Nav />
-
+      {!location.pathname.startsWith('/admin/login') &&
+        <Nav />
+      }
+      
       <Outlet />
 
-      <Footer />
-
+      {!location.pathname.startsWith('/admin') &&
+        <Footer />
+      }
     </div>
 
   )
