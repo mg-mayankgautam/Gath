@@ -9,6 +9,10 @@
     font-size: 15px;
 }
 
+.navLogo{
+    height: 24px;
+}
+
 .navSearchDiv {
     min-width: 400px;
     max-width: 400px;
@@ -93,11 +97,6 @@
         color: white;
         padding: 10px 20px;
         font-size: 15px;
-    }
-
-    .navLogo {
-        font-size: 20px;
-        font-weight: 700;
     }
 
     .navSearchDiv {

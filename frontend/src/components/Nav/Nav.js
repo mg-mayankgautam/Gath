@@ -13,7 +13,7 @@ const Nav = () => {
     <>
     <div className='Nav bigscreen'>
       <div className='navLogo'>
-        <img src={logo} className='object-contain'/>
+        <img src={logo} className='object-contain h-full'/>
       </div>
 
       <div className='hidden md:flex gap-6 items-center ml-auto'>

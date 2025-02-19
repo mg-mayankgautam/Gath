@@ -4,6 +4,8 @@ import Layout from './Layout';
 import Home from './components/Sample/Home/Home';
 import { useState } from 'react';
 import HomePage from './components/HomePage/HomePage';
+import AdminLogin from './AdminPages/AdminLogin';
+import AdminDashboard from './AdminPages/AdminDashboard';
 
 function App() {
 
@@ -19,7 +21,8 @@ const [searchQuery, setSearchQuery] = useState("");
 
           <Route index element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>} />
 
-          {/* <Route path="ourstory" element={<OurStory />} /> */}
+          <Route path="admin/login" element={<AdminLogin />} />
+          <Route path="admin/dashboard" element={<AdminDashboard/>} />
 
         </Route>
 
