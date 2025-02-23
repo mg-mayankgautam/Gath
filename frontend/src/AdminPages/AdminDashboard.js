@@ -41,6 +41,9 @@ const AdminDashboard = () => {
             if (response.data) {
                 console.log("Upload successful:", response.data);
                 toast.success("Video uploaded successfully!");
+                setFile1(null)
+                setTags([])
+                setTagInput('')
             }
             else {
                 toast.error("Failed to upload video.");

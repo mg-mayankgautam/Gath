@@ -41,19 +41,23 @@ module.exports.postVideo = async (req, res) => {
     // await s3Client.send(new PutObjectCommand(uploadParams));
     // const URL = `https://${bucketName}.s3.ap-south-1.amazonaws.com/${fileName}.webp`;
 
+    //hardcoded URL
+    // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+    // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
+    const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
 
-    // let newvideo = new videosDB({ URL, tags });
+    let newvideo = new videosDB({ URL, tags });
 
-    // newvideo.save()
-    //     .then(video => {
-    //         console.log(video);
-    //         res.send(true);
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //         res.status(500).json({ error: "Failed to post love letter" });
-    //     })
-    res.send(false);
+    newvideo.save()
+        .then(video => {
+            console.log(video);
+            res.send(true);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.send(false);
+            // res.status(500).json({ error: "Failed to post love letter" });
+        })
 
 
 };
@@ -62,9 +66,9 @@ module.exports.postVideo = async (req, res) => {
 module.exports.getVideos = async (req, res) => {
 
     videosDB.find({})
-        .then((loveLetters) => {
+        .then((videos) => {
             // console.log(loveLetters);
-            res.send(loveLetters);
+            res.send(videos);
         })
         .catch(err => {
             console.log(err);
