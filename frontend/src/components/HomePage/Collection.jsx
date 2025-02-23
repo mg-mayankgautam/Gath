@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { BsFilterLeft } from "react-icons/bs";
 import Video from "./Video";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import TrendingSearch from "./TrendingSearch";
 
 
 const Collection = ({ searchQuery, setSearchQuery }) => {
@@ -61,22 +63,37 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
       <div className="Home">
 
-        <div className={showFilters ? "flex gap-4 md:gap-10 mt-0" : "flex mt-0"}>
+        {/* <div className="flex gap-4 mt-0"> */}
 
-          <div className={showFilters ? "FiltersDiv" : "FiltersDiv hide"}>
+        <div className={showFilters ? "flex gap-4" : "flex gap-2"}>
+          <div className="FiltersDiv flex-grow">
 
-            <div className="font-medium">Video Themes</div>
-            <div className="font-medium">Shot Types</div>
-            <div className="font-medium">People</div>
-            <div className="font-medium">Collections</div>
-            <div className="font-medium">Filmmakers</div>
+            <div className=
+              {`font-medium cursor-pointer ${showFilters && 'text-[var(--primary)]'}`} onClick={() => setShowFilters(!showFilters)}>
+              Video Themes
+            </div>
+            <div className="font-medium cursor-pointer">Shot Types</div>
+            <div className="font-medium cursor-pointer">People</div>
+            <div className="font-medium cursor-pointer">Collections</div>
+            <div className="font-medium cursor-pointer">Filmmakers</div>
 
-            <div className="mx-auto mt-auto">
-              <div className="greenButton mb-4">Start free now</div>
-              <div className="text-[var(--primary)] underline cursor-pointer text-center">Pricing</div>
+            <div className="mx-auto mt-auto flex flex-col">
+              <button className="greenButton mb-4">Start free now</button>
+              <button className="text-[var(--primary)] underline cursor-pointer text-center">Pricing</button>
             </div>
 
           </div>
+
+          <div className={showFilters ? "FiltersDiv flex-grow" : "FiltersDiv hide"}>
+
+            <Link to='/category/one'
+              className="font-medium cursor-pointer text-[var(--grey)] text-sm"
+            >
+              Category 1
+            </Link>
+
+          </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {filteredVideos.length > 0 && filteredVideos.slice(0, 9).map((video) => (
@@ -86,14 +103,6 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
         </div>
 
-
-        <div className="flex justify-center mt-10 items-center gap-10">
-          <div className="text-[#666666] text-sm">Trending Searches:</div>
-          <button className="lightGreenButton">🔥 background</button>
-          <button className="lightGreenButton">🔥 AI</button>
-          <button className="lightGreenButton">🔥 abstract</button>
-          <button className="lightGreenButton">🔥 3D particles</button>
-        </div>
 
       </div>
     </>

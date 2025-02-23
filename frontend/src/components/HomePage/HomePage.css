@@ -37,14 +37,17 @@
     flex-direction: column;
     gap: 24px;
     width: 100%;
-    max-width: 300px;
-    transition: all 0ms ease-in-out;
+    max-width: 250px;
+    transition: all 80ms ease-in-out;
     border-radius: 4px;
 }
 
 .FiltersDiv.hide {
+    opacity: 0;
+    padding: 0;
     overflow-x: hidden;
     max-width: 0;
+    border: none;
 }
 
 .vidSaveBtn {
