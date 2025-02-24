@@ -11,4 +11,4 @@ const videoSchema = new Schema({
     //
 });
 
-module.exports = mongoose.model('loveletter', videoSchema);
+module.exports = mongoose.model('video', videoSchema);

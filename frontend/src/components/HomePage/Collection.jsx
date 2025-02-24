@@ -11,7 +11,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
   const [filteredVideos, setFilteredVideos] = useState([]);
 
   const [selectedFilters, setSelectedFilters] = useState([]);
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [sortOrder, setSortOrder] = useState("Ascending");
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {filteredVideos.length > 0 && filteredVideos.slice(0, 9).map((video) => (
-              <Video key={video.URL} src={video.URL} />
+              <Video key={video.URL} video={video} />
             ))}
           </div>
 

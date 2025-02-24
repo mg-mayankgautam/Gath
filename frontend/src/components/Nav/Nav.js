@@ -3,11 +3,13 @@ import { FiMenu } from "react-icons/fi";
 import './Nav.css';
 import logo from '../../assets/logo.png';
 import { Link, useLocation } from 'react-router-dom';
+import SignIn from '../SignIn/SignIn';
 
 const Nav = () => {
 
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
   const location = useLocation();
 
 
@@ -24,7 +26,13 @@ const Nav = () => {
           {location.pathname === '/admin/dashboard' ?
             <div className='navBtn'>Logout</div>
             :
-            <div className='navBtn'>Sign In</div>
+
+            <div className='navBtn'
+              onClick={() => setShowSignInModal(true)}
+            >
+              Sign In
+            </div>
+
           }
         </div>
 
@@ -62,6 +70,10 @@ const Nav = () => {
           <div className='cursor-pointer'>Collections</div>
           <div className='cursor-pointer'>Filmmakers</div>
         </div>
+      }
+
+      {showSignInModal &&
+        <SignIn setShowModal={setShowSignInModal} />
       }
 
     </>

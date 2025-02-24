@@ -1,5 +1,5 @@
 .bigscreen{
-    max-width: 1400px;
+    max-width: 1380px;
     margin: 0 auto;
 }
 
@@ -17,4 +17,12 @@
     height: 1px;
     width: 100%;
     background-color: #CBCBCB;
+}
+
+.modalOverflow{
+    overflow-y: scroll;
+}
+
+.modalOverflow::-webkit-scrollbar {
+    display: none;
 }

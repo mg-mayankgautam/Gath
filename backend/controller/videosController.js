@@ -23,7 +23,9 @@ module.exports.postVideo = async (req, res) => {
 
     console.log("Reached post video controller");
 
-    const { tags } = req.body;
+    // const { tags } = req.body;
+
+    const tags = JSON.parse(req.body.tags);
 
     const video = req.files[0];
     console.log(tags, video);
@@ -43,8 +45,8 @@ module.exports.postVideo = async (req, res) => {
 
     //hardcoded URL
     // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
-    // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
-    const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
+    const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
+    // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
 
     let newvideo = new videosDB({ URL, tags });
 
