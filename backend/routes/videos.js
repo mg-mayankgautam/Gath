@@ -9,8 +9,9 @@ const upload = multer({ storage: storage })
 const videosController = require('../controller/videosController');
 
 
-
 router.post('/post', upload.array("video"), videosController.postVideo);
+router.post('/view',  videosController.addView);
 router.get('/get', videosController.getVideos);
+router.post('/editinfo', videosController.editInfo);
 
 module.exports = router;

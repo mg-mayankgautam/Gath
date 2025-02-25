@@ -7,8 +7,11 @@ const { Schema } = mongoose;
 const videoSchema = new Schema({
     
     URL:{type:String},
-    tags:{type:Array}
-    //
+    name:{type:String},
+    tags:{type:Array},
+    views:{type:Number},
+
+    
 });
 
 module.exports = mongoose.model('video', videoSchema);

@@ -6,21 +6,39 @@ import share from '../../assets/icons/share.svg'
 import download from '../../assets/icons/download.svg'
 import profile from '../../assets/sampleprofile.png'
 import { Skeleton } from '@mui/material';
-
+import axios from 'axios'
 
 
 const VideoPage = ({ setShowModal, video }) => {
 
   console.log(video)
 
-  // Disable background scroll when modal is open
   useEffect(() => {
-    document.body.style.overflow = "hidden"; // Stop scrolling
-
-    return () => {
-      document.body.style.overflow = "auto"; // Restore scrolling
+    // Disable background scroll
+    document.body.style.overflow = "hidden";
+  
+    const viewadd = async () => {
+      try {
+        const formData = new FormData(); // Ensure formData is properly initialized
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/videos/view`,
+          {id:video._id}
+        );
+        console.log("Response:", response.data); // Handle success
+      } catch (error) {
+        console.error("Error during viewadd:", error); // Handle errors
+      }
     };
-  }, []);
+  
+    // Call the async function
+    viewadd();
+  
+    // Cleanup function to restore background scroll
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []); // Empty dependency array ensures it runs only once
+  
 
   return (
 
@@ -104,7 +122,7 @@ const VideoPage = ({ setShowModal, video }) => {
 
             <div className='flex justify-between items-center'>
               <div className='text-xl font-semibold'>
-                Asset Example
+                {video?.name}
               </div>
               <div className='underline text-large cursor-pointer'>
                 View License Information

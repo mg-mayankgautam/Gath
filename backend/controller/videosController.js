@@ -23,7 +23,7 @@ module.exports.postVideo = async (req, res) => {
 
     console.log("Reached post video controller");
 
-    // const { tags } = req.body;
+    const name = req.body.name;
 
     const tags = JSON.parse(req.body.tags);
 
@@ -44,11 +44,11 @@ module.exports.postVideo = async (req, res) => {
     // const URL = `https://${bucketName}.s3.ap-south-1.amazonaws.com/${fileName}.webp`;
 
     //hardcoded URL
-    // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
-    const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
+    const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+    // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
     // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
 
-    let newvideo = new videosDB({ URL, tags });
+    let newvideo = new videosDB({ URL,name, tags,views:0 });
 
     newvideo.save()
         .then(video => {
@@ -65,6 +65,9 @@ module.exports.postVideo = async (req, res) => {
 };
 
 
+
+
+
 module.exports.getVideos = async (req, res) => {
 
     videosDB.find({})
@@ -78,3 +81,65 @@ module.exports.getVideos = async (req, res) => {
         });
 
 }
+
+module.exports.addView = async (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ message: 'Video ID is required.' });
+    }
+
+    try {
+        const updatedVideo = await videosDB.findOneAndUpdate(
+            { _id: id },
+            { 
+                $inc: { views: 1 } // Increment views if document exists
+                // $setOnInsert: { views: 1 } // Set views to 1 ONLY if a new document is inserted
+            },
+            { new: true, upsert: true }
+        );
+
+        if (!updatedVideo) {
+            return res.status(404).json({ message: 'Video not found.' });
+        }
+
+        return res.status(200).json({
+            message: 'View count updated successfully.',
+            video: updatedVideo
+        });
+    } catch (error) {
+        console.error('Error updating view count:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+};
+
+
+
+module.exports.editInfo = async (req, res) => {
+
+    const { _id, name, tags } = req.body;
+
+    try {
+        const updatedVideo = await videosDB.findOneAndUpdate(
+            { _id },
+            { name, tags },
+            { new: true, runValidators: true } // Return updated document & validate input
+        );
+
+        if (!updatedVideo) {
+            return res.status(404).json({ error: "Video not found" });
+        }
+
+        res.status(200).json(updatedVideo);
+        
+    } catch (error) {
+        console.error("Error updating video:", error);
+        res.status(500).json({ error: "Failed to update video" });
+    }
+}
+
+
+
+
+
+
