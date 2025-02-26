@@ -58,7 +58,7 @@ const VideoPage = ({ setShowModal, video }) => {
   return (
 
     <div className='bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow'
-    onClick={() => setShowModal(false)} 
+    // onClick={() => setShowModal(false)} 
     >
 
       <div className='bigscreen !max-w-[800px] py-16 px-20'>

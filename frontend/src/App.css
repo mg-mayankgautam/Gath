@@ -26,3 +26,8 @@
 .modalOverflow::-webkit-scrollbar {
     display: none;
 }
+
+.gradientcustom{
+    background: linear-gradient(0deg, #10130D 0%, #4B8166 100%);
+    /* background: radial-gradient(50% 50% at 50% 50%, rgba(151, 253, 202, 0.128) 0%, rgba(151, 253, 202, 0) 100%); */
+}

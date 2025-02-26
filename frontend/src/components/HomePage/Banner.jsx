@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import img from '../../assets/home/banner.webp'
 import icon from '../../assets/icons/search1.png';
+import { Link } from 'react-router-dom';
 
 const Banner = ({ searchQuery, setSearchQuery }) => {
     const [suggestions, setSuggestions] = useState([]);
@@ -81,7 +82,7 @@ const Banner = ({ searchQuery, setSearchQuery }) => {
 
             <div className='absolute bottom-10 right-10 left-[65%] flex items-center gap-8'>
                 <button className="greenButton flex-grow">Start free now</button>
-                <button className="button flex-grow">Pricing</button>
+                <Link to='/pricing' className='flex-grow'><button className="button !w-full">Pricing</button></Link>
             </div>
         </div>
     )

@@ -79,7 +79,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
             <div className="mx-auto mt-auto flex flex-col">
               <button className="greenButton mb-4">Start free now</button>
-              <button className="text-[var(--primary)] underline cursor-pointer text-center">Pricing</button>
+              <Link to='/pricing' className="mx-auto"><button className="text-[var(--primary)] underline cursor-pointer text-center">Pricing</button></Link>
             </div>
 
           </div>
