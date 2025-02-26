@@ -110,7 +110,7 @@ const VideoPage = ({ setShowModal, video }) => {
             >
               <video
                 // ref={videoRef}
-                src={video?.URL}
+                src={video?.previewURL}
                 muted
                 loop
                 className="w-full h-auto rounded-[8px]"

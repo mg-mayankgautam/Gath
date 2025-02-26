@@ -21,9 +21,11 @@ const Nav = () => {
         </Link>
 
         <div className='hidden md:flex gap-6 items-center ml-auto'>
-          <div className='navBtn'>Pricing</div>
+          <Link to='/pricing'>
+            <div className='navBtn'>Pricing</div>
+          </Link>
 
-          {location.pathname === '/admin/dashboard' ?
+          {location.pathname === '/dashboard' ?
             <div className='navBtn'>Logout</div>
             :
 
@@ -60,8 +62,9 @@ const Nav = () => {
 
       </div>
 
-      {location.pathname == '/admin/dashboard' ?
-        <></>
+      {(location.pathname == '/dashboard' || location.pathname == '/employee/dashboard') ?
+        <div className='navStrip h-6 px-10 flex items-center justify-evenly text-white text-sm'>
+        </div>
         :
         <div className='navStrip h-10 px-10 flex items-center justify-evenly text-white text-sm'>
           <div className='cursor-pointer'>Video Themes</div>

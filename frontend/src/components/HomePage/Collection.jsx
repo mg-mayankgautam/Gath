@@ -97,7 +97,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {filteredVideos.length > 0 && filteredVideos.slice(0, 9).map((video) => (
-              <Video key={video.URL} video={video} />
+              <Video key={video._id} video={video} />
             ))}
           </div>
 

@@ -57,7 +57,9 @@ const VideoPage = ({ setShowModal, video }) => {
 
   return (
 
-    <div className='bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow'>
+    <div className='bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow'
+    onClick={() => setShowModal(false)} 
+    >
 
       <div className='bigscreen !max-w-[800px] py-16 px-20'>
 
@@ -93,7 +95,7 @@ const VideoPage = ({ setShowModal, video }) => {
             >
               <video
                 // ref={videoRef}
-                src={video?.URL}
+                src={video?.previewURL}
                 muted
                 loop
                 className="w-full h-auto rounded-[8px]"

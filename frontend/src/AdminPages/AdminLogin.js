@@ -2,8 +2,14 @@ import React, { useState } from 'react'
 import img from '../assets/login/login1.png'
 import logo from '../assets/logo.png'
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios'
+import { jwtDecode } from "jwt-decode";
+import useAuth from '../hooks/useAuth'; 
 
 const AdminLogin = () => {
+    //use auth
+    const { auth } = useAuth();
+    const { setAuth } = useAuth();
 
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({ email: "", password: "" });
@@ -14,17 +20,34 @@ const AdminLogin = () => {
         setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         let newErrors = {};
 
         if (!formData.email.trim()) newErrors.email = "Email is required";
         if (!formData.password.trim()) newErrors.password = "Password is required";
 
-        setErrors(newErrors);
-
         if (Object.keys(newErrors).length === 0) {
-            navigate("/admin/dashboard");
+
+            try {
+                const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+                    id: formData.email,
+                    password: formData.password,
+                });
+                console.log(response.data);
+                const { accessToken } = response.data; // Assume backend returns accessToken
+                const decodedToken = jwtDecode(accessToken); // Decode the JWT
+
+                console.log(decodedToken);
+                setAuth(decodedToken)
+                navigate('/dashboard')
+
+            } catch (error) {
+                console.error("Wrong Credentials", error);
+            }
+
         }
+
+        setErrors(newErrors);
     };
 
 

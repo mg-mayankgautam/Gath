@@ -69,6 +69,8 @@ app.use((req, res, next) => {
 const videosRouter = require('./routes/videos.js');
 app.use('/videos', videosRouter);
 
+const authRouter = require('./routes/auth.js');
+app.use('/auth', authRouter);
 
 
 mongoose.connect(process.env.MONGODB_URL, {

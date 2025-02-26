@@ -35,7 +35,7 @@ const SignIn = ({ setShowModal }) => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // navigate("/admin/dashboard");
+      // navigate("/dashboard");
     }
   };
 

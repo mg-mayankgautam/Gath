@@ -6,16 +6,23 @@ import VideoPage from "./VideoPage";
 import { Card, CardContent, Typography } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 
+
 const AdminDashboard = () => {
+
     const [file1, setFile1] = useState(null);
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
     const [name, setName] = useState("");
     const [activeSection, setActiveSection] = useState("Dashboard");
     const [videos, setVideos] = useState([]);
-    const [selectedVideo, setSelectedVideo] = useState('');
+    const [selectedVideo, setSelectedVideo] = useState("");
     const [selectedVideoModal, setSelectedVideoModal] = useState(false);
-
+    console.log(videos);
+    let topVideos = [];
+    useEffect(() => {
+         topVideos = [...videos].sort((a, b) => b.views - a.views).slice(0, 5);
+    }, [videos])
+    
     const barChartData = [
         { name: "Page A", views: 400 },
         { name: "Page B", views: 300 },
@@ -33,28 +40,26 @@ const AdminDashboard = () => {
 
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-
     const getVideos = async () => {
         try {
-            const data = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/videos/get`)
-
-            console.log(data.data);
+            const data = await axios.get(
+                `${process.env.REACT_APP_BACKEND_URL}/videos/get`
+            );
             setVideos(data.data);
+        } catch (error) {
+            console.error("There was an error getting the videos!", error);
         }
-        catch (error) { console.log('There was an error getting the videos!', error); }
-    }
+    };
 
     useEffect(() => {
         getVideos();
     }, []);
 
-    // Fetch videos again when modal closes
     useEffect(() => {
         if (!selectedVideoModal) {
             getVideos();
         }
     }, [selectedVideoModal]);
-
 
     const handleNavigate = (section) => {
         setActiveSection(section);
@@ -63,13 +68,11 @@ const AdminDashboard = () => {
     const handleAddTag = (e) => {
         if (e.key === "Enter" && tagInput.trim()) {
             setTags([...tags, tagInput.trim()]);
-            setTagInput(""); // Clear input after adding tag
+            setTagInput("");
         }
     };
 
     const handleUpload = async () => {
-        console.log(tags)
-
         if (!file1 || tags.length === 0 || !name) {
             toast.error("Please select a video file and add at least one tag.");
             return;
@@ -78,7 +81,8 @@ const AdminDashboard = () => {
         const formData = new FormData();
         formData.append("video", file1);
         formData.append("name", name);
-        formData.append("tags", JSON.stringify(tags)); // Convert tags array to JSON string
+        formData.append("tags", JSON.stringify(tags));
+
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_BACKEND_URL}/videos/post`,
@@ -87,7 +91,6 @@ const AdminDashboard = () => {
             );
 
             if (response.data) {
-                console.log("Upload successful:", response.data);
                 toast.success("Video uploaded successfully!");
                 setFile1(null);
                 setTags([]);
@@ -102,16 +105,106 @@ const AdminDashboard = () => {
         }
     };
 
-
     const handleDeleteTag = (index) => {
-        const updatedTags = tags.filter((_, i) => i !== index); // Remove tag at the given index
+        const updatedTags = tags.filter((_, i) => i !== index);
         setTags(updatedTags);
     };
 
+
+    const [userId, setUserId] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("EMPLOYEE");
+
+    const submitUser = async (e) => {
+        e.preventDefault();
+
+        if (!userId || !password || !role) {
+            toast.error("Please fill in all fields.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/addemployee`, {
+                userId,
+                password,
+                role,
+            });
+
+            if (response.status === 201) {
+                toast.success("User added successfully!");
+                // Clear fields after successful submission
+                setUserId("");
+                setPassword("");
+                setRole("");
+            } else {
+                toast.error("Failed to add user. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error adding user:", error);
+            toast.error("An error occurred while adding the user.");
+        }
+    };
+
+
+    useEffect(() => {
+        //http://localhost:4700/auth/getallemployees
+    }, [])
+
+
+    const [users, setUsers] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null); // For the modal
+    const [modalOpen, setModalOpen] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+    // console.log(users)
+    useEffect(() => {
+        // Fetch all employees
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/getallemployees`);
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+    // Change password API
+    const handleChangePassword = async (_id) => {
+        console.log(_id, newPassword)
+        try {
+            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/change-password`, {
+                _id,
+                password: newPassword,
+            });
+            toast.success("Password updated successfully!");
+            setModalOpen(false); // Close modal
+        } catch (error) {
+            console.error("Error changing password:", error);
+            toast.error("Failed to update password.");
+        }
+    };
+
+    // Delete user API
+    const handleDeleteUser = async (userId) => {
+        console.log(userId)
+        try {
+            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/delete-user`, { userId });
+            setUsers(users.filter((user) => user.id !== userId)); // Remove user from state
+            toast.success("User deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            toast.error("Failed to delete user.");
+        }
+    };
+
+
     const content = {
-        Dashboard: <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Welcome Section */}
-            <Card className="shadow-lg">
+        Dashboard: (
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Welcome Card */}
+            <Card className="shadow-lg col-span-1 lg:col-span-2">
                 <CardContent>
                     <Typography variant="h5" component="div">
                         Welcome to the Dashboard!
@@ -122,7 +215,7 @@ const AdminDashboard = () => {
                 </CardContent>
             </Card>
 
-            {/* Bar Chart Section */}
+            {/* Page Views Analytics */}
             <Card className="shadow-lg">
                 <CardContent>
                     <Typography variant="h6" component="div">
@@ -143,177 +236,176 @@ const AdminDashboard = () => {
                 </CardContent>
             </Card>
 
-            {/* Pie Chart Section */}
+            {/* Top 5 Most Viewed Videos */}
             <Card className="shadow-lg">
                 <CardContent>
                     <Typography variant="h6" component="div">
-                        User Group Distribution
+                        Top 5 Most Viewed Videos
                     </Typography>
-                    <PieChart width={400} height={300}>
-                        <Pie
-                            data={pieChartData}
-                            cx={200}
-                            cy={150}
-                            innerRadius={60}
-                            outerRadius={100}
-                            fill="#8884d8"
-                            paddingAngle={5}
-                            dataKey="value"
-                            label
-                        >
-                            {pieChartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                    </PieChart>
-                </CardContent>
-            </Card>
-
-            {/* Summary Section */}
-            <Card className="shadow-lg">
-                <CardContent>
-                    <Typography variant="h6" component="div">
-                        Summary
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Total Pages: 5
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Total Views: 1367
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Active Users: 120
-                    </Typography>
-                </CardContent>
-            </Card>
-        </div>,
-
-        "Upload Video": (
-            <div className="p-2 rounded-2xl h-full max-w-[700px] mx-auto flex flex-col gap-6">
-                <h2 className="text-2xl font-semibold mb-4">Upload Video</h2>
-                <div>
-                    <label className="text-[var(--grey)]">Select Video</label>
-                    <input
-                        type="file"
-                        accept="video/*"
-                        onChange={(e) => setFile1(e.target.files[0])}
-                        className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
-                    />
-                </div>
-                <div className="my-4">
-                    <label className="text-[var(--grey)]">Add Name</label>
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter a name..."
-                        className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
-                    />
-                </div>
-                <div className="my-4">
-                    <label className="text-[var(--grey)]">Add Tags (Press Enter)</label>
-                    <input
-                        type="text"
-                        value={tagInput}
-                        onChange={(e) => setTagInput(e.target.value)}
-                        onKeyDown={handleAddTag}
-                        placeholder="Enter a tag..."
-                        className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
-                    />
-                    <div className="flex gap-2 mt-2">
-                        {tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="lightGreenButton flex items-center gap-1 px-2 py-1 rounded-full"
-                            >
-                                {tag}
-                                <FaTimes
-                                    className="cursor-pointer text-red-500"
-                                    onClick={() => handleDeleteTag(index)} // Handle delete on click
-                                />
-                            </span>
+                    <ul className="mt-4">
+                        {topVideos.map((video, index) => (
+                            <li key={video._id} className="mb-2">
+                                <strong>{index + 1}. {video.name}</strong> - {video.views} views
+                                <br />
+                                <video src={video.previewURL} controls className="w-full mt-2" />
+                            </li>
                         ))}
-                    </div>
-                </div>
-                <button onClick={handleUpload} className="w-full greenButton">
-                    Upload Video
-                </button>
-            </div>
-        ),
+                    </ul>
+                </CardContent>
+            </Card>
 
-        "Manage Videos": (
+            {/* Additional Analytics Section */}
+            <Card className="shadow-lg">
+                <CardContent>
+                    <Typography variant="h6" component="div">
+                        Additional Analytics
+                    </Typography>
+                    <Typography color="text.secondary" className="mt-4">
+                        Coming soon: Detailed user engagement data.
+                    </Typography>
+                </CardContent>
+            </Card>
+        </div>
+        ),
+        "Add User": (
             <div className="p-2 rounded-2xl h-full max-w-[700px] mx-auto flex flex-col gap-6">
-                <h2 className="text-2xl font-semibold mb-4">Manage Videos</h2>
-
-                <div className="flex flex-col gap-4">
-                    {videos.length > 0 ? (
-                        videos?.map((video) => (
-                            <div key={video?._id}
-                                className="flex items-center justify-between gap-4 p-4 border border-gray-300 rounded-lg"
-                            >
-
-                                <div className="flex items-center gap-4">
-
-                                    <div className="w-auto h-20 bg-gray-200 rounded-[2px] overflow-hidden">
-                                        <video
-                                            src={video?.URL || "https://via.placeholder.com/80"}
-                                            alt={video?.name}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col justify-between gap-2">
-                                        <p className="font-semibold text-lg">{video?.name}</p>
-                                        <div className="flex gap-2 flex-wrap">
-                                            {video?.tags?.map((tag, index) => (
-                                                <span key={index} className="lightGreenButton">
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div className="flex gap-4 flex-col">
-                                    <button
-                                        className="greenButton !py-2 !px-5 !text-xs !w-full"
-                                        onClick={() => {
-                                            setSelectedVideo(video);
-                                            setSelectedVideoModal(true);
-                                        }}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button className="greenButton !py-2 !px-5 w-full !text-xs !bg-red-700 !text-white">Delete</button>
-                                </div>
-
-
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-500">No videos available</p>
-                    )}
-                </div>
-
+                <h2 className="text-xl font-semibold mb-4">Add User</h2>
+                <form className="space-y-4" onSubmit={submitUser}>
+                    <div className="flex flex-col">
+                        <label htmlFor="userId" className="mb-2 text-sm font-medium">
+                            User ID
+                        </label>
+                        <input
+                            type="text"
+                            id="userId"
+                            className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter User ID"
+                            value={userId}
+                            onChange={(e) => setUserId(e.target.value)}
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="password" className="mb-2 text-sm font-medium">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    {/* <div className="flex flex-col">
+                        <label htmlFor="role" className="mb-2 text-sm font-medium">
+                            Role
+                        </label>
+                        <select
+                            id="role"
+                            className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                        >
+                            <option value="">Select Role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Viewer">Viewer</option>
+                        </select>
+                    </div> */}
+                    <button
+                        type="submit"
+                        className="greenButton"
+                    >
+                        Add User
+                    </button>
+                </form>
             </div>
         ),
+        "Manage Users": (
+            <div className="p-2 rounded-2xl h-full max-w-[860px] mx-auto flex flex-col gap-6">
+                <h2 className="text-xl font-semibold mb-4">Manage Users</h2>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white border border-gray-300 text-left">
+                        <thead>
+                            <tr className="bg-gray-100">
+                                <th className="px-4 py-2 border-b text-center">#</th>
+                                <th className="px-4 py-2 border-b">User ID</th>
+                                <th className="px-4 py-2 border-b">Role</th>
+                                <th className="px-4 py-2 border-b text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user, index) => (
+                                <tr key={user.id} className="hover:bg-gray-50">
+                                    <td className="px-4 py-2 border-b text-center">{index + 1}</td>
+                                    <td className="px-4 py-2 border-b">{user.id}</td>
+                                    <td className="px-4 py-2 border-b">{user.role}</td>
+                                    <td className="px-4 py-2 border-b text-center">
+                                        <button
+                                            className="greenButton !py-2 !px-5 w-full !text-xs mx-1"
+                                            onClick={() => setSelectedUser(user)}
+                                        >
+                                            Change Password
+                                        </button>
+                                        <button
+                                            className="greenButton !py-2 !px-5 w-full !text-xs !bg-red-700 !text-white"
+                                            onClick={() => handleDeleteUser(user._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-        Settings: <p>Settings content will appear here.</p>,
-        Reports: <p>Reports section will be available soon.</p>,
-        "User Management": <p>User Management tools will be here.</p>,
+                {selectedUser && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-6 rounded shadow-lg w-96">
+                            <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+                            <p className="mb-4">User ID: {selectedUser.id}</p>
+                            <input
+                                type="password"
+                                className="w-full p-2 border rounded mb-4 focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter new password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                            />
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                                    onClick={() => setSelectedUser(null)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                    onClick={() => handleChangePassword(selectedUser._id)}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+        ),
     };
 
     return (
-        <div className="flex h-full min-h-[calc(100vh-72px)]">
+        <div className="flex h-full min-h-[calc(100vh-96px)]">
+
             {/* Sidebar */}
-            <div className="bg-[#2E3A46] text-white w-1/5 min-h-[calc(100vh-72px)] p-4">
-                <h2 className="text-2xl font-semibold mb-6">Admin Panel</h2>
+            <div className="bg-[#C9DBD2] w-1/5 min-h-[calc(100vh-96px)] p-8">
+                <h2 className="text-2xl font-semibold mb-6">Super Admin</h2>
                 <ul className="flex flex-col gap-4">
                     {Object.keys(content).map((section) => (
                         <li
                             key={section}
-                            className={`cursor-pointer p-3 rounded-lg hover:bg-[#3C4A57] ${activeSection === section ? "bg-[#3C4A57]" : ""
+                            className={`cursor-pointer p-3 rounded-lg hover:bg-[#66B28D] ${activeSection === section ? "bg-[var(--primary)]" : ""
                                 }`}
                             onClick={() => handleNavigate(section)}
                         >
@@ -324,19 +416,12 @@ const AdminDashboard = () => {
             </div>
 
             {/* Main Content */}
-            <div
-                className="bg-white w-4/5 p-6 border-[6px] overflow-y-scroll h-full max-h-[calc(100vh-116px)] min-h-[calc(100vh-116px)] text-left"
-                style={{ borderColor: "rgb(252, 231, 243)" }}
-            >
+            <div className="bg-white w-4/5 p-8 overflow-y-scroll">
                 {content[activeSection]}
             </div>
 
-            <Toaster />
+            <Toaster position="top-center" richColors />
 
-
-            {setSelectedVideo && selectedVideoModal &&
-                <VideoPage setShowModal={setSelectedVideoModal} video={selectedVideo} />
-            }
         </div>
     );
 };

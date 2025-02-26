@@ -1,71 +1,206 @@
 const videosDB = require("../models/videosDB.js")
-// const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-// const { GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const fs = require("fs");
+const path = require('path');
 // require('dotenv').config();
-// const bucketName = process.env.BUCKET_NAME
-// const bucketRegion = process.env.BUCKET_REGION
-// const accessKeyId = process.env.ACCESS_KEY_ID
-// const secretAccessKey = process.env.SECRET_ACCESS_KEY
+const ffmpeg = require('fluent-ffmpeg');
+const bucketName = process.env.BUCKET_NAME
+const bucketRegion = process.env.BUCKET_REGION
+const accessKeyId = process.env.ACCESS_KEY_ID
+const secretAccessKey = process.env.SECRET_ACCESS_KEY
+const crypto = require('crypto');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+// const client = new S3Client(clientParams);
 
-// const s3Client = new S3Client({
-//     region: bucketRegion,
-//     credentials: {
-//         accessKeyId,
-//         secretAccessKey
+const ffmpegStatic = require('ffmpeg-static');
+ffmpeg.setFfmpegPath(ffmpegStatic);
+
+const s3Client = new S3Client({
+    region: bucketRegion,
+    credentials: {
+        accessKeyId,
+        secretAccessKey
+    }
+})
+
+// const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
+
+
+// module.exports.postVideo = async (req, res) => {
+
+//     try {
+//         console.log("Reached post video controller");
+
+//         const name = req.body.name;
+//         const tags = JSON.parse(req.body.tags);
+
+//         const video = req.files[0];
+
+//         console.log(name, tags, video);
+
+//         const fileName = generateFileName();
+//         const previewName = `${fileName}_preview.webm`;
+
+//         // Generate a 6-second preview using FFmpeg
+//         ffmpeg(video.path)
+//             .setStartTime(0) // Start from the beginning
+//             .setDuration(6) // 6-second preview
+//             .outputOptions(['-c:v libvpx', '-crf 10', '-b:v 1M', '-an']) // WebM encoding options
+//             .saveToFile(`./tmp/${previewName}`) // Save preview locally
+//             .on('end', async () => {
+//                 console.log('Preview generated successfully.');
+
+//                 const uploadParams = {
+//                     Bucket: bucketName,
+//                     Body: video.buffer,
+//                     Key: `${fileName}.mp4`,
+//                     ContentType: 'video/mp4',
+//                 };
+//                 await s3Client.send(new PutObjectCommand(uploadParams));
+
+
+
+//                 // Upload preview
+//                 const previewBuffer = fs.readFileSync(`./tmp/${previewName}`);
+//                 const uploadPreviewParams = {
+//                     Bucket: process.env.BUCKET_NAME,
+//                     Key: `previews/${previewName}`,
+//                     Body: previewBuffer,
+//                     ContentType: 'video/webm',
+//                 };
+//                 await s3Client.send(new PutObjectCommand(uploadPreviewParams));
+
+//                 const videoURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/${fileName}.mp4`;
+//                 const previewURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/previews/${previewName}`;
+//             })
+
+
+
+
+//         // const URL = `https://${bucketName}.s3.ap-south-1.amazonaws.com/${fileName}.mp4`;
+//         console.log(URL);
 //     }
-// })
+//     catch (err) {
+//         console.log(err)
+//     }
 
-// const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
-// const crypto = require('crypto');
+//     // hardcoded URL
+//     // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+//     // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
+//     // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
 
+//     // let newvideo = new videosDB({ URL,name, tags,views:0 });
+
+//     // newvideo.save()
+//     //     .then(video => {
+//     //         console.log(video);
+//     //         res.send(true);
+//     //     })
+//     //     .catch((error) => {
+//     //         console.log(error);
+//     //         res.send(false);
+//     //         // res.status(500).json({ error: "Failed to post love letter" });
+//     //     })
+
+
+// };
 
 module.exports.postVideo = async (req, res) => {
+    try {
+        console.log("Reached post video controller");
 
-    console.log("Reached post video controller");
+        const name = req.body.name;
+        const tags = JSON.parse(req.body.tags);
+        const video = req.files[0];
 
-    const name = req.body.name;
+        console.log(name, tags, video);
+        const tmpDir = path.join(__dirname, '../tmp');
 
-    const tags = JSON.parse(req.body.tags);
+        // Ensure the tmp directory exists
+        if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir);
+        }
+        const fileName = generateFileName();
+        const previewName = `${fileName}_preview.mp4`;
 
-    const video = req.files[0];
-    console.log(tags, video);
+        // Generate paths for original video and preview
+        const videoPath = path.join(tmpDir, `${fileName}.mp4`);
+        const previewPath = path.join(tmpDir, previewName);
 
+        // Save the original video to disk temporarily
+        fs.writeFileSync(videoPath, video.buffer);
 
-    // const fileName = generateFileName();
+        // Generate a 6-second MP4 preview using FFmpeg
+        await new Promise((resolve, reject) => {
+            ffmpeg(videoPath)
+                .setStartTime(0) // Start from the beginning
+                .setDuration(6) // 6-second preview
+                .outputOptions([
+                    "-c:v libx264", // H.264 codec
+                    "-crf 23", // Quality (lower is better)
+                    "-preset veryfast", // Faster encoding
+                    "-an", // No audio
+                ])
+                .save(previewPath) // Save preview locally
+                .on("end", resolve)
+                .on("error", reject);
+        });
 
-    // const uploadParams = {
-    //     Bucket: bucketName,
-    //     Body: compressedImageBuffer,
-    //     Key: `${fileName}.webp`, // Save as WebP
-    //     ContentType: 'image/webp',
-    // };
+        console.log("Preview generated successfully.");
 
-    // await s3Client.send(new PutObjectCommand(uploadParams));
-    // const URL = `https://${bucketName}.s3.ap-south-1.amazonaws.com/${fileName}.webp`;
+        // Upload the full video to S3
+        const videoUploadParams = {
+            Bucket: process.env.BUCKET_NAME,
+            Body: video.buffer,
+            Key: `${fileName}.mp4`,
+            ContentType: "video/mp4",
+        };
+        await s3Client.send(new PutObjectCommand(videoUploadParams));
 
-    //hardcoded URL
-    const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
-    // const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
-    // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
+        // Upload the preview to S3
+        const previewBuffer = fs.readFileSync(previewPath);
+        const previewUploadParams = {
+            Bucket: process.env.BUCKET_NAME,
+            Key: `previews/${previewName}`,
+            Body: previewBuffer,
+            ContentType: "video/mp4",
+        };
+        await s3Client.send(new PutObjectCommand(previewUploadParams));
 
-    let newvideo = new videosDB({ URL,name, tags,views:0 });
+        const videoURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/${fileName}.mp4`;
+        const previewURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/previews/${previewName}`;
 
-    newvideo.save()
-        .then(video => {
-            console.log(video);
-            res.send(true);
-        })
-        .catch((error) => {
-            console.log(error);
-            res.send(false);
-            // res.status(500).json({ error: "Failed to post love letter" });
-        })
+        // Save video details to the database
+        const newVideo = new videosDB({
+            URL: videoURL,
+            previewURL: previewURL,
+            name,
+            tags,
+            views: 0,
+        });
 
+        await newVideo.save();
 
+        console.log("Video and preview uploaded successfully:", { videoURL, previewURL });
+        res.status(200).json({ success: true, videoURL, previewURL });
+
+        // Clean up temporary files
+        fs.unlinkSync(videoPath);
+        fs.unlinkSync(previewPath);
+    } catch (err) {
+        console.error("Error uploading video:", err);
+        res.status(500).json({ success: false, message: "Failed to upload video" });
+    }
 };
 
-
-
+// hardcoded URL
+// const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+// const URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4'
+// const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
 
 
 module.exports.getVideos = async (req, res) => {
@@ -92,7 +227,7 @@ module.exports.addView = async (req, res) => {
     try {
         const updatedVideo = await videosDB.findOneAndUpdate(
             { _id: id },
-            { 
+            {
                 $inc: { views: 1 } // Increment views if document exists
                 // $setOnInsert: { views: 1 } // Set views to 1 ONLY if a new document is inserted
             },
@@ -131,7 +266,7 @@ module.exports.editInfo = async (req, res) => {
         }
 
         res.status(200).json(updatedVideo);
-        
+
     } catch (error) {
         console.error("Error updating video:", error);
         res.status(500).json({ error: "Failed to update video" });

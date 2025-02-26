@@ -38,7 +38,7 @@ const Video = ({ video }) => {
                 {/* Video */}
                 <video
                     ref={videoRef}
-                    src={video?.URL}
+                    src={video?.previewURL}
                     muted
                     loop
                     className="w-full h-auto"
