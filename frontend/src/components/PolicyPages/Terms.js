@@ -14,7 +14,7 @@ const Terms = () => {
         <div className='bg-[#C9DBD2] py-1 px-2 rounded text-sm mt-2 w-fit'>Effective Date: 09 April'25</div>
       </div>
 
-      <div className='flex flex-col gap-6 text-[#333] text-sm leading-relaxed'>
+      <div className='flex flex-col gap-6 text-sm leading-relaxed'>
 
         <p>
           Welcome to www.shotkut.com ("Website") and Shotkut Application ("App"), a platform that develops, markets, sells, purchases, mediates the sale and purchase of content and stock footages including photos, videos, short films and scripts ("Products") under its own brand name, 'Shotkut' via App, Website, online channels and retailers to the market in India and abroad (Website and App are hereinafter collectively referred to as the "Platform/ Shotkut") owned and managed by Gath Productions Private Limited and its affiliates ("Company").

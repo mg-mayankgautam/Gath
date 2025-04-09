@@ -16,7 +16,7 @@ const Refund = () => {
                 <div className='bg-[#C9DBD2] py-1 px-2 rounded text-sm mt-2 w-fit'>Effective Date: 09 April'25</div>
             </div>
 
-            <div className='flex flex-col gap-6 text-[#333] text-sm leading-relaxed'>
+            <div className='flex flex-col gap-6 text-sm leading-relaxed'>
 
                 <p>
                     Our Refund Policy is simple - If you paid within 14 days and have not downloaded any clips from the site, then you qualify for a refund. Please contact us with your name and email so that we can quickly process your request.

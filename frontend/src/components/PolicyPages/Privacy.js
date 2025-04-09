@@ -15,7 +15,7 @@ const Privacy = () => {
                 <div className='bg-[#C9DBD2] py-1 px-2 rounded text-sm mt-2 w-fit'>Effective Date: 09 April'25</div>
             </div>
 
-            <div className='flex flex-col gap-6 text-[#333] text-sm leading-relaxed'>
+            <div className='flex flex-col gap-6 text-sm leading-relaxed'>
 
                 <p>
                     Privacy Policy is part of the Terms of service of our website. By accepting the Terms of service and privacy policy, you grant consent to provide sensitive personal data or personal information. At the time of registration, Shotkut.com requires mandatory personal information. We request you not to register with Shotkut.com in case you do not want to share compulsory personal information. Without providing non-optional personal information, registration process cannot be completed. Shotkut.com may request additional personal information for grant of access to subscription based stock footage.
