@@ -4,6 +4,7 @@ import './Nav.css';
 import logo from '../../assets/logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import SignIn from '../SignIn/SignIn';
+import ThemeToggle from './ThemeToggle';
 
 const Nav = () => {
 
@@ -36,6 +37,8 @@ const Nav = () => {
             </div>
 
           }
+
+          <ThemeToggle/>
         </div>
 
         <FiMenu

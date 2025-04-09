@@ -11,35 +11,46 @@ import EmployeeDashboard from './AdminPages/EmployeeDashboard';
 import RequireAuth from './components/RequireAuth';
 import Dashboard from './AdminPages/Dashboard';
 import Pricing from './components/Pricing/Pricing';
+import Privacy from './components/PolicyPages/Privacy';
+import Terms from './components/PolicyPages/Terms';
+import Refund from './components/PolicyPages/Refund';
+import { ThemeProvider } from './context/ThemeProvider';
 
 function App() {
 
-// commit5
+  // commit5
 
-const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
 
   return (
+    <ThemeProvider>
       <Routes>
 
         <Route path="/" element={<Layout />}>
 
-          <Route index element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>} />
+          <Route index element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
 
           <Route path="admin" element={<AdminLogin />} />
 
           <Route element={<RequireAuth />}>
-            <Route path="dashboard" element={<Dashboard/>} />
+            <Route path="dashboard" element={<Dashboard />} />
 
           </Route>
-          
 
-          <Route path="category/:id" element={<CategoryPage/>} />
-          <Route path="pricing" element={<Pricing/>} />
+
+          <Route path="category/:id" element={<CategoryPage />} />
+          <Route path="pricing" element={<Pricing />} />
+
+          <Route path="privacypolicy" element={<Privacy />} />
+          <Route path="termsandconditions" element={<Terms />} />
+          <Route path="refundpolicy" element={<Refund />} />
+
 
         </Route>
 
       </Routes>
+    </ThemeProvider>
   );
 }
 
