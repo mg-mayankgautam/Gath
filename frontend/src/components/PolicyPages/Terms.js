@@ -11,7 +11,7 @@ const Terms = () => {
 
       <div>
         <div className='font-bold text-4xl'>Terms and Conditions</div>
-        <div className='bg-[#C9DBD2] py-1 px-2 rounded text-sm mt-2 w-fit'>Effective Date: 09 April'25</div>
+        <div className='bg-[#C9DBD2] py-1 px-2 rounded text-sm mt-2 w-fit'>Effective Date: 30 March'25</div>
       </div>
 
       <div className='flex flex-col gap-6 text-sm leading-relaxed'>
