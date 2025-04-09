@@ -27,6 +27,7 @@ app.use(express.json());
 const allowedOrigins = [
     // "https://www.moheerajewels.com",
     "https://shotkut.vercel.app",
+    "https://shotkut.com",
     "http://localhost:3456"
 ];
 

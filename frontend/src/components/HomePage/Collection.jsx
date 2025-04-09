@@ -4,9 +4,13 @@ import Video from "./Video";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import TrendingSearch from "./TrendingSearch";
+import { useTheme } from "../../context/ThemeProvider";
+import { dark } from "@mui/material/styles/createPalette";
 
 
 const Collection = ({ searchQuery, setSearchQuery }) => {
+
+  const { darkMode } = useTheme();
 
   const [filteredVideos, setFilteredVideos] = useState([]);
 
@@ -66,7 +70,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
         {/* <div className="flex gap-4 mt-0"> */}
 
         <div className={showFilters ? "flex gap-4" : "flex gap-2"}>
-          <div className="FiltersDiv flex-grow">
+          <div className={darkMode ? "FiltersDiv dark flex-grow" : "FiltersDiv flex-grow"}>
 
             <div className=
               {`font-medium cursor-pointer ${showFilters && 'text-[var(--primary)]'}`} onClick={() => setShowFilters(!showFilters)}>
@@ -84,7 +88,11 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
           </div>
 
-          <div className={showFilters ? "FiltersDiv flex-grow" : "FiltersDiv hide"}>
+          <div className={`
+  FiltersDiv 
+  ${darkMode ? "dark" : ""}
+  ${showFilters ? "flex-grow" : "hide"}
+`}>
 
             <Link to='/category/one'
               className="font-medium cursor-pointer text-[var(--grey)] text-sm"

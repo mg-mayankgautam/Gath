@@ -7,6 +7,10 @@
     padding: 0px 40px;
     height: 72px;
     font-size: 15px;
+    background-color: #fff;
+}
+.Nav.dark {
+    background: radial-gradient(100% 100% at 50% 0%, #10130D 0%, #10130D 100%);
 }
 
 .navLogo{

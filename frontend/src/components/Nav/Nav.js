@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { FiMenu } from "react-icons/fi";
 import './Nav.css';
 import logo from '../../assets/logo.png';
+import logowhite from '../../assets/logowhite.png';
 import { Link, useLocation } from 'react-router-dom';
 import SignIn from '../SignIn/SignIn';
 import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../../context/ThemeProvider';
 
 const Nav = () => {
 
@@ -12,13 +14,14 @@ const Nav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const location = useLocation();
+  const { darkMode } = useTheme();
 
 
   return (
     <>
-      <div className='Nav bigscreen'>
+      <div className={darkMode ? 'Nav dark bigscreen' : 'Nav bigscreen'}>
         <Link className='navLogo' to='/'>
-          <img src={logo} className='object-contain h-full' />
+          <img src={darkMode ? logowhite : logo} className='object-contain h-full' />
         </Link>
 
         <div className='hidden md:flex gap-6 items-center ml-auto'>
@@ -38,7 +41,7 @@ const Nav = () => {
 
           }
 
-          <ThemeToggle/>
+          <ThemeToggle />
         </div>
 
         <FiMenu
@@ -65,7 +68,7 @@ const Nav = () => {
 
       </div>
 
-      {(location.pathname == '/dashboard' || location.pathname == '/employee/dashboard') ?
+      {/* {(location.pathname == '/dashboard' || location.pathname == '/employee/dashboard') ?
         <div className='navStrip h-6 px-10 flex items-center justify-evenly text-white text-sm'>
         </div>
         :
@@ -76,7 +79,7 @@ const Nav = () => {
           <div className='cursor-pointer'>Collections</div>
           <div className='cursor-pointer'>Filmmakers</div>
         </div>
-      }
+      } */}
 
       {showSignInModal &&
         <SignIn setShowModal={setShowSignInModal} />

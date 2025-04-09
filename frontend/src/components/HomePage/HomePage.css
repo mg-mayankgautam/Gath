@@ -41,6 +41,10 @@
     transition: all 80ms ease-in-out;
     border-radius: 4px;
 }
+.FiltersDiv.dark{
+    border: 1px solid #333333;
+    background-color: #1B1D1C;
+}
 
 .FiltersDiv.hide {
     opacity: 0;
@@ -88,11 +92,16 @@
     font-weight: 300;
     font-size: 12px;
 }
+.lightGreenButton.dark{
+    color: white;
+    background-color: transparent;
+    border: 0.5px solid white;
+}
 
 .button{
-    color: #333333;
+    color: var(--text);
     background-color: transparent;
-    border: 0.5px solid #333333;
+    border: 0.5px solid var(--text);
     padding: 10px 24px;
     border-radius: 100px;
     width: max-content;
