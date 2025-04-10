@@ -1,44 +1,49 @@
 import React, { useEffect } from 'react'
 import cross from '../../assets/icons/cross.svg'
 import wishlist from '../../assets/icons/wishlist.svg'
+import wishlistwhite from '../../assets/icons/wishlistwhite.svg'
 import add from '../../assets/icons/add.svg'
+import addwhite from '../../assets/icons/addwhite.svg'
 import share from '../../assets/icons/share.svg'
+import sharewhite from '../../assets/icons/sharewhite.svg'
 import download from '../../assets/icons/download.svg'
 import profile from '../../assets/sampleprofile.png'
 import { Skeleton } from '@mui/material';
 import axios from 'axios'
+import { useTheme } from '../../context/ThemeProvider'
 
 
 const VideoPage = ({ setShowModal, video }) => {
 
   console.log(video)
+  const { darkMode } = useTheme();
 
   useEffect(() => {
     // Disable background scroll
     document.body.style.overflow = "hidden";
-  
+
     const viewadd = async () => {
       try {
         const formData = new FormData(); // Ensure formData is properly initialized
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/videos/view`,
-          {id:video._id}
+          { id: video._id }
         );
         console.log("Response:", response.data); // Handle success
       } catch (error) {
         console.error("Error during viewadd:", error); // Handle errors
       }
     };
-  
+
     // Call the async function
     viewadd();
-  
+
     // Cleanup function to restore background scroll
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []); // Empty dependency array ensures it runs only once
-  
+
 
   return (
 
@@ -46,9 +51,9 @@ const VideoPage = ({ setShowModal, video }) => {
 
       <div className='bigscreen py-16 px-20'>
 
-        <div className='w-full bg-[#ECECEC] rounded-[8px] border border-[#CBCBCB]'>
+        <div className={`w-full ${darkMode ? 'bg-[#080E0B] border-[#1E1E1E]' : 'bg-[#ECECEC] border-[#CBCBCB]'} rounded-[8px] border`}>
 
-          <div className='bg-[#C9DBD2] flex items-center justify-between pl-8 pr-2 py-2 text-[#222222] text-xs rounded-tl-[8px] rounded-tr-[8px]'>
+          <div className={`flex items-center justify-between pl-8 pr-2 py-2 text-xs rounded-tl-[8px] rounded-tr-[8px] ${darkMode ? 'bg-[#10130D] text-[#888888]' : 'bg-[#C9DBD2] text-[#222222]'} `}>
             <div>
               All Items &gt; Stock Video &gt; Motion Graphics &gt; Asset 1
             </div>
@@ -70,7 +75,7 @@ const VideoPage = ({ setShowModal, video }) => {
                 <div className='font-semibold'>
                   Name
                 </div>
-                <div className='text-[#666666] text-sm'>
+                <div className='text-[var(--grey)] text-sm'>
                   user_name
                 </div>
               </div>
@@ -86,21 +91,21 @@ const VideoPage = ({ setShowModal, video }) => {
               </button>
 
               <div className='cursor-pointer'>
-                <img src={wishlist} alt='wishlist' className='h-8 object-contain' />
+                <img src={darkMode? wishlistwhite : wishlist} alt='wishlist' className={`h-8 object-contain`} />
               </div>
 
               <div className='cursor-pointer'>
-                <img src={add} alt='add' className='h-8 object-contain' />
+                <img src={darkMode? addwhite : add} alt='add' className={`h-8 object-contain`} />
               </div>
 
               <div className='cursor-pointer'>
-                <img src={share} alt='download' className='h-8 object-contain' />
+                <img src={darkMode? sharewhite : share} alt='download' className={`h-8 object-contain`} />
               </div>
             </div>
 
           </div>
 
-          <div className='line'></div>
+          <div className={darkMode ? 'line !bg-[#3D413E]' : 'line'}></div>
 
 
           <div className='flex flex-col gap-8 px-8 py-8'>
@@ -124,7 +129,7 @@ const VideoPage = ({ setShowModal, video }) => {
               <div className='text-xl font-semibold'>
                 {video?.name}
               </div>
-              <div className='underline text-large cursor-pointer'>
+              <div className='underline text-[var(--grey)] text-large cursor-pointer'>
                 View License Information
               </div>
             </div>
@@ -132,7 +137,7 @@ const VideoPage = ({ setShowModal, video }) => {
 
             <div className='flex gap-8'>
 
-              <div className='bg-[#F1F1F1] border border-[#CBCBCB] rounded-[4px] flex flex-col gap-4 p-6 w-full'>
+              <div className={`${darkMode? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} rounded-[4px] flex flex-col gap-4 p-6 w-full border`}>
                 <div className='font-semibold'>
                   Attributes
                 </div>
@@ -150,7 +155,7 @@ const VideoPage = ({ setShowModal, video }) => {
                     { label: "Orientation", value: "Horizontal" },
                   ].map((item, index) => (
                     <div key={index} className="flex flex-col gap-2">
-                      <span className="text-[#666666] text-[12px]">{item.label}</span>
+                      <span className={`${darkMode? 'text-[#AAAAAA]':'text-[#666666]'} text-[12px]`}>{item.label}</span>
                       <span className="text-[13px] font-medium">{item.value}</span>
                     </div>
                   ))}
@@ -159,7 +164,7 @@ const VideoPage = ({ setShowModal, video }) => {
               </div>
 
 
-              <div className='bg-[#F1F1F1] border border-[#CBCBCB] rounded-[4px] flex flex-col gap-4 p-6 w-full max-w-[210px]'>
+              <div className={`${darkMode? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} rounded-[4px] flex flex-col gap-4 p-6 w-full max-w-[210px] border`}>
                 <div className='font-semibold'>
                   Attributes
                 </div>
@@ -171,7 +176,7 @@ const VideoPage = ({ setShowModal, video }) => {
                     "4K HQ .mov",
                     "LOG .mov",
                   ].map((item, index) => (
-                    <div key={index} className="text-sm">
+                    <div key={index} className={darkMode? "text-sm text-[#AAAAAA]":"text-sm"}>
                       {item}
                     </div>
                   ))}
@@ -189,7 +194,7 @@ const VideoPage = ({ setShowModal, video }) => {
 
               <div className='flex flex-wrap gap-4'>
                 {video?.tags.map((tag, index) => (
-                  <div key={index} className='lightGreenButton'>
+                  <div key={index} className={darkMode? 'lightGreenButton dark' :'lightGreenButton'}>
                     {tag}
                   </div>
                 ))}
@@ -203,9 +208,12 @@ const VideoPage = ({ setShowModal, video }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-              <Skeleton variant="rectangular" height={200} />
-              <Skeleton variant="rectangular" height={200} />
-              <Skeleton variant="rectangular" height={200} />
+              <Skeleton variant="rectangular" height={200} 
+                sx={darkMode ? { bgcolor: 'grey.800' } : {}} />
+              <Skeleton variant="rectangular" height={200} 
+                sx={darkMode ? { bgcolor: 'grey.800' } : {}} />
+              <Skeleton variant="rectangular" height={200} 
+                sx={darkMode ? { bgcolor: 'grey.800' } : {}} />
 
             </div>
 

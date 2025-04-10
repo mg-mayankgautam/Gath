@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import icon from '../../assets/icons/check2.svg';
+import { useTheme } from '../../context/ThemeProvider';
 
 const Pricing = () => {
 
@@ -8,8 +9,10 @@ const Pricing = () => {
             window.scrollTo(0, 0)
         }, [])
 
+        const {darkMode} = useTheme()
+
     return (
-        <div className='bigscreen p-10 text-center'>
+        <div className='bigscreen p-10 text-center bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(151,253,202,0.128)_0%,_rgba(151,253,202,0)_100%)]'>
             <div className='text-[32px] font-semibold'>
                 The best Indian footage license in the world
             </div>
@@ -19,7 +22,7 @@ const Pricing = () => {
 
             <div className='flex items-end justify-center gap-9 mt-8 text-left'>
 
-                <div className='cursor-pointer border-[0.5px] p-4 rounded-[16px] bg-white hover:shadow flex flex-col gap-6 w-full max-w-[240px]'
+                <div className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${darkMode? 'bg-[#23262452]':'bg-white'} hover:shadow flex flex-col gap-6 w-full max-w-[240px]`}
                     style={{ borderColor: 'var(--primary)' }}
                 >
                     <div>Free</div>
@@ -31,13 +34,13 @@ const Pricing = () => {
 
                     <div className='text-sm'>Great for trying out Shotkut and for tiny teams.</div>
 
-                    <button className='greenButton mx-auto !bg-[transparent] border-2 border-black !w-[90%]'
+                    <button className={`greenButton mx-auto !bg-[transparent] border-2 ${darkMode? 'border-white !text-white':'border-black'} !w-[90%]`}
                     // style={{borderColor:''}}
                     >
                         Try Now
                     </button>
 
-                    <div className='bg-[#C9DBD2] text-[#333333] text-sm rounded-[4px] p-1 mx-auto'>
+                    <div className={`${darkMode? 'bg-[#232624] text-[#666666]' :"bg-[#C9DBD2] text-[#333333]"} text-sm rounded-[4px] p-1 mx-auto`}>
                         Features
                     </div>
 
@@ -81,10 +84,10 @@ const Pricing = () => {
                     </div>
                 </div>
 
-                <div className='gradientcustom p-2 rounded-[16px] bg-[var(--primary)] hover:shadow flex flex-col gap-2 w-full max-w-[250px]'>
-                    <div className='text-white text-xs text-center font-semibold'>Most Popular</div>
+                <div className={`bg-[var(--primary)] p-2 rounded-[16px] ${darkMode ? 'gradientcustom dark':'gradientcustom'} hover:shadow flex flex-col gap-2 w-full max-w-[250px]`}>
+                    <div className={`${darkMode?'text-[#333]':'text-white'} text-xs text-center font-semibold`}>Most Popular</div>
 
-                    <div className='cursor-pointer border-[0.5px] p-4 rounded-[16px] bg-white flex flex-col gap-6 w-full max-w-[240px]'
+                    <div className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${darkMode? 'bg-[#232624]':'bg-white'} flex flex-col gap-6 w-full max-w-[240px]`}
                         style={{ borderColor: 'var(--primary)' }}
                     >
                         <div>Professional</div>
@@ -96,13 +99,12 @@ const Pricing = () => {
 
                         <div className='text-sm'>Best for growing startups and growth companies.</div>
 
-                        <button className='greenButton mx-auto !w-[90%]'
-                        // style={{borderColor:''}}
+                        <button className={`greenButton mx-auto ${darkMode&& '!bg-[#97FDCA]'} !w-[90%]`}
                         >
                             Try Now
                         </button>
 
-                        <div className='bg-[#C9DBD2] text-[#333333] text-sm rounded-[4px] p-1 mx-auto'>
+                        <div className={`${darkMode? 'bg-[#232624] text-[#666666]' :"bg-[#C9DBD2] text-[#333333]"} text-sm rounded-[4px] p-1 mx-auto`}>
                             Features
                         </div>
 
@@ -147,7 +149,7 @@ const Pricing = () => {
                 </div>
 
 
-                <div className='cursor-pointer border-[0.5px] p-4 rounded-[16px] bg-white hover:shadow flex flex-col gap-6 w-full max-w-[240px]'
+                <div className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${darkMode? 'bg-[#23262452]':'bg-white'} hover:shadow flex flex-col gap-6 w-full max-w-[240px]`}
                     style={{ borderColor: 'var(--primary)' }}
                 >
                     <div>Enterprise</div>
@@ -159,13 +161,13 @@ const Pricing = () => {
 
                     <div className='text-sm'>Great for trying out Shotkut and for tiny teams.</div>
 
-                    <button className='greenButton mx-auto !bg-[transparent] border-2 border-black !w-[90%]'
+                    <button className={`greenButton mx-auto !bg-[transparent] border-2 ${darkMode? 'border-white !text-white':'border-black'} !w-[90%]`}
                     // style={{borderColor:''}}
                     >
                         Try Now
                     </button>
 
-                    <div className='bg-[#C9DBD2] text-[#333333] text-sm rounded-[4px] p-1 mx-auto'>
+                    <div className={`${darkMode? 'bg-[#232624] text-[#666666]' :"bg-[#C9DBD2] text-[#333333]"} text-sm rounded-[4px] p-1 mx-auto`}>
                         Features
                     </div>
 

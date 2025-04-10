@@ -19,53 +19,55 @@ const Nav = () => {
 
   return (
     <>
-      <div className={darkMode ? 'Nav dark bigscreen' : 'Nav bigscreen'}>
-        <Link className='navLogo' to='/'>
-          <img src={darkMode ? logowhite : logo} className='object-contain h-full' />
-        </Link>
-
-        <div className='hidden md:flex gap-6 items-center ml-auto'>
-          <Link to='/pricing'>
-            <div className='navBtn'>Pricing</div>
+      <div className={darkMode ? 'NavContainer dark' : 'NavContainer'}>
+        <div className={'Nav bigscreen'}>
+          <Link className='navLogo' to='/'>
+            <img src={darkMode ? logowhite : logo} className='object-contain h-full' />
           </Link>
 
-          {location.pathname === '/dashboard' ?
-            <div className='navBtn'>Logout</div>
-            :
+          <div className='hidden md:flex gap-6 items-center ml-auto'>
+            <Link to='/pricing'>
+              <div className='navBtn'>Pricing</div>
+            </Link>
 
-            <div className='navBtn'
-              onClick={() => setShowSignInModal(true)}
-            >
-              Sign In
-            </div>
+            {location.pathname === '/dashboard' ?
+              <div className='navBtn'>Logout</div>
+              :
 
-          }
+              <div className='navBtn'
+                onClick={() => setShowSignInModal(true)}
+              >
+                Sign In
+              </div>
 
-          <ThemeToggle />
-        </div>
+            }
 
-        <FiMenu
-          className="md:hidden text-2xl text-white cursor-pointer"
-          onClick={() => setMenuOpen(!menuOpen)}
-        />
-
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="absolute top-12 left-0 w-full bg-black shadow-lg flex flex-col items-start p-4 space-y-2 md:hidden">
-
-            <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
-              Join
-            </button>
-            <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
-              Contact
-            </button>
-            {/* Sign In Button */}
-            <button className="w-full text-left px-4 py-2 bg-[rgb(255,173,143)] text-black rounded-lg hover:bg-[rgb(252,185,161)]">
-              Sign In
-            </button>
+            <ThemeToggle />
           </div>
-        )}
 
+          <FiMenu
+            className="md:hidden text-2xl text-white cursor-pointer"
+            onClick={() => setMenuOpen(!menuOpen)}
+          />
+
+          {/* Mobile Menu */}
+          {menuOpen && (
+            <div className="absolute top-12 left-0 w-full bg-black shadow-lg flex flex-col items-start p-4 space-y-2 md:hidden">
+
+              <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
+                Join
+              </button>
+              <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
+                Contact
+              </button>
+              {/* Sign In Button */}
+              <button className="w-full text-left px-4 py-2 bg-[rgb(255,173,143)] text-black rounded-lg hover:bg-[rgb(252,185,161)]">
+                Sign In
+              </button>
+            </div>
+          )}
+
+        </div>
       </div>
 
       {/* {(location.pathname == '/dashboard' || location.pathname == '/employee/dashboard') ?

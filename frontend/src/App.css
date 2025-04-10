@@ -11,6 +11,9 @@
     background-color: #ECECEC;
     font-size: 14px;
 }
+.input.dark{
+    background-color: #1B1D1C;
+}
 
 .line{
     /* h-[1px] w-full bg-[#CBCBCB] */
@@ -30,4 +33,7 @@
 .gradientcustom{
     background: linear-gradient(0deg, #10130D 0%, #4B8166 100%);
     /* background: radial-gradient(50% 50% at 50% 50%, rgba(151, 253, 202, 0.128) 0%, rgba(151, 253, 202, 0) 100%); */
+}
+.gradientcustom.dark{
+    background: linear-gradient(207.79deg, #97FDCA 0%, #308A5D 35.79%);
 }
