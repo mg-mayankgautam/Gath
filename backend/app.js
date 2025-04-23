@@ -29,7 +29,8 @@ const allowedOrigins = [
     "https://shotkut.vercel.app",
     "https://shotkut.com",
     "https://www.shotkut.com",
-    "http://localhost:3456"
+    "http://localhost:3456",
+    "http://localhost:3001"
 ];
 
 // Use `cors` middleware
