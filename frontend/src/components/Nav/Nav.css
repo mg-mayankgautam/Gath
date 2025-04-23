@@ -1,3 +1,9 @@
+.NavContainer{
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 .Nav {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -7,9 +13,8 @@
     padding: 0px 40px;
     height: 72px;
     font-size: 15px;
-    background-color: #fff;
 }
-.Nav.dark {
+.NavContainer.dark {
     background: radial-gradient(100% 100% at 50% 0%, #10130D 0%, #10130D 100%);
 }
 

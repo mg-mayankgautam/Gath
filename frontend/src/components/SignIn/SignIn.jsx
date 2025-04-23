@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import cross from '../../assets/icons/cross.svg'
 import img from '../../assets/login/login1.png'
 import logo from '../../assets/logo.png'
+import logowhite from '../../assets/logowhite.png'
+import { useTheme } from '../../context/ThemeProvider'
 
 
 
 const SignIn = ({ setShowModal }) => {
 
+const {darkMode}= useTheme();
 
   // Disable background scroll when modal is open
   useEffect(() => {
@@ -45,7 +48,7 @@ const SignIn = ({ setShowModal }) => {
 
       <div className='bigscreen max-h-[100vh] h-[100vh] p-10'>
 
-        <div className='relative max-w-[1024px] mx-auto h-full max-h-full p-8 bg-white shadow grid grid-cols-2 !gap-8'>
+        <div className={`relative max-w-[1024px] mx-auto h-full max-h-full border p-8 ${darkMode? 'bg-[#10130D] border-[#1E1E1E]' : 'bg-white border-[#CBCBCB]'} shadow grid grid-cols-2 !gap-8`}>
 
           <div className='cursor-pointer h-8 absolute top-4 right-4' onClick={() => setShowModal(false)}>
             <img src={cross} alt='close' className='h-full object-contain' />
@@ -58,7 +61,7 @@ const SignIn = ({ setShowModal }) => {
 
           <div className='flex flex-col gap-8 py-12'>
             <div className='h-8'>
-              <img src={logo} className='object-contain h-full' />
+              <img src={darkMode? logowhite : logo} className='object-contain h-full' />
             </div>
 
             <div className='mt-8 text-2xl font-semibold'>Sign In</div>
@@ -72,7 +75,7 @@ const SignIn = ({ setShowModal }) => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className='input w-full'
+                className={darkMode? 'input dark w-full' :'input w-full'}
               />
 
               {errors.email && (
@@ -89,7 +92,7 @@ const SignIn = ({ setShowModal }) => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className='input w-full'
+                className={darkMode? 'input dark w-full' :'input w-full'}
               />
 
               {errors.password && (
