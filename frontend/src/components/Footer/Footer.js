@@ -22,10 +22,12 @@ const Footer = () => {
 
 
                 <div className='flex flex-col'>
-                    <div className='font-semibold mb-6'>Quick Links</div>
+                    <div className='font-semibold mb-6'>Links</div>
 
-                    <Link to='/pricing'>Pricing</Link>
-                    <Link to='/category/one'>Categories</Link>
+                    <Link to='/about'>About Us</Link>
+                    <Link to='/pricing'>Our Pricing & Plans</Link>
+                    <Link to='/'>FAQs</Link>
+                    {/* <Link to='/category/one'>Categories</Link> */}
 
                 </div>
 

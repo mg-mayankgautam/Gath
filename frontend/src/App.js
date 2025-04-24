@@ -15,6 +15,9 @@ import Privacy from './components/PolicyPages/Privacy';
 import Terms from './components/PolicyPages/Terms';
 import Refund from './components/PolicyPages/Refund';
 import { ThemeProvider } from './context/ThemeProvider';
+import AboutPage from './components/About/AboutPage';
+import PaymentPage from './components/Pricing/PaymentPage';
+import Faqs from './components/About/Faqs';
 
 function App() {
 
@@ -41,6 +44,9 @@ function App() {
 
           <Route path="category/:id" element={<CategoryPage />} />
           <Route path="pricing" element={<Pricing />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="payment" element={<PaymentPage />} />
+          <Route path="faqs" element={<Faqs />} />
 
           <Route path="privacypolicy" element={<Privacy />} />
           <Route path="termsandconditions" element={<Terms />} />
