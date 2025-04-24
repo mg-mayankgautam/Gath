@@ -41,7 +41,7 @@ const Video = ({ video }) => {
                     src={video?.previewURL}
                     muted
                     loop
-                    className="w-full h-auto"
+                    className="w-full h-auto max-h-[151px]"
                     loading="lazy"
                 // controls={showControls}
                 />

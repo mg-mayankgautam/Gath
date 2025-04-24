@@ -62,6 +62,21 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
   // });
 
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const videosPerPage = 9;
+
+  const totalPages = Math.ceil(filteredVideos?.length / videosPerPage);
+
+  const paginatedVideos = filteredVideos
+    ? filteredVideos.slice(
+      (currentPage - 1) * videosPerPage,
+      currentPage * videosPerPage
+    )
+    : [];
+
+
+
+
   return (
     <>
 
@@ -88,11 +103,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
           </div>
 
-          <div className={`
-  FiltersDiv 
-  ${darkMode ? "dark" : ""}
-  ${showFilters ? "flex-grow" : "hide"}
-`}>
+          <div className={`FiltersDiv  ${darkMode ? "dark" : ""} ${showFilters ? "flex-grow" : "hide"}`}>
 
             <Link to='/category/one'
               className="font-medium cursor-pointer text-[var(--grey)] text-sm"
@@ -104,11 +115,43 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
 
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-            {filteredVideos.length > 0 && filteredVideos.slice(0, 9).map((video) => (
+            {/* {filteredVideos.length > 0 && filteredVideos.slice(0, 9).map((video) => ( */}
+            {paginatedVideos?.length > 0 && paginatedVideos?.map((video) => (
               <Video key={video._id} video={video} />
             ))}
           </div>
 
+        </div>
+
+
+        {/* Pagination */}
+        <div className="mt-10 flex justify-center items-center gap-4">
+          <div
+            className={`text-2xl font-semibold cursor-pointer ${currentPage === 1 && "opacity-30 pointer-events-none"}`}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          >
+            ‹
+          </div>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <div
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`w-10 h-10 flex items-center justify-center rounded-full text-sm cursor-pointer 
+        ${currentPage === i + 1
+                  ? "bg-[var(--primary)] text-black"
+                  : "bg-transparent"}`}
+            >
+              {i + 1}
+            </div>
+          ))}
+
+          <div
+            className={`text-2xl font-semibold cursor-pointer ${currentPage === totalPages && "opacity-30 pointer-events-none"}`}
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            ›
+          </div>
         </div>
 
 
