@@ -14,7 +14,14 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 // const client = new S3Client(clientParams);
 
 const ffmpegStatic = require('ffmpeg-static');
+const ffprobeStatic = require('ffprobe-static');
 ffmpeg.setFfmpegPath(ffmpegStatic);
+ffmpeg.setFfprobePath(ffprobeStatic.path);
+
+
+// Log the paths to verify
+console.log('FFmpeg Path:', ffmpegStatic);
+console.log('FFprobe Path:', ffprobeStatic.path);
 
 const s3Client = new S3Client({
     region: bucketRegion,
@@ -110,6 +117,125 @@ const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex
 // };
 
 
+// async function addWatermark(inputVideoPath, watermarkImagePath, outputVideoPath) {
+//     return new Promise((resolve, reject) => {
+//         ffmpeg(inputVideoPath)
+//             .input(watermarkImagePath)
+//             .complexFilter([
+//                 {
+//                     filter: 'overlay',
+//                     options: {
+//                         x: 0, // Adjust as needed
+//                         y: 0, // Adjust as needed
+//                     },
+//                 },
+//             ])
+//             .outputOptions(['-codec:a', 'copy']) // Copy audio stream
+//             .output(outputVideoPath)
+//             .on('end', () => {
+//                 console.log('Watermark added successfully!');
+//                 resolve(outputVideoPath);
+//             })
+//             .on('error', (err) => {
+//                 console.error('Error adding watermark:', err);
+//                 reject(err);
+//             })
+//             .run();
+//     });
+// }
+
+// Helper function to run ffprobe and get dimensions
+
+
+function getDimensions(filePath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(filePath, (err, metadata) => {
+            if (err) {
+                return reject(new Error(`Error probing file ${filePath}: ${err.message}`));
+            }
+            const stream = metadata.streams.find(s => s.codec_type === 'video');
+            if (!stream || !stream.width || !stream.height) {
+                 return reject(new Error(`Could not find video stream dimensions for ${filePath}`));
+            }
+            resolve({ width: stream.width, height: stream.height });
+        });
+    });
+}
+
+// async function addWatermark(inputVideoPath, watermarkImagePath, outputVideoPath, padding = 10) {
+//     const tempTiledWatermarkPath = path.join(
+//         path.dirname(outputVideoPath),
+//         `temp_tiled_${Date.now()}_${path.basename(watermarkImagePath)}`
+//     );
+//     try {
+//         // --- Step 1: Get Dimensions ---
+//         console.log("Probing video and watermark dimensions...");
+//         const [videoDims, watermarkDims] = await Promise.all([
+//             getDimensions(inputVideoPath),
+//             getDimensions(watermarkImagePath),
+//         ]);
+
+//         console.log(`Video: ${videoDims.width}x${videoDims.height}, Watermark: ${watermarkDims.width}x${watermarkDims.height}`);
+//         if (!videoDims.width || !videoDims.height || !watermarkDims.width || !watermarkDims.height) {
+//             throw new Error("Invalid video or watermark dimensions.");
+//         }
+
+//         // --- Step 2: Create Tiled Watermark Image ---
+//         const tileWidthWithPadding = watermarkDims.width + padding;
+//         const tileHeightWithPadding = watermarkDims.height + padding;
+//         const tilesX = Math.ceil(videoDims.width / tileWidthWithPadding);
+//         const tilesY = Math.ceil(videoDims.height / tileHeightWithPadding);
+
+//         await new Promise((resolve, reject) => {
+//             ffmpeg()
+//                 .input(watermarkImagePath)
+//                 .inputOptions(['-loop', '1']) // Loop the watermark
+//                 .complexFilter([
+//                     `[0:v]scale=${watermarkDims.width}:${watermarkDims.height},pad=${tileWidthWithPadding}:${tileHeightWithPadding}:color=black@0.0,` +
+//                     `tile=${tilesX}x${tilesY}`
+//                 ])
+//                 .outputOptions('-frames:v 1') // Single-frame image
+//                 .output(tempTiledWatermarkPath)
+//                 .on('start', (cmd) => console.log(`FFmpeg command: ${cmd}`))
+//                 .on('end', resolve)
+//                 .on('error', reject)
+//                 .run();
+//         });
+//         console.log("Tiled watermark image created successfully.");
+
+//         // --- Step 3: Overlay Tiled Watermark on Video ---
+//         await new Promise((resolve, reject) => {
+//             ffmpeg(inputVideoPath)
+//                 .input(tempTiledWatermarkPath)
+//                 .complexFilter('overlay=0:0:shortest=1')
+//                 .outputOptions([
+//                     '-c:v libx264',
+//                     '-crf 23',
+//                     '-preset fast',
+//                     '-c:a copy',
+//                 ])
+//                 .output(outputVideoPath)
+//                 .on('start', (cmd) => console.log(`FFmpeg overlay command: ${cmd}`))
+//                 .on('end', resolve)
+//                 .on('error', reject)
+//                 .run();
+//         });
+//         console.log("Watermark successfully applied to video.");
+//     } catch (error) {
+//         console.error("Error in watermark process:", error);
+//         throw error;
+//     } finally {
+//         if (fs.existsSync(tempTiledWatermarkPath)) {
+//             try {
+//                 fs.unlinkSync(tempTiledWatermarkPath);
+//                 console.log("Temporary watermark file cleaned up.");
+//             } catch (err) {
+//                 console.error("Error cleaning up temporary watermark file:", err);
+//             }
+//         }
+//     }
+// }
+
 async function addWatermark(inputVideoPath, watermarkImagePath, outputVideoPath) {
     return new Promise((resolve, reject) => {
         ffmpeg(inputVideoPath)
@@ -136,6 +262,7 @@ async function addWatermark(inputVideoPath, watermarkImagePath, outputVideoPath)
             .run();
     });
 }
+
 
 module.exports.postVideo = async (req, res) => {
     try {
@@ -172,11 +299,7 @@ module.exports.postVideo = async (req, res) => {
             console.log("Watermarked video generated successfully");
         } catch (error) {
             console.error("Error generating watermarked video:", error);
-            // Handle error, e.g., skip uploading watermarked version, or send error response
-            // Important:  Decide how you want to handle this.  For this example, I'm proceeding without the watermarked video.
-            // You might want to:
-            //    -  res.status(500).json({ error: "Watermark failed", ... }); return;  // Stop processing
-            //    -  Don't create watermarked, and just use original.
+         
         }
 
 
@@ -240,7 +363,7 @@ module.exports.postVideo = async (req, res) => {
         const newVideo = new videosDB({
             URL: videoURL,
             previewURL: previewURL,
-            watermarkedURL: watermarkedVideoURL, // Save the watermarked URL
+            waterMarkedVideoURL: watermarkedVideoURL, // Save the watermarked URL
             name,
             tags,
             views: 0,

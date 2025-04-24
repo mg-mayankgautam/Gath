@@ -8,6 +8,7 @@ const videoSchema = new Schema({
     
     URL:{type:String},
     previewURL:{type:String},
+    waterMarkedVideoURL:{type:String},
     name:{type:String},
     tags:{type:Array},
     views:{type:Number},

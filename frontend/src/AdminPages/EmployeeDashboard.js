@@ -91,6 +91,32 @@ const EmployeeDashboard = () => {
         setTags(updatedTags);
     };
 
+    const handleVideoUpload = (event) => {
+        const selectedFile = event.target.files[0];
+    
+        if (selectedFile && selectedFile.type.startsWith('video/')) {
+          setFile1(selectedFile);
+          extractKeywordsFromFilename(selectedFile.name);
+        } else {
+          alert('Please select a valid video file.');
+          // Optionally clear the file input
+          event.target.value = '';
+          setFile1(null);
+        }
+      };
+    
+      const extractKeywordsFromFilename = (filename) => {
+        // Remove the file extension (e.g., .mp4, .mov)
+        const nameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
+        setName(nameWithoutExtension);
+
+        // Split the filename by underscores to get potential keywords
+        const keywords = nameWithoutExtension.split('_').map(keyword => keyword.trim()).filter(keyword => keyword !== '');
+    
+        // Update the tags state with the extracted keywords
+        setTags(keywords);
+      };
+
     const content = {
         // Dashboard:
         //     <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -180,7 +206,9 @@ const EmployeeDashboard = () => {
                     <input
                         type="file"
                         accept="video/*"
-                        onChange={(e) => setFile1(e.target.files[0])}
+                        // onChange={(e) => setFile1(e.target.files[0])}
+                        onChange={handleVideoUpload}
+
                         className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
                     />
                 </div>
@@ -285,6 +313,7 @@ const EmployeeDashboard = () => {
 
         Settings: <p>Settings content will appear here.</p>
     };
+
     return (
 
         <div className="flex h-full min-h-[calc(100vh-96px)]">
