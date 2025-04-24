@@ -125,11 +125,11 @@ const VideoPage = ({ setShowModal, video }) => {
 
             </div>
 
-            <div className='flex justify-between items-center'>
-              <div className='text-xl font-semibold'>
+            <div className='flex justify-between items-start gap-10'>
+              <div className='text-xl font-semibold break-all'>
                 {video?.name}
               </div>
-              <div className='underline text-[var(--grey)] text-large cursor-pointer'>
+              <div className='underline text-[var(--grey)] text-large cursor-pointer min-w-[208px]'>
                 View License Information
               </div>
             </div>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import { FaTimes } from "react-icons/fa"; // Import the delete icon
 import VideoPage from "./VideoPage";
+import { useTheme } from "../context/ThemeProvider";
 
 
 const EmployeeDashboard = () => {
@@ -15,6 +16,8 @@ const EmployeeDashboard = () => {
     const [videos, setVideos] = useState([]);
     const [selectedVideo, setSelectedVideo] = useState('');
     const [selectedVideoModal, setSelectedVideoModal] = useState(false);
+    const { darkMode } = useTheme()
+    const [isUploading, setIsUploading] = useState(false);
 
 
     const getVideos = async () => {
@@ -58,6 +61,8 @@ const EmployeeDashboard = () => {
             return;
         }
 
+        setIsUploading(true); // Show loader
+
         const formData = new FormData();
         formData.append("video", file1);
         formData.append("name", name);
@@ -83,6 +88,9 @@ const EmployeeDashboard = () => {
             console.error("Upload failed:", error);
             toast.error("Failed to upload video.");
         }
+        finally {
+            setIsUploading(false); // Hide loader
+        }
     };
 
 
@@ -93,29 +101,29 @@ const EmployeeDashboard = () => {
 
     const handleVideoUpload = (event) => {
         const selectedFile = event.target.files[0];
-    
+
         if (selectedFile && selectedFile.type.startsWith('video/')) {
-          setFile1(selectedFile);
-          extractKeywordsFromFilename(selectedFile.name);
+            setFile1(selectedFile);
+            extractKeywordsFromFilename(selectedFile.name);
         } else {
-          alert('Please select a valid video file.');
-          // Optionally clear the file input
-          event.target.value = '';
-          setFile1(null);
+            alert('Please select a valid video file.');
+            // Optionally clear the file input
+            event.target.value = '';
+            setFile1(null);
         }
-      };
-    
-      const extractKeywordsFromFilename = (filename) => {
+    };
+
+    const extractKeywordsFromFilename = (filename) => {
         // Remove the file extension (e.g., .mp4, .mov)
         const nameWithoutExtension = filename.substring(0, filename.lastIndexOf('.'));
         setName(nameWithoutExtension);
 
         // Split the filename by underscores to get potential keywords
         const keywords = nameWithoutExtension.split('_').map(keyword => keyword.trim()).filter(keyword => keyword !== '');
-    
+
         // Update the tags state with the extracted keywords
         setTags(keywords);
-      };
+    };
 
     const content = {
         // Dashboard:
@@ -209,7 +217,7 @@ const EmployeeDashboard = () => {
                         // onChange={(e) => setFile1(e.target.files[0])}
                         onChange={handleVideoUpload}
 
-                        className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
+                        className={`mt-4 w-full input ${darkMode && "dark"} focus:outline-none focus:border-[var(--primary)]`}
                     />
                 </div>
                 <div className="my-4">
@@ -219,7 +227,7 @@ const EmployeeDashboard = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Enter a name..."
-                        className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
+                        className={`mt-4 w-full input ${darkMode && "dark"} focus:outline-none focus:border-[var(--primary)]`}
                     />
                 </div>
                 <div className="my-4">
@@ -230,9 +238,9 @@ const EmployeeDashboard = () => {
                         onChange={(e) => setTagInput(e.target.value)}
                         onKeyDown={handleAddTag}
                         placeholder="Enter a tag..."
-                        className="mt-4 w-full input focus:outline-none focus:border-[var(--primary)]"
+                        className={`mt-4 w-full input ${darkMode && "dark"} focus:outline-none focus:border-[var(--primary)]`}
                     />
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-2">
                         {tags.map((tag, index) => (
                             <span
                                 key={index}
@@ -247,14 +255,18 @@ const EmployeeDashboard = () => {
                         ))}
                     </div>
                 </div>
-                <button onClick={handleUpload} className="w-full greenButton">
+                <button
+                    onClick={handleUpload}
+                    disabled={isUploading}
+                    className="w-full greenButton"
+                >
                     Upload Video
                 </button>
             </div>
         ),
 
         "Manage Videos": (
-            <div className="p-2 rounded-2xl h-full max-w-[700px] mx-auto flex flex-col gap-6">
+            <div className="p-2 rounded-2xl h-full mx-auto flex flex-col gap-6">
                 <h2 className="text-2xl font-semibold mb-4">Manage Videos</h2>
 
                 <div className="flex flex-col gap-4">
@@ -264,9 +276,9 @@ const EmployeeDashboard = () => {
                                 className="flex items-center justify-between gap-4 p-4 border border-gray-300 rounded-lg"
                             >
 
-                                <div className="flex items-center gap-4">
+                                <div className="grid grid-cols-[130px_auto] gap-4">
 
-                                    <div className="w-auto h-20 bg-gray-200 rounded-[2px] overflow-hidden">
+                                    <div className="!w-full w-auto h-20 bg-gray-200 rounded-[2px] overflow-hidden">
                                         <video
                                             src={video?.previewURL || "https://via.placeholder.com/80"}
                                             alt={video?.name}
@@ -275,7 +287,7 @@ const EmployeeDashboard = () => {
                                     </div>
 
                                     <div className="flex flex-col justify-between gap-2">
-                                        <p className="font-semibold text-lg">{video?.name}</p>
+                                        <p className="font-semibold text-lg break-all">{video?.name}</p>
                                         <div className="flex gap-2 flex-wrap">
                                             {video?.tags?.map((tag, index) => (
                                                 <span key={index} className="lightGreenButton">
@@ -318,7 +330,7 @@ const EmployeeDashboard = () => {
 
         <div className="flex h-full min-h-[calc(100vh-96px)]">
             {/* Sidebar */}
-            <div className="bg-[#C9DBD2] w-1/5 min-h-[calc(100vh-96px)] p-8">
+            <div className="bg-[#C9DBD2] text-black w-1/5 min-h-[calc(100vh-96px)] p-8">
                 <h2 className="text-2xl font-semibold mb-6">Employee</h2>
                 <ul className="flex flex-col gap-4">
                     {Object.keys(content).map((section) => (
@@ -336,17 +348,28 @@ const EmployeeDashboard = () => {
 
             {/* Main Content */}
             <div
-                className="bg-white w-4/5 p-8 border overflow-y-scroll h-full max-h-[calc(100vh-96px)] min-h-[calc(100vh-96px)] text-left"
+                className={`${darkMode ? "" : "bg-white"} w-4/5 p-8 overflow-y-scroll h-full max-h-[calc(100vh-96px)] min-h-[calc(100vh-96px)] text-left`}
             >
                 {content[activeSection]}
             </div>
 
-            <Toaster position="top-center" richColors/>
+            <Toaster position="top-center" richColors />
 
 
             {setSelectedVideo && selectedVideoModal &&
                 <VideoPage setShowModal={setSelectedVideoModal} video={selectedVideo} />
             }
+
+
+            {isUploading && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                    <div className={`${darkMode ? "bg-black" : "bg-white"} p-6 rounded-lg shadow-lg text-center max-w-[500px] w-full flex flex-col gap-6 items-center border border-[#333333]`}>
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary)]"></div>
+                        <div className="text-sm">Please don’t close or refresh this window while your video is uploading. It might take a few minutes depending on file size and network speed.</div>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }
