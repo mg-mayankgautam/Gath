@@ -203,7 +203,7 @@ const AboutPage = () => {
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="User Country"
+              placeholder="Message"
               className={darkMode ? "input dark w-full" : "input w-full"}
             />
 

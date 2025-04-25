@@ -5,15 +5,12 @@ const { Schema } = mongoose;
 
 
 const videoSchema = new Schema({
-    
-    URL:{type:String},
-    previewURL:{type:String},
-    waterMarkedVideoURL:{type:String},
-    name:{type:String},
-    tags:{type:Array},
-    views:{type:Number},
-
-    
+    URL: { type: String },
+    previewURL: { type: String },
+    waterMarkedVideoURL: { type: String },
+    name: { type: String },
+    tags: { type: [String], index: true }, // Added index for efficient tag search
+    views: { type: Number },
 });
 
 module.exports = mongoose.model('video', videoSchema);

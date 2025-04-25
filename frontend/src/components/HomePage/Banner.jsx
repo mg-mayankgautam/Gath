@@ -49,7 +49,7 @@ const Banner = ({ searchQuery, setSearchQuery }) => {
                 </div>
 
                 <div className='navSearchDiv relative mt-8'>
-                    <input className='navSearch'
+                    <input className='navSearch placeholder-gray-700'
                         placeholder='What are you looking for?'
                         value={input}
                         onChange={(e) => handleSearch(e.target.value)}

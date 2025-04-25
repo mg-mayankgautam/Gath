@@ -49,7 +49,9 @@ module.exports.logIn = async (req, res) => {
                     userDB.findOneAndUpdate({ id: id }, { refreshToken: refreshToken }, { returnDocument: 'after' })
                         .then((saved) => {
 
-                            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
+                            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', 
+                                // secure: true,
+                                 maxAge: 24 * 60 * 60 * 1000, path: '/', });
                             res.json({ accessToken });
                         })
                         .catch((e) => { console.log(e) })

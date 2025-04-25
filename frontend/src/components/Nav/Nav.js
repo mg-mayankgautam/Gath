@@ -27,14 +27,14 @@ const Nav = () => {
 
           <div className='hidden md:flex gap-6 items-center ml-auto'>
             <Link to='/pricing'>
-              <div className='navBtn'>Pricing</div>
+              <div className='navBtn hover:text-[var(--primary)] transition-all duration-250'>Pricing</div>
             </Link>
 
             {location.pathname === '/dashboard' ?
-              <div className='navBtn'>Logout</div>
+              <div className='navBtn hover:text-[var(--primary)] transition-all duration-250'>Logout</div>
               :
 
-              <div className='navBtn'
+              <div className='navBtn hover:text-[var(--primary)] transition-all duration-250'
                 onClick={() => setShowSignInModal(true)}
               >
                 Sign In

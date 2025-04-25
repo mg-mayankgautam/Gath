@@ -10,14 +10,16 @@
   --background: #ECECEC;
   --text: #333333;
   --grey: #666666;
+  --hover: #97FDCA;
   /* other light mode variables */
 }
 
 [data-theme="dark"] {
-  --primary: #66B28C;
-  --background: #121212;
+  --primary: #97FDCA;
+  --background: #090B07;
   --text: #ffffff;
   --grey: #C7C7CC;
+  --hover: #66B28C;
   /* other dark mode variables */
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import cross from '../../assets/icons/cross.svg'
 import wishlist from '../../assets/icons/wishlist.svg'
 import wishlistwhite from '../../assets/icons/wishlistwhite.svg'
@@ -11,6 +11,7 @@ import profile from '../../assets/sampleprofile.png'
 import { Skeleton } from '@mui/material';
 import axios from 'axios'
 import { useTheme } from '../../context/ThemeProvider'
+import useAuth from '../../hooks/useAuth'
 
 
 const VideoPage = ({ setShowModal, video }) => {
@@ -44,6 +45,66 @@ const VideoPage = ({ setShowModal, video }) => {
     };
   }, []); // Empty dependency array ensures it runs only once
 
+
+  const { auth } = useAuth();
+  const [activeModal, setActiveModal] = useState(null); // null | 'similar' | 'add' | 'download'
+
+  const handleIconClick = (type) => {
+    setActiveModal(type);
+  };
+
+  const closeModal = () => setActiveModal(null);
+
+  const renderModalContent = () => {
+    if (!auth || Object.keys(auth).length === 0) {
+      return (
+        <>
+          <p className="text-sm">Please login to perform this action.</p>
+          <button className='greenButton'>Subscribe Now</button>
+        </>);
+    }
+
+    switch (activeModal) {
+      case "wishlist":
+        return (
+          <>
+            <h2 className="text-lg font-semibold mb-4 capitalize">Wishlisted Video!</h2>
+            {/* <p className="text-sm">Are you sure you want to add this video to your Collection?</p> */}
+            <button className="greenButton">Show</button>
+          </>
+        );
+      case "share":
+        return (
+          <>
+            <h2 className="text-lg font-semibold mb-4 capitalize">Share Video!</h2>
+            {/* <p className="text-sm">Are you sure you want to add this video to your Collection?</p> */}
+            <button className="greenButton">Show</button>
+          </>
+        );
+      case "add":
+        return (
+          <>
+            <h2 className="text-lg font-semibold mb-4 capitalize">Add to Collection</h2>
+            <p className="text-sm">Are you sure you want to add this video to your Collection?</p>
+            <button className="greenButton">Add</button>
+          </>
+        );
+      case "download":
+        return (
+          <>
+            <h2 className="text-lg font-semibold mb-4 capitalize">Download</h2>
+            <p className="text-sm">Click below to download the video:</p>
+            {/* <a href={video?.previewURL} download> */}
+            <button className='greenButton'>
+              Download
+            </button>
+            {/* </a> */}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
 
@@ -86,21 +147,33 @@ const VideoPage = ({ setShowModal, video }) => {
             <div className='flex gap-6 items-center'>
 
               <button className='greenButton flex gap-2 text-xs'>
-                <img src={download} alt='download' className='h-full object-contain' />
+                <img src={download} alt='download' className='h-full object-contain'
+                  onClick={() => setActiveModal('download')}
+                />
                 Download
               </button>
 
-              <div className='cursor-pointer'>
-                <img src={darkMode? wishlistwhite : wishlist} alt='wishlist' className={`h-8 object-contain`} />
-              </div>
-
-              <div className='cursor-pointer'>
-                <img src={darkMode? addwhite : add} alt='add' className={`h-8 object-contain`} />
-              </div>
-
-              <div className='cursor-pointer'>
-                <img src={darkMode? sharewhite : share} alt='download' className={`h-8 object-contain`} />
-              </div>
+              {[
+                { icon: darkMode ? wishlistwhite : wishlist, label: "Wishlist", type: "wishlist" },
+                { icon: darkMode ? addwhite : add, label: "Add", type: "add" },
+                { icon: darkMode ? sharewhite : share, label: "Share", type: "share" },
+              ].map(({ icon, label, type }) => (
+                <div
+                  key={type}
+                  className="relative flex flex-col items-center cursor-pointer"
+                >
+                  <img src={icon} alt={label} className="h-8 object-contain peer"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click from bubbling up to parent
+                      handleIconClick(type);
+                    }}
+                  />
+                  {/* Hover Label */}
+                  <span className={`absolute -top-6 whitespace-nowrap text-[11px] ${darkMode ? "bg-[#1B1D1C] text-white" : "bg-white text-gray-700"} opacity-0 peer-hover:opacity-100 transition px-2 py-1 rounded shadow absolute`}>
+                    {label}
+                  </span>
+                </div>
+              ))}
             </div>
 
           </div>
@@ -137,7 +210,7 @@ const VideoPage = ({ setShowModal, video }) => {
 
             <div className='flex gap-8'>
 
-              <div className={`${darkMode? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} rounded-[4px] flex flex-col gap-4 p-6 w-full border`}>
+              <div className={`${darkMode ? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} rounded-[4px] flex flex-col gap-4 p-6 w-full border`}>
                 <div className='font-semibold'>
                   Attributes
                 </div>
@@ -155,7 +228,7 @@ const VideoPage = ({ setShowModal, video }) => {
                     { label: "Orientation", value: "Horizontal" },
                   ].map((item, index) => (
                     <div key={index} className="flex flex-col gap-2">
-                      <span className={`${darkMode? 'text-[#AAAAAA]':'text-[#666666]'} text-[12px]`}>{item.label}</span>
+                      <span className={`${darkMode ? 'text-[#AAAAAA]' : 'text-[#666666]'} text-[12px]`}>{item.label}</span>
                       <span className="text-[13px] font-medium">{item.value}</span>
                     </div>
                   ))}
@@ -164,7 +237,7 @@ const VideoPage = ({ setShowModal, video }) => {
               </div>
 
 
-              <div className={`${darkMode? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} rounded-[4px] flex flex-col gap-4 p-6 w-full max-w-[210px] border`}>
+              <div className={`${darkMode ? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} rounded-[4px] flex flex-col gap-4 p-6 w-full max-w-[210px] border`}>
                 <div className='font-semibold'>
                   Attributes
                 </div>
@@ -176,7 +249,7 @@ const VideoPage = ({ setShowModal, video }) => {
                     "4K HQ .mov",
                     "LOG .mov",
                   ].map((item, index) => (
-                    <div key={index} className={darkMode? "text-sm text-[#AAAAAA]":"text-sm"}>
+                    <div key={index} className={darkMode ? "text-sm text-[#AAAAAA]" : "text-sm"}>
                       {item}
                     </div>
                   ))}
@@ -194,7 +267,7 @@ const VideoPage = ({ setShowModal, video }) => {
 
               <div className='flex flex-wrap gap-4'>
                 {video?.tags.map((tag, index) => (
-                  <div key={index} className={darkMode? 'lightGreenButton dark' :'lightGreenButton'}>
+                  <div key={index} className={darkMode ? 'lightGreenButton dark' : 'lightGreenButton'}>
                     {tag}
                   </div>
                 ))}
@@ -208,11 +281,11 @@ const VideoPage = ({ setShowModal, video }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-              <Skeleton variant="rectangular" height={200} 
+              <Skeleton variant="rectangular" height={200}
                 sx={darkMode ? { bgcolor: 'grey.800' } : {}} />
-              <Skeleton variant="rectangular" height={200} 
+              <Skeleton variant="rectangular" height={200}
                 sx={darkMode ? { bgcolor: 'grey.800' } : {}} />
-              <Skeleton variant="rectangular" height={200} 
+              <Skeleton variant="rectangular" height={200}
                 sx={darkMode ? { bgcolor: 'grey.800' } : {}} />
 
             </div>
@@ -223,6 +296,17 @@ const VideoPage = ({ setShowModal, video }) => {
 
         </div>
 
+        {activeModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex items-center justify-center" onClick={closeModal}>
+            <div
+              className={`${darkMode ? 'bg-[#1B1D1C] border-[#333333]' : 'bg-[#F1F1F1] border-[#CBCBCB]'} border rounded-xl p-6 w-[90%] max-w-sm z-50 shadow-lg flex flex-col items-center gap-6 text-center`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {renderModalContent()}
+
+            </div>
+          </div>
+        )}
       </div>
 
     </div>

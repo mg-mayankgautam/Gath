@@ -1,5 +1,5 @@
 
-const adminDB = require("../models/adminDB.js")
+const adminDB = require("../models/UsersDB.js")
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 

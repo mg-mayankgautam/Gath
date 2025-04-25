@@ -1,24 +1,29 @@
 import React, { useState } from 'react'
 import img from '../assets/login/login1.png'
 import logo from '../assets/logo.png'
+import logowhite from '../assets/logowhite.png'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import { useTheme } from '../context/ThemeProvider';
 import { jwtDecode } from "jwt-decode";
-import useAuth from '../hooks/useAuth'; 
+import useAuth from '../hooks/useAuth';
 
 const AdminLogin = () => {
     //use auth
     const { auth } = useAuth();
     const { setAuth } = useAuth();
+    const { darkMode } = useTheme();
 
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({ email: "", password: "" });
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
     };
+    axios.defaults.withCredentials = true;
 
     const handleLogin = async () => {
         let newErrors = {};
@@ -55,8 +60,8 @@ const AdminLogin = () => {
 
         <div className='bigscreen max-h-[100vh] h-[100vh] p-10'>
 
-            <div className='max-w-[1024px] mx-auto max-h-full p-8 bg-white shadow grid grid-cols-2 
-            !gap-8'>
+            <div className={`max-w-[1024px] mx-auto max-h-full p-8 border ${darkMode? 'bg-[#10130D] border-[#1E1E1E]' : 'bg-white border-[#CBCBCB]'} shadow grid grid-cols-2 
+            !gap-8`}>
 
                 <div className='h-full max-h-full w-full rounded-2xl'>
                     <img src={img} className='object-cover max-h-full h-[calc(100vh-156px)] w-full rounded-2xl opacity-90' />
@@ -65,7 +70,7 @@ const AdminLogin = () => {
 
                 <div className='flex flex-col gap-8 py-12'>
                     <Link to='/' className='h-8'>
-                        <img src={logo} className='object-contain h-full' />
+                        <img src={darkMode? logowhite : logo} className='object-contain h-full' />
                     </Link>
 
                     <div className='mt-8 text-2xl font-semibold'>Admin Login</div>
@@ -79,7 +84,7 @@ const AdminLogin = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Enter your email"
-                            className='input w-full'
+                            className={darkMode? 'input dark w-full' :'input w-full'}
                         />
 
                         {errors.email && (
@@ -96,7 +101,7 @@ const AdminLogin = () => {
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Enter your password"
-                            className='input w-full'
+                            className={darkMode? 'input dark w-full' :'input w-full'}
                         />
 
                         {errors.password && (

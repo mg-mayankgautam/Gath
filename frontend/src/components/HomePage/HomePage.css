@@ -9,18 +9,6 @@
     align-items: center;
 }
 
-.grid {
-    display: grid;
-    /* grid-template-columns: repeat(3, 1fr); */
-    /* Always 2 columns */
-    gap: 1rem;
-}
-
-.grid>* {
-    max-width: 100%;
-    /* Prevent stretching */
-}
-
 
 .sidebar {
     width: 300px;
@@ -41,7 +29,8 @@
     transition: all 80ms ease-in-out;
     border-radius: 4px;
 }
-.FiltersDiv.dark{
+
+.FiltersDiv.dark {
     border: 1px solid #333333;
     background-color: #1B1D1C;
 }
@@ -71,7 +60,7 @@
     box-shadow: 0px 5px 10px #0000001a;
 }
 
-.greenButton{
+.greenButton {
     color: black;
     background-color: var(--primary);
     padding: 10px 24px;
@@ -80,8 +69,11 @@
     cursor: pointer;
     font-weight: 500;
 }
+.greenButton:hover{
+    background-color: var(--hover);
+}
 
-.lightGreenButton{
+.lightGreenButton {
     color: black;
     background-color: #E6F6EE;
     border: 0.5px solid black;
@@ -92,13 +84,14 @@
     font-weight: 300;
     font-size: 12px;
 }
-.lightGreenButton.dark{
+
+.lightGreenButton.dark {
     color: white;
     background-color: #0E1914;
     border: 0.5px solid white;
 }
 
-.button{
+.button {
     color: var(--text);
     background-color: transparent;
     border: 0.5px solid var(--text);
@@ -107,6 +100,15 @@
     width: max-content;
     cursor: pointer;
     font-weight: 300;
+}
+
+button {
+    transition: all 250ms ease-in-out;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    /* Moves up */
 }
 
 @media only screen and (max-width: 768px) {

@@ -24,9 +24,9 @@ const Footer = () => {
                 <div className='flex flex-col'>
                     <div className='font-semibold mb-6'>Links</div>
 
-                    <Link to='/about'>About Us</Link>
-                    <Link to='/pricing'>Our Pricing & Plans</Link>
-                    <Link to='/'>FAQs</Link>
+                    <Link to='/about' className='hover:text-[var(--primary)]'>About Us</Link>
+                    <Link to='/pricing' className='hover:text-[var(--primary)]'>Our Pricing & Plans</Link>
+                    <Link to='/faqs' className='hover:text-[var(--primary)]'>FAQs</Link>
                     {/* <Link to='/category/one'>Categories</Link> */}
 
                 </div>
@@ -35,9 +35,9 @@ const Footer = () => {
                 <div className='mr-auto flex flex-col'>
                     <div className='font-semibold mb-6'>Legal</div>
 
-                    <Link to='/privacypolicy'>Privacy Policy</Link>
-                    <Link to='/termsandconditions'>Terms and Conditions</Link>
-                    <Link to='/refundpolicy'>Cancellation and Refund</Link>
+                    <Link to='/privacypolicy' className='hover:text-[var(--primary)]'>Privacy Policy</Link>
+                    <Link to='/termsandconditions' className='hover:text-[var(--primary)]'>Terms and Conditions</Link>
+                    <Link to='/refundpolicy' className='hover:text-[var(--primary)]'>Cancellation and Refund</Link>
 
                 </div>
 

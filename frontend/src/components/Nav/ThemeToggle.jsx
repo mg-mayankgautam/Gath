@@ -7,7 +7,7 @@ const ThemeToggle = () => {
     <button
       onClick={toggleTheme}
       aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
-      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+      className="hover:transform-none relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
       style={{
         backgroundColor: darkMode ? '#4f46e5' : '#d1d5db', // indigo-600 / gray-300
       }}

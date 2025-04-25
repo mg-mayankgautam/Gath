@@ -88,13 +88,13 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
           <div className={darkMode ? "FiltersDiv dark flex-grow" : "FiltersDiv flex-grow"}>
 
             <div className=
-              {`font-medium cursor-pointer ${showFilters && 'text-[var(--primary)]'}`} onClick={() => setShowFilters(!showFilters)}>
+              {`font-medium cursor-pointer hover:text-[var(--primary)] ${showFilters && 'text-[var(--primary)]'}`} onClick={() => setShowFilters(!showFilters)}>
               Video Themes
             </div>
-            <div className="font-medium cursor-pointer">Shot Types</div>
-            <div className="font-medium cursor-pointer">People</div>
-            <div className="font-medium cursor-pointer">Collections</div>
-            <div className="font-medium cursor-pointer">Filmmakers</div>
+            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">Shot Types</div>
+            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">People</div>
+            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">Collections</div>
+            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">Filmmakers</div>
 
             <div className="mx-auto mt-auto flex flex-col">
               <button className="greenButton mb-4">Start free now</button>
@@ -106,7 +106,7 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
           <div className={`FiltersDiv  ${darkMode ? "dark" : ""} ${showFilters ? "flex-grow" : "hide"}`}>
 
             <Link to='/category/one'
-              className="font-medium cursor-pointer text-[var(--grey)] text-sm"
+              className="font-medium cursor-pointer text-[var(--grey)] text-sm hover:text-[var(--primary)]"
             >
               Category 1
             </Link>
@@ -117,7 +117,9 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {/* {filteredVideos.length > 0 && filteredVideos.slice(0, 9).map((video) => ( */}
             {paginatedVideos?.length > 0 && paginatedVideos?.map((video) => (
-              <Video key={video._id} video={video} />
+              <div key={video._id} className="aspect-[16/9]"> {/* Adjust aspect ratio as needed */}
+                <Video video={video} />
+              </div>
             ))}
           </div>
 
