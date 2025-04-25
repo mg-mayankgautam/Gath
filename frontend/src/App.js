@@ -18,13 +18,12 @@ import { ThemeProvider } from './context/ThemeProvider';
 import AboutPage from './components/About/AboutPage';
 import PaymentPage from './components/Pricing/PaymentPage';
 import Faqs from './components/About/Faqs';
+import SearchPage from './components/SearchPage/SearchPage';
+import CustomerDashboard from './components/Customer/CustomerDashboard';
 
 function App() {
 
   // commit5
-
-  const [searchQuery, setSearchQuery] = useState("");
-
 
   return (
     <ThemeProvider>
@@ -32,7 +31,7 @@ function App() {
 
         <Route path="/" element={<Layout />}>
 
-          <Route index element={<HomePage searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
+          <Route index element={<HomePage />} />
 
           <Route path="admin" element={<AdminLogin />} />
 
@@ -41,6 +40,9 @@ function App() {
 
           </Route>
 
+          <Route path="user/:id" element={<CustomerDashboard />} />
+
+          <Route path="search" element={<SearchPage />} />
 
           <Route path="category/:id" element={<CategoryPage />} />
           <Route path="pricing" element={<Pricing />} />

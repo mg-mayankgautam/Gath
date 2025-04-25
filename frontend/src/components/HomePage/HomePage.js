@@ -5,7 +5,7 @@ import Collection from './Collection'
 import CollectionSlider from './CollectionSlider'
 import TrendingSearch from './TrendingSearch'
 
-const HomePage = ({ searchQuery, setSearchQuery }) => {
+const HomePage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -13,7 +13,7 @@ const HomePage = ({ searchQuery, setSearchQuery }) => {
 
   return (
     <div className='bigscreen'>
-      <Banner searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Banner />
 
       <Collection />
 

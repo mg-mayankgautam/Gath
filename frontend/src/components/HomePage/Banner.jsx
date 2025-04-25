@@ -1,40 +1,9 @@
 import React, { useState } from 'react'
 import img from '../../assets/home/banner.webp'
-import icon from '../../assets/icons/search1.png';
 import { Link } from 'react-router-dom';
+import SearchInput from '../SearchPage/SearchInput';
 
-const Banner = ({ searchQuery, setSearchQuery }) => {
-    const [suggestions, setSuggestions] = useState([]);
-    const [input, setInput] = useState('');
-    const [isFocused, setIsFocused] = useState(false);
-
-    const handleSearch = (query) => {
-        setInput(query);
-        // console.log(query);
-        if (query.trim() === "") {
-            setSuggestions([]); // Hide suggestions if the search query is empty
-        } else {
-            const filteredSuggestions = uniqueKeywords.filter(keyword =>
-                keyword.toLowerCase().includes(query.toLowerCase())
-            );
-            setSuggestions(filteredSuggestions);
-        }
-    };
-
-
-    const handleFocus = () => {
-        setIsFocused(true);
-    };
-
-    const handleBlur = () => {
-        // Set a timeout to give time to click the suggestion before hiding
-        setTimeout(() => {
-            if (!isFocused) {
-                setSuggestions([]); // Hide suggestions if input loses focus
-            }
-        }, 500); // Short delay to allow suggestion click
-    };
-
+const Banner = () => {
 
     return (
         <div className='relative'>
@@ -48,36 +17,7 @@ const Banner = ({ searchQuery, setSearchQuery }) => {
                     Access the broadest range of assets in one place.
                 </div>
 
-                <div className='navSearchDiv relative mt-8'>
-                    <input className='navSearch placeholder-gray-700'
-                        placeholder='What are you looking for?'
-                        value={input}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                    />
-                    <img src={icon} className='absolute my-auto right-1 cursor-pointer top-1 bottom-1' />
-
-                    {suggestions.length > 0 && (
-                        <div className="suggestions-dropdown"
-                            onMouseDown={() => setIsFocused(false)}
-                        >
-                            {suggestions.map((suggestion, index) => (
-                                <div
-                                    key={index}
-                                    className="suggestion-item relative"
-                                    onClick={() => {
-                                        setSearchQuery(suggestion);
-                                    }}
-                                >
-                                    <img src={icon} className='absolute inset-0 my-auto left-3' />
-                                    {suggestion}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                </div>
+                <SearchInput />
             </div>
 
             <div className='absolute bottom-10 right-10 left-[65%] flex items-center gap-8'>
