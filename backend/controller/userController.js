@@ -69,8 +69,11 @@ module.exports.getSavedVideos = async (req, res) => {
 
         const email = req.user;
 
-        // 2. Find the user and populate the saved videos.
-        const user = await siteUsersDB.findOne({email}).populate('saved');  //  Populate
+        // 2. Find the user and populate the saved videos, selecting specific fields.
+        const user = await siteUsersDB.findOne({ email }).populate({
+            path: 'saved',
+            select: '-URL', //  Exclude URL.  This is the corrected way to exclude a field.
+        });
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
@@ -80,7 +83,7 @@ module.exports.getSavedVideos = async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Saved videos retrieved successfully',
-            savedVideos: user.saved, //  Send the populated saved videos
+            savedVideos: user.saved,
         });
 
     } catch (error) {
@@ -88,3 +91,4 @@ module.exports.getSavedVideos = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error getting saved videos', error: error.message });
     }
 };
+
