@@ -11,7 +11,7 @@ const RequireAuth = () => {
 
             ? <Outlet />
             // : auth?.user
-                :  <Navigate to="/admin" state={{ from: location }} replace />
+                :  <Navigate to="/" state={{ from: location }} replace />
                 // <Navigate to="/unauthorized" state={{ from: location }} replace />
                 
     );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
@@ -6,6 +6,10 @@ import SignUp from "./SignUp/SignUp";
 const Subscribe = () => {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <div className="p-10 min-h-[calc(100vh-160px)] flex flex-col gap-[64px] justify-center">

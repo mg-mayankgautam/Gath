@@ -11,8 +11,8 @@ import useAuth from "../../hooks/useAuth";
 import { useGoogleLogin } from '@react-oauth/google'; // Correct usage
 
 const SignIn = ({ setShowModal }) => {
-      const [loading, setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
+
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const { darkMode } = useTheme();
@@ -57,6 +57,7 @@ const SignIn = ({ setShowModal }) => {
       console.log(decodedToken);
       setAuth(decodedToken);
       navigate("/dashboard");
+      setShowModal(false);
     } catch (error) {
       console.error("Wrong Credentials", error);
     }
@@ -106,11 +107,10 @@ const SignIn = ({ setShowModal }) => {
     <div className="bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow">
       <div className="bigscreen max-h-[100vh] h-[100vh] p-10">
         <div
-          className={`relative max-w-[1024px] mx-auto h-full max-h-full border p-8 ${
-            darkMode
+          className={`relative max-w-[1024px] mx-auto h-full max-h-full border p-8 ${darkMode
               ? "bg-[#10130D] border-[#1E1E1E]"
               : "bg-white border-[#CBCBCB]"
-          } shadow grid grid-cols-2 !gap-8`}
+            } shadow grid grid-cols-2 !gap-8`}
         >
           <div
             className="cursor-pointer h-8 absolute top-4 right-4"

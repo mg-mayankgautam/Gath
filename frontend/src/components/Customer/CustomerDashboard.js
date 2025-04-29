@@ -17,45 +17,50 @@ const CustomerDashboard = () => {
 
   useEffect(() => {
     const getsavedVideos = async () => {
-      const token = auth.RawToken;
+      const token = auth?.RawToken;
 
-      const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/getsavedvideos`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Replace with your actual token
-          },
-        }
-      );
+      if (!token) {
+        console.warn("No auth token found. Aborting request.");
+        return;
+      }
 
-      setSavedClips(response.data.savedVideos);
-
-      //
-
-      //
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/user/getsavedvideos`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setSavedClips(response.data.savedVideos);
+      } catch (error) {
+        console.error("Error fetching saved videos:", error?.response || error);
+      }
     };
 
     getsavedVideos();
-  }, []);
+  }, [auth]);
+
 
 
   const handleRemoveSaved = async (clipId) => {
     try {
       const token = auth.RawToken;
-  
+
       await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/user/removesaved/${clipId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-  
+
       setSavedClips((prev) => prev.filter((clip) => clip._id !== clipId));
     } catch (error) {
       console.error("Failed to remove clip from saved:", error);
     }
   };
-  
+
 
   return (
     <div className="min-h-screen">
@@ -92,11 +97,10 @@ const CustomerDashboard = () => {
           ].map((tab) => (
             <div
               key={tab.id}
-              className={`py-2 px-4 font-medium focus:outline-none border-b-2 cursor-pointer transition-all duration-250 ease-in-out ${
-                activeTab === tab.id
+              className={`py-2 px-4 font-medium focus:outline-none border-b-2 cursor-pointer transition-all duration-250 ease-in-out ${activeTab === tab.id
                   ? "text-[var(--primary)] border-[var(--primary)]"
                   : "text-[var(--grey)] hover:text-white border-transparent"
-              }`}
+                }`}
               onClick={() => setActiveTab(tab.id)}
             >
               {tab.label}
@@ -115,21 +119,19 @@ const CustomerDashboard = () => {
             <>
               <div className="flex justify-end mb-4 gap-2">
                 <button
-                  className={`px-4 py-2 rounded border ${
-                    savedViewMode === "grid"
+                  className={`px-4 py-2 rounded border ${savedViewMode === "grid"
                       ? "bg-[var(--primary)] text-white"
                       : "bg-transparent text-[var(--grey)]"
-                  }`}
+                    }`}
                   onClick={() => setSavedViewMode("grid")}
                 >
                   Grid View
                 </button>
                 <button
-                  className={`px-4 py-2 rounded border ${
-                    savedViewMode === "list"
+                  className={`px-4 py-2 rounded border ${savedViewMode === "list"
                       ? "bg-[var(--primary)] text-white"
                       : "bg-transparent text-[var(--grey)]"
-                  }`}
+                    }`}
                   onClick={() => setSavedViewMode("list")}
                 >
                   List View
@@ -137,68 +139,68 @@ const CustomerDashboard = () => {
               </div>
 
               {savedViewMode === 'grid' ? (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {savedClips.map((clip) => (
-      <div
-        key={clip._id}
-        className={`border rounded-xl p-4 shadow-md ${darkMode ? 'bg-[#2c2c2c] text-white' : 'bg-white text-black'}`}
-      >
-        <div className="aspect-video rounded overflow-hidden mb-4">
-          <video
-            src={clip.previewURL}
-            className="w-full h-full object-cover rounded"
-            muted
-            loop
-            preload="metadata"
-            controls
-          />
-        </div>
-        <h3 className="text-lg font-semibold mb-2 truncate">{clip.name}</h3>
-        <div className="text-sm text-[var(--grey)] mb-2">
-          Duration: {clip.duration}s • Size: {parseFloat(clip.fileSizeInMB).toFixed(1)} MB
-        </div>
-        <button
-          className="text-sm text-red-500 hover:underline"
-          onClick={() => handleRemoveSaved(clip._id)}
-        >
-          Remove from Saved
-        </button>
-      </div>
-    ))}
-  </div>
-) : (
-  <div className="space-y-4">
-    {savedClips.map((clip) => (
-      <div
-        key={clip._id}
-        className={`flex gap-4 items-center border rounded-xl p-4 shadow-md ${darkMode ? 'bg-[#2c2c2c] text-white' : 'bg-white text-black'}`}
-      >
-        <div className="w-48 aspect-video rounded overflow-hidden">
-          <video
-            src={clip.previewURL}
-            className="w-full h-full object-cover rounded"
-            muted
-            loop
-            preload="metadata"
-            controls
-          />
-        </div>
-        <div className="flex flex-col justify-between gap-2 flex-1">
-          <h3 className="text-lg font-semibold">{clip.name}</h3>
-          <div className="text-sm text-[var(--grey)]">
-            Duration: {clip.duration}s • Size: {parseFloat(clip.fileSizeInMB).toFixed(1)} MB
-          </div>
-          <button
-            className="text-sm text-red-500 hover:underline self-start"
-            onClick={() => handleRemoveSaved(clip._id)}
-          >
-            Remove from Saved
-          </button>
-        </div>
-      </div>
-    ))}
-  </div>
-)}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {savedClips.map((clip) => (
+                    <div
+                      key={clip._id}
+                      className={`border rounded-xl p-4 shadow-md ${darkMode ? 'bg-[#2c2c2c] text-white' : 'bg-white text-black'}`}
+                    >
+                      <div className="aspect-video rounded overflow-hidden mb-4">
+                        <video
+                          src={clip.previewURL}
+                          className="w-full h-full object-cover rounded"
+                          muted
+                          loop
+                          preload="metadata"
+                          controls
+                        />
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2 truncate">{clip.name}</h3>
+                      <div className="text-sm text-[var(--grey)] mb-2">
+                        Duration: {clip.duration}s • Size: {parseFloat(clip.fileSizeInMB).toFixed(1)} MB
+                      </div>
+                      <button
+                        className="text-sm text-red-500 hover:underline"
+                        onClick={() => handleRemoveSaved(clip._id)}
+                      >
+                        Remove from Saved
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {savedClips.map((clip) => (
+                    <div
+                      key={clip._id}
+                      className={`flex gap-4 items-center border rounded-xl p-4 shadow-md ${darkMode ? 'bg-[#2c2c2c] text-white' : 'bg-white text-black'}`}
+                    >
+                      <div className="w-48 aspect-video rounded overflow-hidden">
+                        <video
+                          src={clip.previewURL}
+                          className="w-full h-full object-cover rounded"
+                          muted
+                          loop
+                          preload="metadata"
+                          controls
+                        />
+                      </div>
+                      <div className="flex flex-col justify-between gap-2 flex-1">
+                        <h3 className="text-lg font-semibold">{clip.name}</h3>
+                        <div className="text-sm text-[var(--grey)]">
+                          Duration: {clip.duration}s • Size: {parseFloat(clip.fileSizeInMB).toFixed(1)} MB
+                        </div>
+                        <button
+                          className="text-sm text-red-500 hover:underline self-start"
+                          onClick={() => handleRemoveSaved(clip._id)}
+                        >
+                          Remove from Saved
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
             </>
           )}
