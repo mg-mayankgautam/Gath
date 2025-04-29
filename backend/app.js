@@ -1,155 +1,149 @@
+// app.js
 require("dotenv").config();
-const path = require('path');
 const express = require('express');
 const app = express();
-
 const PORT = process.env.PORT || 4700;
-
-const bodyparser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const siteUsersDB = require('./models/siteUsersDB.js');
+const axios = require('axios');
+// Google OAuth2 client
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// Middleware Setup
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyparser.json());
-app.use(bodyparser.json({ limit: "50mb" }));
-app.use(bodyparser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb", parameterLimit: 50000 }));
 
+// CORS Configuration
 const allowedOrigins = [
     "https://shotkut.vercel.app",
     "https://shotkut.com",
     "https://www.shotkut.com",
     "http://localhost:3456",
-    "http://localhost:3001"
+    "http://localhost:3001",
+    "http://localhost:3000"
 ];
 
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
-        },
-        credentials: true,
-    })
-);
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 
+// Cookie Debugging Middleware
 app.use((req, res, next) => {
-    const requestOrigin = req.headers.origin;
-
-    if (allowedOrigins.includes(requestOrigin)) {
-        res.setHeader("Access-Control-Allow-Origin", requestOrigin);
-        res.setHeader("Access-Control-Allow-Credentials", "true"); // Explicitly set this header
-    }
-
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS"
-    );
     next();
 });
 
+// --- GOOGLE AUTH NEW FLOW ---
+app.post('/auth/google', async (req, res) => {
+    console.log("Received /auth/google request body:", req.body); // ✅ Log 6
+    const { credential } = req.body;
+    
+    try {
+        // Call Google API here to verify access token and fetch user profile
+        const googleUserInfo = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo`, {
+            headers: {
+                Authorization: `Bearer ${credential}`,
+            },
+        });
+        
+        console.log("Fetched Google User Info:", googleUserInfo.data); // ✅ Log 7
 
+        const { email, given_name, family_name } = googleUserInfo.data;
 
+        let user = await siteUsersDB.findOne({ email });
 
-// require("dotenv").config();
+        if (!user) {
+            user = new siteUsersDB({
+                firstName: given_name,
+                lastName: family_name,
+                email: email,
+                password: '', // Google user — no password
+                role: 'USER',
+            });
+            console.log("Creating new user...");
+        } else {
+            console.log("Existing user found:", user);
+        }
+        
+        // Now generate your accessToken and refreshToken
+        const accessToken = jwt.sign(
+            {        
+                userId: user._id,
+                username: user.email,
+                role: user.role,
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "15m" }
+        );
+        
+        // ✅ IMPORTANT: Create the refresh token
+        const refreshToken = jwt.sign(
+            {
+                _id: user._id,
+                email: user.email,
+                role: user.role,
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: "1d" }
+        );
+        
+        // ✅ Save the refresh token into DB
+        user.refreshToken = refreshToken;
+        await user.save();
+        console.log("Saved refresh token for user:", user.email);
+        
+        // ✅ Send refresh token as httpOnly cookie
+        res.cookie("jwt", refreshToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            path: "/",
+        });
+        
+        // ✅ Send accessToken to client in response
+        res.json({ accessToken });
 
-// const path = require('path');
-// const express = require('express');
-// const app = express();
+        console.log("Sent back access token"); // ✅ Log 10
+    } catch (error) {
+        console.error("Error in /auth/google route:", error); // ✅ Log 11
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
-// const PORT = process.env.PORT || 4700;
+// --- GOOGLE AUTH NEW FLOW END ---
 
-// const bodyparser = require('body-parser');//use with axios 
-
-// const cors = require('cors');
-// const cookieParser = require('cookie-parser');
-// const mongoose = require('mongoose');
-
-// app.use(cookieParser())
-
-
-
-// app.use(express.urlencoded({ extended: true }));
-// app.use(bodyparser.json());
-// app.use(bodyparser.json({ limit: "50mb" }));
-// app.use(bodyparser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-// app.use(express.json());
-
-
-// // List of allowed origins
-// const allowedOrigins = [
-//     // "https://www.moheerajewels.com",
-//     "https://shotkut.vercel.app",
-//     "https://shotkut.com",
-//     "https://www.shotkut.com",
-//     "http://localhost:3456",
-//     "http://localhost:3001"
-// ];
-
-// // Use `cors` middleware
-// app.use(
-//     cors({
-//         origin: (origin, callback) => {
-//             if (!origin || allowedOrigins.includes(origin)) {
-//                 callback(null, true); // Allow if origin matches or is null (server-to-server requests)
-//             } else {
-//                 callback(new Error("Not allowed by CORS"));
-//             }
-//         },
-//         credentials: true, // Allow credentials
-//     })
-// );
-
-// // Custom middleware to set headers manually
-// app.use((req, res, next) => {
-//     const requestOrigin = req.headers.origin;
-
-//     // Dynamically set Access-Control-Allow-Origin if origin is allowed
-//     if (allowedOrigins.includes(requestOrigin)) {
-//         res.setHeader("Access-Control-Allow-Origin", requestOrigin);
-//     }
-
-//     res.setHeader(
-//         "Access-Control-Allow-Headers",
-//         "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//     );
-//     res.setHeader(
-//         "Access-Control-Allow-Methods",
-//         "GET, POST, PUT, DELETE, OPTIONS"
-//     );
-//     next();
-// });
-
-
-
+// Routes
 const videosRouter = require('./routes/videos.js');
-app.use('/videos', videosRouter);
-
 const authRouter = require('./routes/auth.js');
-app.use('/auth', authRouter);
-
 const refreshRouter = require('./routes/refresh.js');
+const UserRouter = require('./routes/user.js')
+
+app.use('/videos', videosRouter);
+app.use('/auth', authRouter);
 app.use('/refresh', refreshRouter);
+app.use('/user',UserRouter)
 
-
-
-mongoose.connect(process.env.MONGODB_URL, {
-    autoIndex: true // Enable automatic index creation
-})
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`https://localhost:` + PORT);
+// Database Connection
+mongoose.connect(process.env.MONGODB_URL, { autoIndex: true })
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server running on http://localhost:${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error("MongoDB connection error:", err);
     });
-  })
-  .catch(err => {
-    console.error("MongoDB connection error:", err);
-  });

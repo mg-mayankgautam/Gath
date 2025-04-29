@@ -19,9 +19,9 @@ const AdminDashboard = () => {
     const [selectedVideoModal, setSelectedVideoModal] = useState(false);
     console.log(videos);
     let topVideos = [];
-    useEffect(() => {
-         topVideos = [...videos].sort((a, b) => b.views - a.views).slice(0, 5);
-    }, [videos])
+    // useEffect(() => {
+    //      topVideos = [...videos].sort((a, b) => b.views - a.views).slice(0, 5);
+    // }, [videos])
     
     const barChartData = [
         { name: "Page A", views: 400 },

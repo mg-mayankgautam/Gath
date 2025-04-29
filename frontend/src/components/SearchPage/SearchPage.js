@@ -5,9 +5,13 @@ import { Link } from 'react-router-dom'
 import Video from '../HomePage/Video'
 import { useTheme } from '../../context/ThemeProvider'
 import TrendingSearch from '../HomePage/TrendingSearch'
+import { useSearchParams } from 'react-router-dom';
 
 const SearchPage = () => {
 
+
+    const [searchParams] = useSearchParams();
+    const [keyword, setKeyword] = useState('');
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
@@ -17,22 +21,33 @@ const SearchPage = () => {
     const [filteredVideos, setFilteredVideos] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
 
-    useEffect(() => {
 
-        const getData = async () => {
-            try {
-                const data = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/videos/get`)
-
-                console.log(data.data);
-                setFilteredVideos(data.data);
-                // setAllProducts(data.data);
-            }
-            catch (error) { console.log('There was an error getting the videos!', error); }
+      useEffect(() => {
+    const term = searchParams.get('term');
+    if (term) {
+      console.log("Extracted keyword:", term);
+      setKeyword(term);
+      // Now, fetch videos based on this term
+      const fetchFilteredVideos = async (searchTerm) => {
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BACKEND_URL}/videos/getsearchvideos?term=${encodeURIComponent(searchTerm)}`
+          );
+          console.log("Filtered videos:", response.data);
+          setFilteredVideos(response.data);
+        } catch (error) {
+          console.error("Error fetching filtered videos:", error);
+          setFilteredVideos([]); // Or handle the error appropriately
         }
+      };
 
-        getData();
-
-    }, [])
+      fetchFilteredVideos(term);
+    } else {
+      // Handle the case where there is no search term in the URL
+      console.log("No search term in URL.");
+      setFilteredVideos([]); // Or perhaps fetch all videos if that's the default behavior
+    }
+  }, [searchParams]); // Re-run when searchParams change
 
     return (
         <div className='bigscreen p-10'>

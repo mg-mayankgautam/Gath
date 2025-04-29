@@ -7,31 +7,59 @@ import { Link, useLocation } from 'react-router-dom';
 import SignIn from '../SignIn/SignIn';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '../../context/ThemeProvider';
+import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Nav = () => {
-
-
+  const navigate=useNavigate();
+  const {auth}=useAuth();
+  console.log(auth)
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const location = useLocation();
   const { darkMode } = useTheme();
 
+  const logout = async() =>{
+    console.log('clicked logout')
+    try {
+     const response= await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`);
+      if (response.data) {
+        window.location.reload();
+        navigate('/');
+      }
+  } catch (error) {
+      console.error("Error changing password:", error);
+  }
+
+  }
 
   return (
     <>
       <div className={darkMode ? 'NavContainer dark' : 'NavContainer'}>
         <div className={'Nav bigscreen'}>
-          <Link className='navLogo' to='/'>
+          {auth.role == 'ADMIN' ?<Link className='navLogo' >
+            <img src={darkMode ? logowhite : logo} className='object-contain h-full' />
+          </Link>:<Link className='navLogo' to='/'>
             <img src={darkMode ? logowhite : logo} className='object-contain h-full' />
           </Link>
+          }
+          
 
           <div className='hidden md:flex gap-6 items-center ml-auto'>
             <Link to='/pricing'>
               <div className='navBtn hover:text-[var(--primary)] transition-all duration-250'>Pricing</div>
             </Link>
 
+
+
             {location.pathname === '/dashboard' ?
-              <div className='navBtn hover:text-[var(--primary)] transition-all duration-250'>Logout</div>
+              <div 
+              onClick={()=>logout()}
+              
+              className='navBtn hover:text-[var(--primary)] transition-all duration-250'>
+                Logout
+              </div>
               :
 
               <div className='navBtn hover:text-[var(--primary)] transition-all duration-250'

@@ -1,12 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import profile from '../../assets/sampleprofile.png'
 import { useTheme } from '../../context/ThemeProvider';
+import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
 
 const CustomerDashboard = () => {
+
+        const {auth}=useAuth();
+        console.log(auth)
+
+    
 
     const { darkMode } = useTheme();
 
     const [activeTab, setActiveTab] = useState('downloads');
+
+    useEffect(() => {
+      
+ 
+        const getsavedVideos = async()=>{
+            const token = auth.RawToken;
+    
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/user/getsavedvideos`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Replace with your actual token
+    
+                }
+            });
+    
+    
+    //
+           
+    
+            //
+            
+        }
+
+        getsavedVideos();
+
+    }, [])
+    
 
 
     return (
@@ -25,7 +59,7 @@ const CustomerDashboard = () => {
                             Name
                         </div>
                         <div className='text-[var(--grey)] text-xl'>
-                            user.name@gmail.com
+                            {auth.username}
                         </div>
                     </div>
 

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import Nav from './components/Nav/Nav';
 import Footer from './components/Footer/Footer';
 import useAuth from './hooks/useAuth';
+import { jwtDecode } from 'jwt-decode';
 
 
 const Layout = () => {
@@ -23,22 +24,26 @@ const Layout = () => {
       try {
         console.log('inside check auth',auth)
 
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/refresh`,);
-        // console.log(response)
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/refresh`, {
+          withCredentials: true
+        });          // console.log(response)
         const token = response.data.accessToken;
         // // Split the token and taken the second
 
-        const base64Url = token?.split(".")[1];
+        const decodedToken = jwtDecode(token); // Decode the JWT
+        console.log(decodedToken.username)
+
+       // const base64Url = token?.split(".")[1];
 
         // // Replace "-" with "+"; "_" with "/"
-        const base64 = base64Url?.replace("-", "+").replace("_", "/");
+      //  const base64 = base64Url?.replace("-", "+").replace("_", "/");
 
-        const TokenDataWithoutToken = JSON.parse(window?.atob(base64));
-        console.log('Response:', TokenDataWithoutToken);
+      //  const TokenDataWithoutToken = JSON.parse(window?.atob(base64));
+     //   console.log('Response:', TokenDataWithoutToken);
 
-        const Role = TokenDataWithoutToken.role
+        const Role = decodedToken.role
 
-        const TokenData = { username: TokenDataWithoutToken.username, role: TokenDataWithoutToken.role, RawToken: token }
+        const TokenData = { username: decodedToken.username, role: decodedToken.role, RawToken: token }
 
         try {
           if (Role) {

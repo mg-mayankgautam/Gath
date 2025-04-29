@@ -27,6 +27,7 @@ const Footer = () => {
                     <Link to='/about' className='hover:text-[var(--primary)]'>About Us</Link>
                     <Link to='/pricing' className='hover:text-[var(--primary)]'>Our Pricing & Plans</Link>
                     <Link to='/faqs' className='hover:text-[var(--primary)]'>FAQs</Link>
+                    <Link to='/contactus' className='hover:text-[var(--primary)]'>Contact Us</Link>
                     {/* <Link to='/category/one'>Categories</Link> */}
 
                 </div>
@@ -38,7 +39,8 @@ const Footer = () => {
                     <Link to='/privacypolicy' className='hover:text-[var(--primary)]'>Privacy Policy</Link>
                     <Link to='/termsandconditions' className='hover:text-[var(--primary)]'>Terms and Conditions</Link>
                     <Link to='/refundpolicy' className='hover:text-[var(--primary)]'>Cancellation and Refund</Link>
-
+                    <Link to='/shipmentanddelivery' className='hover:text-[var(--primary)]'>Shipment and Delivery</Link>
+                    
                 </div>
 
             </div>

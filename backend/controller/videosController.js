@@ -266,11 +266,24 @@ async function addWatermark(inputVideoPath, watermarkImagePath, outputVideoPath)
 
 module.exports.postVideo = async (req, res) => {
     try {
-        console.log("Reached post video controller");
+        console.log("Reached post video controller",req.body);
 
         const name = req.body.name;
+        const filesize=req.body.fileSize;
+        const fileSizeInMB = Number(filesize) / (1024 * 1024);
+
+        const fileType=req.body.fileType;
+        const duration=req.body.duration;
+        const videoWidth=req.body.videoWidth;
+        const videoHeight=req.body.videoHeight;
+
         const tags = JSON.parse(req.body.tags);
         const video = req.files[0];
+
+
+
+
+
 
         console.log(name, tags, video);
         const tmpDir = path.join(__dirname, '../tmp');
@@ -366,8 +379,17 @@ module.exports.postVideo = async (req, res) => {
             waterMarkedVideoURL: watermarkedVideoURL, // Save the watermarked URL
             name,
             tags,
+            theme: [],
             views: 0,
+            filesize,
+            fileSizeInMB,
+            fileType,
+            duration,
+            videoWidth,videoHeight
         });
+
+
+       
 
         await newVideo.save();
 
@@ -485,21 +507,96 @@ module.exports.postVideo = async (req, res) => {
 // const URL ='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
 
 
+// module.exports.getVideos = async (req, res) => {
+
+//     videosDB.find({})
+//         .then((videos) => {
+//             // console.log(loveLetters);
+//             res.send(videos);
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             res.status(500).json({ error: "Failed to get love letters" });
+//         });
+
+// }
+
 module.exports.getVideos = async (req, res) => {
+    const { page = 1, limit = 9 } = req.query; // Default page to 1, limit to 9
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const skip = (pageNumber - 1) * limitNumber;
 
-    videosDB.find({})
-        .then((videos) => {
-            // console.log(loveLetters);
-            res.send(videos);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: "Failed to get love letters" });
+    try {
+        const videos = await videosDB.find({})
+            .skip(skip)
+            .limit(limitNumber);
+
+        const totalVideos = await videosDB.countDocuments({});
+        const totalPages = Math.ceil(totalVideos / limitNumber);
+
+        res.status(200).json({
+            videos,
+            totalPages,
+            currentPage: pageNumber,
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to get videos" });
+    }
+};
 
-}
+module.exports.getSearchVideos = async (req, res) => {
+    console.log('reached getSearchVideos');
+    console.log('Request Query:', req.query);
+  
+    const searchQuery = req.query.term;
+  
+    if (searchQuery) {
+      console.log('Search Query:', searchQuery);
+  
+      const keywords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean); // Split, lowercase, and remove empty strings
+  
+      if (keywords.length === 1) {
+        // Scenario 1: Single keyword - use the case-insensitive substring search
+        const singleKeyword = keywords[0];
+        try {
+          const videosWithTag = await videosDB.find({
+            tags: { $regex: new RegExp(singleKeyword, 'i') }
+          });
+          console.log('Videos with single tag:', videosWithTag);
+          res.send(videosWithTag);
+        } catch (error) {
+          console.error('Error fetching videos by single tag:', error);
+          res.status(500).send('Error fetching videos.');
+        }
+      } else if (keywords.length > 1) {
+        // Scenario 2: Multiple keywords - use $all with case-insensitive regex for each keyword
+        try {
+          const matchingVideos = await videosDB.find({
+            tags: {
+              $all: keywords.map(keyword => new RegExp(keyword, 'i'))
+            }
+          });
+          console.log('Matching Videos (all keywords):', matchingVideos);
+          res.send(matchingVideos);
+        } catch (error) {
+          console.error('Error fetching videos by all keywords:', error);
+          res.status(500).send('Error fetching videos.');
+        }
+      } else {
+        // Scenario 3: No keywords (empty search) - you might want to handle this differently
+        console.log('No keywords in search query.');
+        res.send([]); // Or perhaps return all videos, or a message
+      }
+    } else {
+      console.log('No search query provided.');
+      res.status(400).send('Search query is required.');
+    }
+  };
 
-module.exports.addView = async (req, res) => {
+
+  module.exports.addView = async (req, res) => {
     const { id } = req.body;
 
     if (!id) {
@@ -509,11 +606,12 @@ module.exports.addView = async (req, res) => {
     try {
         const updatedVideo = await videosDB.findOneAndUpdate(
             { _id: id },
-            {
-                $inc: { views: 1 } // Increment views if document exists
-                // $setOnInsert: { views: 1 } // Set views to 1 ONLY if a new document is inserted
-            },
-            { new: true, upsert: true }
+            { $inc: { views: 1 } },
+            { 
+                new: true,
+                upsert: true,
+                select: '-URL' // This is the key change
+            }
         );
 
         if (!updatedVideo) {
@@ -529,7 +627,6 @@ module.exports.addView = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error.' });
     }
 };
-
 
 
 module.exports.editInfo = async (req, res) => {

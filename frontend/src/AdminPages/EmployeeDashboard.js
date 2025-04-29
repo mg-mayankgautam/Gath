@@ -53,8 +53,51 @@ const EmployeeDashboard = () => {
         }
     };
 
+
+
+    // const handleUpload = async () => {
+    //     console.log(tags)
+
+    //     if (!file1 || tags.length === 0 || !name) {
+    //         toast.error("Please select a video file and add at least one tag.");
+    //         return;
+    //     }
+
+    //     setIsUploading(true); // Show loader
+
+    //     const formData = new FormData();
+    //     formData.append("video", file1);
+    //     formData.append("name", name);
+    //     formData.append("tags", JSON.stringify(tags)); // Convert tags array to JSON string
+    //     try {
+    //         const response = await axios.post(
+    //             `${process.env.REACT_APP_BACKEND_URL}/videos/post`,
+    //             formData,
+    //             { headers: { "Content-Type": "multipart/form-data" } }
+    //         );
+
+    //         if (response.data) {
+    //             console.log("Upload successful:", response.data);
+    //             toast.success("Video uploaded successfully!");
+    //             setFile1(null);
+    //             setTags([]);
+    //             setTagInput("");
+    //             setName("");
+    //         } else {
+    //             toast.error("Failed to upload video.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Upload failed:", error);
+    //         toast.error("Failed to upload video.");
+    //     }
+    //     finally {
+    //         setIsUploading(false); // Hide loader
+    //     }
+    // };
+
+
     const handleUpload = async () => {
-        console.log(tags)
+        console.log(tags);
 
         if (!file1 || tags.length === 0 || !name) {
             toast.error("Please select a video file and add at least one tag.");
@@ -67,30 +110,73 @@ const EmployeeDashboard = () => {
         formData.append("video", file1);
         formData.append("name", name);
         formData.append("tags", JSON.stringify(tags)); // Convert tags array to JSON string
-        try {
-            const response = await axios.post(
+
+        // Extract additional file information
+        formData.append("fileSize", file1.size);
+        formData.append("fileType", file1.type);
+
+        // Extract video metadata (duration, width, height)
+        const videoURL = URL.createObjectURL(file1);
+        const videoElement = document.createElement('video');
+
+        videoElement.addEventListener('loadedmetadata', async () => {
+            console.log('inside event listener')
+            formData.append("duration", videoElement.duration);
+            formData.append("videoWidth", videoElement.videoWidth);
+            formData.append("videoHeight", videoElement.videoHeight);
+            URL.revokeObjectURL(videoURL); // Clean up
+
+            try {
+                const response = await axios.post(
+                    `${process.env.REACT_APP_BACKEND_URL}/videos/post`,
+                    formData,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+
+                if (response.data) {
+                    console.log("Upload successful:", response.data);
+                    toast.success("Video uploaded successfully!");
+                    setFile1(null);
+                    setTags([]);
+                    setTagInput("");
+                    setName("");
+                } else {
+                    toast.error("Failed to upload video.");
+                }
+            } catch (error) {
+                console.error("Upload failed:", error);
+                toast.error("Failed to upload video.");
+            } finally {
+                setIsUploading(false); // Hide loader
+            }
+        });
+
+       // Fallback in case metadata doesn't load quickly
+        videoElement.onerror = () => {
+            URL.revokeObjectURL(videoURL);
+            axios.post(
                 `${process.env.REACT_APP_BACKEND_URL}/videos/post`,
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
-            );
-
-            if (response.data) {
-                console.log("Upload successful:", response.data);
-                toast.success("Video uploaded successfully!");
-                setFile1(null);
-                setTags([]);
-                setTagInput("");
-                setName("");
-            } else {
+            ).then(response => {
+                if (response.data) {
+                    toast.success("Video uploaded successfully (metadata could not be extracted).");
+                    setFile1(null);
+                    setTags([]);
+                    setTagInput("");
+                    setName("");
+                } else {
+                    toast.error("Failed to upload video.");
+                }
+            }).catch(error => {
+                console.error("Upload failed:", error);
                 toast.error("Failed to upload video.");
-            }
-        } catch (error) {
-            console.error("Upload failed:", error);
-            toast.error("Failed to upload video.");
-        }
-        finally {
-            setIsUploading(false); // Hide loader
-        }
+            }).finally(() => {
+                setIsUploading(false); // Ensure loader is hidden even on error
+            });
+        };
+
+        videoElement.src = videoURL;
     };
 
 

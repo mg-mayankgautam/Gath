@@ -5,8 +5,11 @@ import icon2 from '../../assets/icons/add2.svg'
 import icon3 from '../../assets/icons/download3.svg'
 import useAuth from '../../hooks/useAuth';
 import { useTheme } from '../../context/ThemeProvider';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Video = ({ video }) => {
+    const navigate = useNavigate();
     const videoRef = useRef(null);
     let hoverTimeout = null;
 
@@ -32,10 +35,46 @@ const Video = ({ video }) => {
     const [activeModal, setActiveModal] = useState(null); // null | 'similar' | 'add' | 'download'
 
     const handleIconClick = (type) => {
-        setActiveModal(type);
+        console.log(type)
+
+        if(type=='add'){
+            console.log(auth);
+
+            if(!auth.role){
+                console.log('no auth found')
+                navigate('/subscribe');}
+            else{
+                setActiveModal('add');
+
+            }
+        }
+        else{
+            setActiveModal(type);
+        }
     };
 
     const closeModal = () => setActiveModal(null);
+
+    const saveVideo = async()=>{
+        const token = auth.RawToken;
+
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/user/save`, {  // Changed endpoint
+            id:video._id
+          },{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`, // Replace with your actual token
+
+            }
+        });
+
+
+//
+       
+
+        //
+        console.log(video)
+    }
 
     const renderModalContent = () => {
         if (!auth || Object.keys(auth).length === 0) {
@@ -60,7 +99,9 @@ const Video = ({ video }) => {
                     <>
                         <h2 className="text-lg font-semibold mb-4 capitalize">Add to Collection</h2>
                         <p className="text-sm">Are you sure you want to add this video to your Collection?</p>
-                        <button className="greenButton">Add</button>
+                        <button className="greenButton"
+                        onClick={()=>saveVideo()}
+                        >Add</button>
                     </>
                 );
             case "download":

@@ -20,6 +20,14 @@ import PaymentPage from './components/Pricing/PaymentPage';
 import Faqs from './components/About/Faqs';
 import SearchPage from './components/SearchPage/SearchPage';
 import CustomerDashboard from './components/Customer/CustomerDashboard';
+import Subscribe from './components/Subscribe';
+import ShipmentDelivery from './components/PolicyPages/ShipmentDelivery';
+import ContactUs from './components/ContactUs';
+
+//
+import AdminCreate from './AdminCreate';
+//
+
 
 function App() {
 
@@ -40,19 +48,23 @@ function App() {
 
           </Route>
 
-          <Route path="user/:id" element={<CustomerDashboard />} />
+          {/* <Route path="user/:id" element={<CustomerDashboard />} /> */}
 
           <Route path="search" element={<SearchPage />} />
 
           <Route path="category/:id" element={<CategoryPage />} />
           <Route path="pricing" element={<Pricing />} />
+          <Route path="subscribe" element={<Subscribe />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="payment" element={<PaymentPage />} />
           <Route path="faqs" element={<Faqs />} />
+          <Route path="contactus" element={<ContactUs />} />
 
           <Route path="privacypolicy" element={<Privacy />} />
           <Route path="termsandconditions" element={<Terms />} />
           <Route path="refundpolicy" element={<Refund />} />
+          <Route path="shipmentanddelivery" element={<ShipmentDelivery />} />
+          <Route path="admincreate" element={<AdminCreate />} />
 
 
         </Route>
