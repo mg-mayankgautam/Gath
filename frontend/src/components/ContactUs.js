@@ -58,7 +58,7 @@ const ContactUs = () => {
           {/* <button className="greenButton mt-6">Start Browsing</button> */}
           <div className="text-[18px] font-semibold my-4">
             <a href="mailto:support@shotkut.com">support@shotkut.com</a> <br />{" "}
-            +91 23452 56566
+            +91 97179 14147
           </div>
         </div>
 
