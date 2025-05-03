@@ -1,94 +1,86 @@
-import React, { useState } from 'react'
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect } from 'react';
-import Nav from './components/Nav/Nav';
-import Footer from './components/Footer/Footer';
-import useAuth from './hooks/useAuth';
-import { jwtDecode } from 'jwt-decode';
-
+import React, { useState, useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import Nav from "./components/Nav/Nav";
+import Footer from "./components/Footer/Footer";
+import useAuth from "./hooks/useAuth";
+// import LoadingSpinner from "./components/LoadingSpinner"; // Create this component
 
 const Layout = () => {
   const location = useLocation();
-
-  axios.defaults.withCredentials = true
-  const { auth } = useAuth();
-  const { setAuth } = useAuth();
   const navigate = useNavigate();
-  console.log(auth)
+  const { auth, setAuth } = useAuth();
+  const [authChecked, setAuthChecked] = useState(false);
+
+  const LoadingSpinner = () => (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
+  
+
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
+    let isMounted = true;
 
-    console.log('auth not present',auth)
     const checkauthentication = async () => {
       try {
-        console.log('inside check auth',auth)
-
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/refresh`, {
-          withCredentials: true
-        });          // console.log(response)
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/refresh`,
+          { withCredentials: true }
+        );
+        
         const token = response.data.accessToken;
-        // // Split the token and taken the second
-
-        const decodedToken = jwtDecode(token); // Decode the JWT
-        console.log(decodedToken.username)
-
-       // const base64Url = token?.split(".")[1];
-
-        // // Replace "-" with "+"; "_" with "/"
-      //  const base64 = base64Url?.replace("-", "+").replace("_", "/");
-
-      //  const TokenDataWithoutToken = JSON.parse(window?.atob(base64));
-     //   console.log('Response:', TokenDataWithoutToken);
-
-        const Role = decodedToken.role
-
-        const TokenData = { username: decodedToken.username, role: decodedToken.role, RawToken: token }
-
-        try {
-          if (Role) {
-            console.log(Role, 'brkpnt 2')
-            setAuth(TokenData);//isme role set nahi ho raha
-            console.log(Role, 'brkpnt 3')
-            // console.log(state.prev.pathname)
-            // Extract the section parameter from the URL
-            const params = new URLSearchParams(location.search);
-            const section = params.get('section') || 'section1'; // Default to section1 if no section is provided
-
-            // Navigate to the appropriate section
-            navigate(`/dashboard`);
-          }
-          else {
-            console.log(Role, 'role not found')
-          }
-        } catch (e) {
-          console.log('e', e);
+        const decodedToken = jwtDecode(token);
+        
+        if (isMounted) {
+          setAuth({
+            ...decodedToken,
+            RawToken: token
+          });
         }
+      } catch (e) {
+        console.log("Auth check failed:", e);
+        if (isMounted) {
+          // navigate('/');this line
+        }
+      } finally {
+        if (isMounted) {
+          setAuthChecked(true);
+        }
+      }
+    };
 
-      } catch (e) { console.log(e) }
+    if (!auth?.role) {
+      console.log('here')
+      checkauthentication();
+    } else {
+      setAuthChecked(true);
     }
 
-    if (!auth.role) checkauthentication();
-  }, [])
+    return () => {
+      isMounted = false;
+    };
+  }, [auth?.role, navigate, setAuth]);
 
-
+  if (!authChecked) {
+    return <LoadingSpinner />;
+  }
 
   return (
-
     <div className="App">
-
-      {!location.pathname.startsWith('/admin') &&
-        <Nav />
-      }
-
+      {!location.pathname.startsWith("/admin") && <Nav />}
       <Outlet />
-
-      {(!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/dashboard')) &&
-        <Footer />
-      }
+      {!location.pathname.startsWith("/admin") &&
+        !location.pathname.startsWith("/dashboard") && <Footer />}
     </div>
+  );
+};
 
-  )
-}
+export default Layout;
 
-export default Layout
+
+
+

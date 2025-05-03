@@ -4,55 +4,96 @@ import { useTheme } from "../../context/ThemeProvider";
 const PaymentPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+    fetchSavedAddress();
   }, []);
 
   const { darkMode } = useTheme();
   const [plan, setPlan] = useState("monthly");
+  const [savedAddress, setSavedAddress] = useState(null);
+  const [loadingAddress, setLoadingAddress] = useState(true);
+  const [saveDetails, setSaveDetails] = useState(false);
+  const [agreedToPolicy, setAgreedToPolicy] = useState(false);
+  const [policyError, setPolicyError] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "",
-    company: "",
-    country: "",
     address1: "",
     address2: "",
     city: "",
     state: "",
     zip: "",
-    gstin: "",
   });
 
   const [errors, setErrors] = useState({
-    name: "",
-    company: "",
-    country: "",
     address1: "",
     city: "",
     state: "",
     zip: "",
-    gstin: "",
   });
+
+  // Simulate fetching saved address from backend
+  const fetchSavedAddress = async () => {
+    setLoadingAddress(true);
+    try {
+      // Replace this with your actual API call to fetch saved address
+      const response = await fetch("/api/user/billing/address"); // Example API endpoint
+      if (response.ok) {
+        const data = await response.json();
+        setSavedAddress(data);
+        setFormData(data); // Populate form with saved address
+      } else {
+        setSavedAddress(null);
+      }
+    } catch (error) {
+      console.error("Error fetching saved address:", error);
+      setSavedAddress(null);
+    } finally {
+      setLoadingAddress(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
   };
 
+  const handleUseSavedAddress = () => {
+    if (savedAddress) {
+      setFormData(savedAddress);
+    }
+  };
+
   const handleSubmit = () => {
     let newErrors = {};
 
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.company.trim()) newErrors.company = "Company is required";
-    if (!formData.country.trim()) newErrors.country = "Country is required";
     if (!formData.address1.trim())
       newErrors.address1 = "Address Line 1 is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
     if (!formData.zip.trim()) newErrors.zip = "Zip Code is required";
-    if (!formData.gstin.trim()) newErrors.gstin = "GSTIN is required";
 
     setErrors(newErrors);
+    if (!agreedToPolicy) {
+      setPolicyError("Please agree to the Privacy Policy and Terms & Conditions before proceeding.");
+      return; // Prevent further submission
+    } else {
+      setPolicyError(""); // Clear the error if they have agreed
+    }
 
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors).length === 0 && agreedToPolicy) {
+      // Proceed with payment and potentially save details to backend
+      console.log("Form submitted:", formData, "Save Details:", saveDetails);
+      if (saveDetails) {
+        // Make API call to save billing details to backend
+        console.log("Saving billing details to backend:", formData);
+        // Example API call:
+        // fetch("/api/user/billing/address", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(formData),
+        // });
+      }
       // navigate("/dashboard");
     }
   };
@@ -62,15 +103,37 @@ const PaymentPage = () => {
       <div className="bigscreen p-10 grid grid-cols-2 !gap-10 justify-center">
         <div className="flex flex-col gap-4">
           <div className="font-bold text-3xl mb-6">Checkout</div>
+
+          {/* Saved Address Section */}
+          <div className="mb-4">
+            <div className="font-semibold mb-2">Saved Address</div>
+            {loadingAddress ? (
+              <div className="text-sm italic">Loading saved address...</div>
+            ) : savedAddress ? (
+              <div className="border p-4 rounded">
+                <p className="text-sm">{savedAddress.address1}</p>
+                {savedAddress.address2 && <p className="text-sm">{savedAddress.address2}</p>}
+                <p className="text-sm">
+                  {savedAddress.city}, {savedAddress.state} {savedAddress.zip}
+                </p>
+                <button
+                  onClick={handleUseSavedAddress}
+                  className="text-[var(--primary)] text-sm underline mt-2"
+                >
+                  Use this address
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm italic">No saved address found.</div>
+            )}
+          </div>
+
           {[
-            "company",
-            "country",
             "address1",
             "address2",
             "city",
             "state",
             "zip",
-            "gstin",
           ].map((field) => (
             <div className="relative mb-4" key={field}>
               <input
@@ -82,7 +145,6 @@ const PaymentPage = () => {
                   .replace("address1", "Address Line 1")
                   .replace("address2", "Address Line 2 (Optional)")
                   .replace("zip", "Zip Code")
-                  .replace("gstin", "GSTIN")
                   .replace(/\b\w/g, (l) => l.toUpperCase())}
                 className={darkMode ? "input dark w-full" : "input w-full"}
               />
@@ -93,6 +155,20 @@ const PaymentPage = () => {
               )}
             </div>
           ))}
+
+          {/* Save Details Checkbox */}
+          <div className="flex items-center mt-2">
+            <input
+              type="checkbox"
+              id="saveDetails"
+              className="form-checkbox text-[var(--primary)] focus:ring-[var(--primary)] mr-2"
+              checked={saveDetails}
+              onChange={(e) => setSaveDetails(e.target.checked)}
+            />
+            <label htmlFor="saveDetails" className="text-sm">
+              Save details for future use
+            </label>
+          </div>
         </div>
 
         <div className="">
@@ -175,9 +251,14 @@ const PaymentPage = () => {
               </div>
             </div>
 
+            {policyError && (
+              <p className="text-red-500 text-sm mt-2">{policyError}</p>
+            )}
+
             <button
-              className="greenButton mt-6 mx-auto"
+              className={`greenButton mt-6 mx-auto ${!agreedToPolicy ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={() => handleSubmit()}
+              disabled={!agreedToPolicy}
             >
               Complete Payment
             </button>
@@ -188,6 +269,11 @@ const PaymentPage = () => {
               type="checkbox"
               id="agree"
               className="form-checkbox text-[var(--primary)] focus:ring-[var(--primary)]"
+              checked={agreedToPolicy}
+              onChange={(e) => {
+                setAgreedToPolicy(e.target.checked);
+                setPolicyError(""); // Clear error when user agrees
+              }}
             />
             <label htmlFor="agree" className="text-sm">
               By subscribing to Shotkut, you confirm you are 18 or over, and
@@ -197,8 +283,7 @@ const PaymentPage = () => {
                 className="text-[var(--primary)] underline hover:opacity-80"
               >
                 Privacy Policy
-              </a>
-              {" "}
+              </a>{" "}
               and{" "}
               <a
                 href="/termsandconditions"
@@ -215,4 +300,4 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default PaymentPage

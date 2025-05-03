@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import useAuth from "../../hooks/useAuth";
-import { useGoogleLogin } from '@react-oauth/google'; // Correct usage
+import { useGoogleLogin } from "@react-oauth/google"; // Correct usage
+import { FcGoogle } from "react-icons/fc";
 
 const SignIn = ({ setShowModal }) => {
   const [loading, setLoading] = useState(false);
@@ -50,12 +51,18 @@ const SignIn = ({ setShowModal }) => {
           password: formData.password,
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       const { accessToken } = response.data; // Assume backend returns accessToken
       const decodedToken = jwtDecode(accessToken); // Decode the JWT
 
-      console.log(decodedToken);
-      setAuth(decodedToken);
+      // console.log(decodedToken);
+
+      const tokenData = {
+        ...decodedToken, // Spread all properties from decodedToken
+        RawToken: accessToken, // Add the raw token as a new property
+      };
+
+      setAuth(tokenData);
       navigate("/dashboard");
       setShowModal(false);
     } catch (error) {
@@ -104,13 +111,18 @@ const SignIn = ({ setShowModal }) => {
   });
 
   return (
-    <div className="bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow">
+    <div
+      className="bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow"
+      onClick={() => setShowModal(false)}
+    >
       <div className="bigscreen max-h-[100vh] h-[100vh] p-10">
         <div
-          className={`relative max-w-[1024px] mx-auto h-full max-h-full border p-8 ${darkMode
+          className={`relative max-w-[1024px] mx-auto h-full max-h-full border p-8 ${
+            darkMode
               ? "bg-[#10130D] border-[#1E1E1E]"
               : "bg-white border-[#CBCBCB]"
-            } shadow grid grid-cols-2 !gap-8`}
+          } shadow grid grid-cols-2 !gap-8`}
+          onClick={(e) => e.stopPropagation()}
         >
           <div
             className="cursor-pointer h-8 absolute top-4 right-4"
@@ -139,11 +151,11 @@ const SignIn = ({ setShowModal }) => {
               onClick={() => googleLogin()}
               className={
                 darkMode
-                  ? "input dark w-1/2 flex items-center justify-center"
-                  : "input w-1/2 flex items-center justify-center"
+                  ? "input dark w-1/2 flex items-center justify-center gap-2"
+                  : "input w-1/2 flex items-center justify-center gap-2"
               }
             >
-              Continue with Google
+              <FcGoogle className="text-xl" /> Continue with Google
             </button>
             or
             <div className="relative">

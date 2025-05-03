@@ -5,6 +5,12 @@ const RequireAuth = () => {
     const { auth } = useAuth();
     const location = useLocation();
 
+
+    if (!auth) {
+        // This will be caught by Layout's loading state
+        return null;
+      }
+
     return (
         // auth?.roles?.find(role => allowedRoles?.includes(role))
         auth?.role

@@ -26,7 +26,7 @@ const Footer = () => {
 
                     <Link to='/about' className='hover:text-[var(--primary)]'>About Us</Link>
                     <Link to='/pricing' className='hover:text-[var(--primary)]'>Our Pricing & Plans</Link>
-                    <Link to='/faqs' className='hover:text-[var(--primary)]'>FAQs</Link>
+                    <Link to='/' className='hover:text-[var(--primary)]'>FAQs</Link>
                     <Link to='/contactus' className='hover:text-[var(--primary)]'>Contact Us</Link>
                     {/* <Link to='/category/one'>Categories</Link> */}
 

@@ -65,16 +65,16 @@ const VideoPage = ({ setShowModal, video }) => {
     }
 
     switch (activeModal) {
-      case "wishlist":
-        return (
-          <>
-            <h2 className="text-lg font-semibold mb-4 capitalize">
-              Wishlisted Video!
-            </h2>
-            {/* <p className="text-sm">Are you sure you want to add this video to your Collection?</p> */}
-            <button className="greenButton">Show</button>
-          </>
-        );
+      // case "wishlist":
+      //   return (
+      //     <>
+      //       <h2 className="text-lg font-semibold mb-4 capitalize">
+      //         Wishlisted Video!
+      //       </h2>
+      //       {/* <p className="text-sm">Are you sure you want to add this video to your Collection?</p> */}
+      //       <button className="greenButton">Show</button>
+      //     </>
+      //   );
       case "share":
         return (
           <>
@@ -113,14 +113,20 @@ const VideoPage = ({ setShowModal, video }) => {
   };
 
   return (
-    <div className="bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow">
-      <div className="bigscreen py-16 px-20">
+    <div
+      className="bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow"
+      onClick={() => setShowModal(false)}
+    >
+      <div
+        className="bigscreen py-16 px-20"
+      >
         <div
           className={`w-full ${
             darkMode
               ? "bg-[#080E0B] border-[#1E1E1E]"
               : "bg-[#ECECEC] border-[#CBCBCB]"
           } rounded-[8px] border`}
+        onClick={(e) => e.stopPropagation()}
         >
           <div
             className={`flex items-center justify-between pl-8 pr-2 py-2 text-xs rounded-tl-[8px] rounded-tr-[8px] ${
@@ -169,11 +175,11 @@ const VideoPage = ({ setShowModal, video }) => {
               </button>
 
               {[
-                {
-                  icon: darkMode ? wishlistwhite : wishlist,
-                  label: "Wishlist",
-                  type: "wishlist",
-                },
+                // {
+                //   icon: darkMode ? wishlistwhite : wishlist,
+                //   label: "Wishlist",
+                //   type: "wishlist",
+                // },
                 { icon: darkMode ? addwhite : add, label: "Add", type: "add" },
                 {
                   icon: darkMode ? sharewhite : share,
@@ -218,7 +224,7 @@ const VideoPage = ({ setShowModal, video }) => {
                 src={video?.waterMarkedVideoURL}
                 muted
                 loop
-                className="w-full h-auto rounded-[8px]"
+                className="w-full h-auto rounded-[8px] aspect-video object-contain"
                 loading="lazy"
                 controls={true}
               />
@@ -325,11 +331,13 @@ const VideoPage = ({ setShowModal, video }) => {
               <div className="font-semibold">Item Tags</div>
 
               <div className="flex flex-wrap gap-2">
-  {video?.tags.map((tag, index) => (
-    <button
-      key={index}
-      onClick={() => navigate(`/search?term=${encodeURIComponent(tag)}`)}
-      className={`
+                {video?.tags.map((tag, index) => (
+                  <button
+                    key={index}
+                    onClick={() =>
+                      navigate(`/search?term=${encodeURIComponent(tag)}`)
+                    }
+                    className={`
         px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ease-in-out
         cursor-pointer transform hover:-translate-y-0.5
         ${
@@ -339,11 +347,11 @@ const VideoPage = ({ setShowModal, video }) => {
         }
         active:scale-95 active:translate-y-0
       `}
-    >
-      {tag}
-    </button>
-  ))}
-</div>
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="text-xl font-semibold mt-6">

@@ -12,7 +12,7 @@ const ShipmentDelivery = () => {
     <div className="bigscreen p-10 flex flex-col gap-5">
       <div>
         <div className="font-bold text-4xl">
-          Terms of Subscription and Delivery
+          Terms of Shipment and Delivery
         </div>
         <div
           className={`${
@@ -26,7 +26,7 @@ const ShipmentDelivery = () => {
       <div className="flex flex-col gap-6 text-sm leading-relaxed">
         {/* Section 1 */}
         <div>
-          <h2 className="text-xl font-semibold mb-2">1. Subscription</h2>
+          <h2 className="text-xl font-semibold mb-2">1. Shipment</h2>
           <p>
             To receive full access to Shotkut’s stock footage library of
             Products, you must become a Subscriber. If you elect to subscribe to

@@ -30,13 +30,13 @@ module.exports.logIn = async (req, res) => {
       if (saved) {
         //create Jwt
         const accessToken = jwt.sign(
-          { username: saved.id, role: saved.role,_id:saved._id },
+          { username: saved.id, role: saved.role, _id: saved._id },
 
           process.env.ACCESS_TOKEN_SECRET,
           { expiresIn: "1200s" }
         );
         const refreshToken = jwt.sign(
-          { username: saved.id, role: saved.role ,_id:saved._id},
+          { username: saved.id, role: saved.role, _id: saved._id },
           process.env.REFRESH_TOKEN_SECRET,
           { expiresIn: "1d" }
         );
@@ -73,74 +73,75 @@ module.exports.logIn = async (req, res) => {
 };
 
 module.exports.userLogIn = async (req, res) => {
-    console.log(req.body, "user login controller");
-    const { id, password } = req.body;
+  console.log(req.body, "user login controller");
+  const { id, password } = req.body;
 
-    try {
-        // 1. Find the user by email (ID)
-        const foundUser = await siteUsersDB.findOne({ email: id });
+  try {
+    // 1. Find the user by email (ID)
+    const foundUser = await siteUsersDB.findOne({ email: id });
 
-        if (!foundUser) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        // 2. Compare the provided password with the hashed password from the database
-        const passwordMatch = await bcrypt.compare(password, foundUser.password);
-        console.log('passwordMatch',passwordMatch)
-
-        if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        // 3. Generate tokens (Access and Refresh)
-        const accessToken = jwt.sign(
-            {
-                _id: foundUser._id,
-                username: foundUser.email,
-                role: foundUser.role,
-            },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '15m' }
-        );
-
-       
-
-        const refreshToken = jwt.sign(
-            { _id: foundUser._id, email: foundUser.email, role: foundUser.role },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d' }
-        );
-
-        
-
-        // 4. Update the user's refresh token in the database
-        foundUser.refreshToken = refreshToken;
-        await foundUser.save();
-
-        // 5.  Send the refresh token as a cookie
-        res.cookie('jwt', refreshToken, {
-            httpOnly: true,
-            sameSite: 'None',
-            secure: true,
-            maxAge: 24 * 60 * 60 * 1000,
-            path: '/',
-        });
-
-        // 6. Send the access token and user data in the response
-        res.status(200).json({
-            message: 'Login successful',
-            user: {
-                _id: foundUser._id,
-                email: foundUser.email,
-                role: foundUser.role,
-            },
-            accessToken,
-        });
-
-    } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+    if (!foundUser) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
+
+    const subscribed=foundUser.subscription.subscriptionStatus;
+
+
+    // 2. Compare the provided password with the hashed password from the database
+    const passwordMatch = await bcrypt.compare(password, foundUser.password);
+    console.log("passwordMatch", passwordMatch);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // 3. Generate tokens (Access and Refresh)
+    const accessToken = jwt.sign(
+      {
+        _id: foundUser._id,
+        username: foundUser.email,
+        role: foundUser.role,
+        subscription:subscribed
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "45m" }
+    );
+
+    const refreshToken = jwt.sign(
+      { _id: foundUser._id, email: foundUser.email, role: foundUser.role },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // 4. Update the user's refresh token in the database
+    foundUser.refreshToken = refreshToken;
+    await foundUser.save();
+
+    // 5.  Send the refresh token as a cookie
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    // 6. Send the access token and user data in the response
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        _id: foundUser._id,
+        email: foundUser.email,
+        role: foundUser.role,
+      },
+      accessToken,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 module.exports.addEmployee = async (req, res) => {
@@ -269,15 +270,15 @@ module.exports.userSignup = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      subscription: { subscriptionStatus: false, validityDate: "" },
     });
 
     await newSiteuser.save();
 
     // 4. Generate tokens          { username: saved.id, role: saved.role },
 
-
     const accessToken = jwt.sign(
-      {        
+      {
         userId: newSiteuser._id,
         username: newSiteuser.email,
         role: newSiteuser.role,
@@ -303,12 +304,12 @@ module.exports.userSignup = async (req, res) => {
     // 6. Send the response
 
     res.cookie("jwt", refreshToken, {
-        httpOnly: true,
-        sameSite: "None",
-        secure: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        path: "/",
-      });
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
     res.status(201).json({
       success: true,
       message:
@@ -325,48 +326,53 @@ module.exports.userSignup = async (req, res) => {
     console.log("newSiteuser created", newSiteuser);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error registering user.",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Error registering user.",
+      error: error.message,
+    });
   }
 };
 
-
 module.exports.logout = async (req, res) => {
-    console.log('reached logout');
+  console.log("reached logout");
 
-    const token = req.cookies.jwt;
-    console.log('token', token);
-    const decodedToken = jwt.decode(token)
-    console.log('decodedToken', decodedToken);
-    console.log('decoded._id ', decodedToken._id);
-    const id=decodedToken._id
-    const blankstring = '';
+  const token = req.cookies.jwt;
+  console.log("token", token);
+  const decodedToken = jwt.decode(token);
+  console.log("decodedToken", decodedToken);
+  console.log("decoded._id ", decodedToken._id);
+  const id = decodedToken._id;
+  const blankstring = "";
 
-
-    if(decodedToken.role=='ADMIN' || decodedToken.role=='EMP' ){
-    internalUserDB.findOneAndUpdate({ _id: id }, { refreshToken: blankstring }, { returnDocument: 'after' })
-        .then((saved) => {
-            console.log('updated user refresh token/logout', saved)
-            res.send('logged out')
-        })
-        .catch((e) => { console.log(e) })
-    }
-    else{
-        console.log('user block')
-        siteUsersDB.findOneAndUpdate({ _id: id }, { refreshToken: blankstring }, { returnDocument: 'after' })
-        .then((saved) => {
-            console.log('updated user refresh token/logout', saved)
-            res.send('logged out')
-        })
-        .catch((e) => { console.log(e) })
-
-    }
-
-
-
-}
+  if (decodedToken.role == "ADMIN" || decodedToken.role == "EMP") {
+    internalUserDB
+      .findOneAndUpdate(
+        { _id: id },
+        { refreshToken: blankstring },
+        { returnDocument: "after" }
+      )
+      .then((saved) => {
+        console.log("updated user refresh token/logout", saved);
+        res.send("logged out");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  } else {
+    console.log("user block");
+    siteUsersDB
+      .findOneAndUpdate(
+        { _id: id },
+        { refreshToken: blankstring },
+        { returnDocument: "after" }
+      )
+      .then((saved) => {
+        console.log("updated user refresh token/logout", saved);
+        res.send("logged out");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+};

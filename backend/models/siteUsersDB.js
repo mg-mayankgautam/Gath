@@ -10,6 +10,8 @@ const siteUserSchema = new Schema({
     password: { type: String },
     role:{type:String},
     refreshToken:{type:String},
+    subscription:{type:Object},
+    DownloadedVideosInfo:{type:Array},
     
     saved: [{  // Array of saved item IDs
         type: Schema.Types.ObjectId,
