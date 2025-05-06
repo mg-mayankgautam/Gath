@@ -116,9 +116,10 @@
 
     .navSearch {
         padding: 8px 16px;
-        padding-left: 40px;
+        padding-right: 40px;
         width: 100%;
         height: 100%;
+        font-size: 14px;
     }
 
     .suggestions-dropdown {

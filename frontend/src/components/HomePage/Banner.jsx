@@ -1,26 +1,29 @@
 import React, { useState } from 'react'
 import img from '../../assets/home/banner.webp'
+import img1 from '../../assets/login/login1.png'
 import { Link } from 'react-router-dom';
 import SearchInput from '../SearchPage/SearchInput';
 
 const Banner = () => {
 
     return (
-        <div className='relative'>
-            <img src={img} className='object-contain h-full w-full px-10 py-8' />
+        <div className='relative overflow-hidden'>
+            <img src={img} className='hidden md:block object-contain h-full w-full px-5 py-4 md:px-10 lg:py-8 rounded-xl object-right' />
+            <img src={img1} className='md:hidden object-cover lg:object-contain h-full w-full p-0 rounded-xl object-center' />
+            {/* <img src={img} className='object-cover lg:object-contain h-[calc(100vh-80px)] lg:h-full w-full px-5 py-4 md:px-10 lg:py-8 rounded-xl object-right' /> */}
 
-            <div className='absolute inset-0 flex flex-col justify-center items-center text-white text-center'>
-                <div className='text-5xl font-bold'>
+            <div className='h-full absolute inset-0 px-8 md:px-10 flex flex-col justify-center items-center text-white text-center'>
+                <div className='text-4xl md:text-5xl font-bold'>
                     Get Unlimited Stock Footage
                 </div>
-                <div className='text-xl font-light mt-1 mb-8'>
+                <div className='text-lg md:text-xl font-light mt-1 mb-8'>
                     Access the broadest range of assets in one place.
                 </div>
 
                 <SearchInput />
             </div>
 
-            <div className='absolute bottom-10 right-10 left-[65%] flex items-center gap-8'>
+            <div className='absolute bottom-5 lg:bottom-10 right-5 lg:right-10 lg:left-[65%] flex items-center gap-8'>
                 <button className="greenButton flex-grow">Start free now</button>
                 <Link to='/pricing' className='flex-grow'><button className="button !w-full">Pricing</button></Link>
             </div>

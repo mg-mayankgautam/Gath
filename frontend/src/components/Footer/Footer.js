@@ -11,7 +11,7 @@ const Footer = () => {
 
     return (
         <div className={darkMode ? 'mt-20 bg-[#080E0B] text-[var(--grey)]' : 'mt-20 bg-white'}>
-            <div className='bigscreen grid grid-cols-3 gap-4 px-10 py-14'>
+            <div className='bigscreen grid grid-cols-1 md:grid-cols-3 gap-10 px-5 md:px-10 py-14'>
 
                 <div>
                     <div className='navLogo'>
