@@ -88,6 +88,10 @@ const EmployeeDashboard = () => {
     formData.append("video", file1);
     formData.append("name", name);
     formData.append("tags", JSON.stringify(tags)); // Convert tags array to JSON string
+    formData.append("themes", JSON.stringify(theme)); // Convert tags array to JSON string
+    formData.append("shots", JSON.stringify(shot)); // Convert tags array to JSON string
+    formData.append("shotonmobile", shotOnMobile); // Convert tags array to JSON string
+
 
     // Extract additional file information
     formData.append("fileSize", file1.size);
@@ -128,12 +132,36 @@ const EmployeeDashboard = () => {
         } finally {
           setIsUploading(false); // Hide loader
         }
-      } else {
-
-
-        console.log("this video is shot on mobile, different upload route");
-
       }
+      
+      else {
+
+
+            console.log("this video is shot on mobile, different upload route");
+            try {
+                const response = await axios.post(
+                  `${process.env.REACT_APP_BACKEND_URL}/videos/postmobilevideo`,
+                  formData,
+                  { headers: { "Content-Type": "multipart/form-data" } }
+                );
+            
+                if (response.data) {
+                  console.log("Upload successful:", response.data);
+                  toast.success("Video uploaded successfully!");
+                  setFile1(null);
+                  setTags([]);
+                  setTagInput("");
+                  setName("");
+                } else {
+                  toast.error("Failed to upload video.");
+                }
+              } catch (error) {
+                console.error("Upload failed:", error);
+                toast.error("Failed to upload video.");
+              } finally {
+                setIsUploading(false); // Hide loader
+              }
+      } 
     });
 
     // Fallback in case metadata doesn't load quickly
@@ -197,8 +225,8 @@ const EmployeeDashboard = () => {
     }
   };
 
-  const predefinedThemes = ["food", "indian", "nature"];
-  const predefinedShots = ["close-up", "Aerial"];
+  const predefinedThemes = ["food", "indian", "nature","vintage","rural","festival"];
+  const predefinedShots = ["close-up", "Aerial","pan-shot"];
 
   const extractKeywordsFromFilename = (filename) => {
     // Remove the file extension (e.g., .mp4, .mov)
@@ -223,6 +251,12 @@ const EmployeeDashboard = () => {
     const themes = predefinedThemes.filter((theme) =>
       keywords.some((keyword) => keyword.toLowerCase() === theme.toLowerCase())
     );
+
+    const shot_type = predefinedShots.filter((shot) =>
+        keywords.some((keyword) => keyword.toLowerCase() === shot.toLowerCase())
+      );
+  
+    setShot(shot_type);
 
     setShotOnMobile(keywords.includes("shot-on-mobile"));
 

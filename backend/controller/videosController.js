@@ -95,6 +95,9 @@ module.exports.postVideo = async (req, res) => {
     const videoWidth = req.body.videoWidth;
     const videoHeight = req.body.videoHeight;
     const tags = JSON.parse(req.body.tags);
+    const themes = JSON.parse(req.body.themes);
+    const shots = JSON.parse(req.body.shots);
+    const shotonmobile=req.body.shotonmobile;
     const video = req.files[0];
 
     console.log(name, tags, video);
@@ -213,6 +216,8 @@ module.exports.postVideo = async (req, res) => {
       duration,
       videoWidth,
       videoHeight,
+      themes,shots,shotonmobile
+
     });
 
     await newVideo.save();
@@ -246,6 +251,147 @@ module.exports.postVideo = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to upload video" });
   }
 };
+
+module.exports.postMobileVideo=async(req,res)=>{
+try{
+  console.log('reached post mobile videos',req.body);
+  const name = req.body.name;
+  const filesize = req.body.fileSize;
+  const fileSizeInMB = Number(filesize) / (1024 * 1024);
+  const fileType = req.body.fileType;
+  const duration = req.body.duration;
+  const videoWidth = req.body.videoWidth;
+  const videoHeight = req.body.videoHeight;
+  const tags = JSON.parse(req.body.tags);
+  const themes = JSON.parse(req.body.themes);
+  const shots = JSON.parse(req.body.shots);
+  const shotonmobile=req.body.shotonmobile;
+  const video = req.files[0];
+
+
+
+  const tmpDir = path.join(__dirname, "../tmp");
+  if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir);
+  }
+  const fileName = generateFileName();
+  const previewName = `${fileName}_preview.mp4`;
+  const watermarkedName = `${fileName}_watermarked.mp4`;
+
+  const videoPath = path.join(tmpDir, `${fileName}.mp4`);
+  const previewPath = path.join(tmpDir, previewName);
+  const watermarkedVideoPath = path.join(tmpDir, watermarkedName);
+
+  fs.writeFileSync(videoPath, video.buffer);
+  const watermarkImagePath = path.join(__dirname, "watermark.png");
+   
+      // Generate watermarked video
+
+      try {
+        await addWatermark(videoPath, watermarkImagePath, watermarkedVideoPath);
+        console.log("Watermarked video generated successfully");
+      } catch (error) {
+        console.error("Error generating watermarked video:", error);
+      }
+
+      await new Promise((resolve, reject) => {
+        ffmpeg(videoPath)
+          .setStartTime(0)
+          .setDuration(6)
+          .outputOptions(["-c:v libx264", "-crf 23", "-preset veryfast", "-an"])
+          .save(previewPath)
+          .on("end", resolve)
+          .on("error", reject);
+      });
+      console.log("Preview generated successfully.");
+   
+      // Upload the full video to S3
+   const videoUploadParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Body: video.buffer,
+    Key: `${fileName}.mp4`,
+    ContentType: "video/mp4",
+  };
+  await s3Client.send(new PutObjectCommand(videoUploadParams));
+
+
+   // Upload the preview to S3
+   const previewBuffer = fs.readFileSync(previewPath);
+   const previewUploadParams = {
+     Bucket: process.env.BUCKET_NAME,
+     Key: `previews/${previewName}`,
+     Body: previewBuffer,
+     ContentType: "video/mp4",
+   };
+   await s3Client.send(new PutObjectCommand(previewUploadParams));
+
+   // Upload the watermarked video to S3
+   let watermarkedVideoURL = null;
+   if (fs.existsSync(watermarkedVideoPath)) {
+     const watermarkedVideoBuffer = fs.readFileSync(watermarkedVideoPath);
+     const watermarkedUploadParams = {
+       Bucket: process.env.BUCKET_NAME,
+       Key: `watermarked/${watermarkedName}`,
+       Body: watermarkedVideoBuffer,
+       ContentType: "video/mp4",
+     };
+     await s3Client.send(new PutObjectCommand(watermarkedUploadParams));
+     watermarkedVideoURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/watermarked/${watermarkedName}`;
+   }
+
+
+   const videoURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/${fileName}.mp4`;
+   const previewURL = `https://${process.env.BUCKET_NAME}.s3.amazonaws.com/previews/${previewName}`;
+  // Save video details to the database
+  const newVideo = new videosDB({
+    URL: videoURL,
+    previewURL: previewURL,
+    waterMarkedVideoURL: watermarkedVideoURL,
+    hdVideoURL: '', // Add 1080p URL to database
+    name,
+    tags,
+    theme: [],
+    views: 0,
+    filesize,
+    fileSizeInMB,
+    fileType,
+    duration,
+    videoWidth,
+    videoHeight,
+    themes,shots,shotonmobile
+
+  });
+
+  await newVideo.save();
+
+  console.log("Video and versions uploaded successfully:", {
+    videoURL,
+    previewURL,
+    watermarkedVideoURL,
+  
+  });
+
+   res.status(200).json({
+    success: true,
+    videoURL,
+    previewURL,
+    watermarkedVideoURL,
+  });
+
+  // Clean up temporary files
+  fs.unlinkSync(videoPath);
+  fs.unlinkSync(previewPath);
+  if (fs.existsSync(watermarkedVideoPath)) {
+    fs.unlinkSync(watermarkedVideoPath);
+  }
+
+}catch(err){
+  
+  console.error("Error uploading video:", err);
+  res.status(500).json({ success: false, message: "Failed to upload video" });
+}
+
+}
 
 // module.exports.getVideos = async (req, res) => {
 

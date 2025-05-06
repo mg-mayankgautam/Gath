@@ -11,7 +11,9 @@ const videoSchema = new Schema({
     hdVideoURL: { type: String },
     name: { type: String },
     tags: { type: [String], index: true }, // Added index for efficient tag search
-    theme: { type: [String], index: true }, // Added index for efficient tag search
+    themes: { type: [String], index: true }, // Added index for efficient tag search
+    shots: { type: [String], index: true }, // Added index for efficient tag search
+    shotonmobile:{type:Boolean},
     views: { type: Number },
     filesize: { type: String },
     fileSizeInMB: { type: String },
