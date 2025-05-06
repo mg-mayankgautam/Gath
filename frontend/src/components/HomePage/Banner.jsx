@@ -13,7 +13,7 @@ const Banner = () => {
                 <div className='text-5xl font-bold'>
                     Get Unlimited Stock Footage
                 </div>
-                <div className='text-xl font-light mt-1'>
+                <div className='text-xl font-light mt-1 mb-8'>
                     Access the broadest range of assets in one place.
                 </div>
 

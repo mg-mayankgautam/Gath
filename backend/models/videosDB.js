@@ -8,6 +8,7 @@ const videoSchema = new Schema({
     URL: { type: String },
     previewURL: { type: String },
     waterMarkedVideoURL: { type: String },
+    hdVideoURL: { type: String },
     name: { type: String },
     tags: { type: [String], index: true }, // Added index for efficient tag search
     theme: { type: [String], index: true }, // Added index for efficient tag search

@@ -131,6 +131,8 @@ const videosRouter = require('./routes/videos.js');
 const authRouter = require('./routes/auth.js');
 const refreshRouter = require('./routes/refresh.js');
 const UserRouter = require('./routes/user.js')
+const paymentsRouter = require('./routes/payments.js');
+app.use('/pay', paymentsRouter);
 
 app.use('/videos', videosRouter);
 app.use('/auth', authRouter);

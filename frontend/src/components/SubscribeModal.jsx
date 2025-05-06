@@ -19,9 +19,6 @@ const SubscribeModal = ({ video, setShowModal }) => {
     // Prevent scroll
     document.body.style.overflow = "hidden";
 
-    // Scroll to top
-    window.scrollTo(0, 0);
-
     // Allow scroll when modal unmounts
     return () => {
       document.body.style.overflow = "auto";
@@ -87,7 +84,7 @@ const SubscribeModal = ({ video, setShowModal }) => {
                 </h1>
 
                 <div className="flex justify-start items-center mb-4">
-                  <span className="text-[18px] font-semibold">$24/ month</span>
+                  <span className="text-[18px] font-semibold">₹ 833/ month</span>
                   <span className="text-[var(--grey)]">(billed annually)</span>
                 </div>
 
@@ -130,7 +127,7 @@ const SubscribeModal = ({ video, setShowModal }) => {
                   Get Exactly What You Need, Instantly!
                 </h1>
                 <div className="font-semibold mb-4">
-                  Purchase the video for $200
+                  Purchase the video, prices starting from ₹29
                 </div>
 
                 <ul className="space-y-3 mb-6 text-left">
@@ -159,7 +156,7 @@ const SubscribeModal = ({ video, setShowModal }) => {
                   <br />
                 </ul>
 
-                <Link to="/payment">
+                <Link to={`onetimepurchase/${video?._id}?type=none`}>
                   <button
                     className="greenButton"
                     onClick={() => setShowSignUpModal(true)}

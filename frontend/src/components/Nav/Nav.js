@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FiMenu } from "react-icons/fi";
 import "./Nav.css";
 import logo from "../../assets/logo.png";
@@ -36,6 +36,25 @@ const Nav = () => {
       console.error("Error changing password:", error);
     }
   };
+
+  const profileDropdownRef = useRef(null);
+
+  // Add this useEffect for click-outside detection
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
+        setShowProfileDropDown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -108,6 +127,7 @@ const Nav = () => {
 
           {/* {showProfileDropDown && ( */}
           <div
+            ref={profileDropdownRef}
             className={`absolute top-[60px] right-[124px] w-full max-w-[200px] px-2 flex flex-col gap-2 shadow-md transition-all duration-300 ease-in-out max-h-0 overflow-y-hidden rounded border
                 ${
                   darkMode
@@ -120,13 +140,16 @@ const Nav = () => {
                     : "opacity-0 py-0"
                 }`}
           >
-            <Link to="/dashboard">
+            <Link to="/dashboard" onClick={() => setShowProfileDropDown(false)}>
               <div className="navBtn hover:text-[var(--primary)] transition-all duration-250">
                 Dashboard
               </div>
             </Link>
             <div
-              onClick={() => logout()}
+              onClick={() => {
+                logout();
+                setShowProfileDropDown(false);
+              }}
               className="navBtn hover:text-[var(--primary)] transition-all duration-250"
             >
               Logout

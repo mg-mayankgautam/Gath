@@ -55,7 +55,7 @@ const SignIn = ({ setShowModal }) => {
       const { accessToken } = response.data; // Assume backend returns accessToken
       const decodedToken = jwtDecode(accessToken); // Decode the JWT
 
-      // console.log(decodedToken);
+      console.log(decodedToken);
 
       const tokenData = {
         ...decodedToken, // Spread all properties from decodedToken
