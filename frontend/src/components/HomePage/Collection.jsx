@@ -62,15 +62,15 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
             <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
               Shot Types
             </div>
-            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
+            {/* <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
               People
-            </div>
-            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
+            </div> */}
+            {/* <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
               Collections
             </div>
             <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
               Filmmakers
-            </div>
+            </div> */}
 
             <div className="mx-auto mt-auto flex flex-col">
               <button className="greenButton mb-4">Start free now</button>

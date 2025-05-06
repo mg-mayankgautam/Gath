@@ -10,7 +10,9 @@ const EmployeeDashboard = () => {
 
     const [file1, setFile1] = useState(null);
     const [tags, setTags] = useState([]);
+    const [theme, setTheme] = useState([]);
     const [tagInput, setTagInput] = useState("");
+    const [themeInput, setThemeInput] = useState("");
     const [name, setName] = useState("");
     const [activeSection, setActiveSection] = useState("Upload Video");
     const [videos, setVideos] = useState([]);
@@ -53,6 +55,13 @@ const EmployeeDashboard = () => {
         }
     };
 
+    const handleAddTheme = (e) => {
+        if (e.key === "Enter" && themeInput.trim()) {
+          setTheme([...theme, themeInput.trim()]);
+          setThemeInput(""); // Clear input after adding tag
+        }
+    };
+    
 
 
     // const handleUpload = async () => {
@@ -184,6 +193,11 @@ const EmployeeDashboard = () => {
         const updatedTags = tags.filter((_, i) => i !== index); // Remove tag at the given index
         setTags(updatedTags);
     };
+    const handleDeleteTheme = (index) => {
+        const updatedTheme = theme.filter((_, i) => i !== index); // Remove tag at the given index
+        setTheme(updatedTheme);
+    };
+    
 
     const handleVideoUpload = (event) => {
         const selectedFile = event.target.files[0];
@@ -336,6 +350,32 @@ const EmployeeDashboard = () => {
                                 <FaTimes
                                     className="cursor-pointer text-red-500"
                                     onClick={() => handleDeleteTag(index)} // Handle delete on click
+                                />
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="my-4">
+                    <label className="text-[var(--grey)]">Add Video Theme</label>
+                    <input
+                        type="text"
+                        value={themeInput}
+                        onChange={(e) =>  setThemeInput(e.target.value)}
+                        onKeyDown={handleAddTheme}
+                        placeholder="Enter a theme..."
+                        className={`mt-4 w-full input ${darkMode && "dark"} focus:outline-none focus:border-[var(--primary)]`}
+                    />
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {theme.map((theme, index) => (
+                            <span
+                                key={index}
+                                className="lightGreenButton flex items-center gap-1 px-2 py-1 rounded-full"
+                            >
+                                {theme}
+                                <FaTimes
+                                    className="cursor-pointer text-red-500"
+                                    onClick={() => handleDeleteTheme(index)} // Handle delete on click
                                 />
                             </span>
                         ))}
