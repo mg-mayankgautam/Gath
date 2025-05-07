@@ -117,8 +117,8 @@ button:hover {
   }
 
   .FiltersDiv {
-    padding: 16px 0;
-    max-width: 156px;
+    padding: 16px 10px;
+    max-width: fit-content;
   }
 }
 

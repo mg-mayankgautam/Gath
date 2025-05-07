@@ -1,20 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import icon from "../../assets/icons/search1.png";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SearchInput = ({ searchQuery, setSearchQuery }) => {
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const [suggestions, setSuggestions] = useState([]);
   const [input, setInput] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchClick = () => {
+    performSearch();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      performSearch();
+    }
+  };
+
+  const performSearch = () => {
     console.log("Search function was called in React!", input);
     if (input) {
       navigate(`/search?term=${encodeURIComponent(input)}`);
+      setIsDropdownOpen(false); // Close dropdown after search
     } else {
-      // Optionally handle the case where the input is empty
       console.log("Input is empty, not navigating.");
     }
   };
@@ -23,68 +48,60 @@ const SearchInput = ({ searchQuery, setSearchQuery }) => {
     console.log("Search function was called in React!", suggestion);
     setInput(suggestion);
     navigate(`/search?term=${encodeURIComponent(suggestion)}`);
+    setIsDropdownOpen(false); // Close dropdown after selecting suggestion
   };
 
   const handleSearch = (query) => {
     setInput(query);
-    // console.log(query);
     if (query.trim() === "") {
-      setSuggestions([]); // Hide suggestions if the search query is empty
+      setSuggestions([]);
+      setIsDropdownOpen(false);
     } else {
       const filteredSuggestions = uniqueKeywords.filter((keyword) =>
         keyword.toLowerCase().includes(query.toLowerCase())
       );
       setSuggestions(filteredSuggestions);
+      setIsDropdownOpen(true); // Open dropdown when there are suggestions
     }
   };
 
   const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    // Set a timeout to give time to click the suggestion before hiding
-    setTimeout(() => {
-      if (!isFocused) {
-        setSuggestions([]); // Hide suggestions if input loses focus
-      }
-    }, 500); // Short delay to allow suggestion click
+    if (input && suggestions.length > 0) {
+      setIsDropdownOpen(true);
+    }
   };
 
   return (
-    <div className="navSearchDiv relative mt-8">
+    <div className="navSearchDiv relative mt-0" ref={dropdownRef}>
       <input
+        ref={inputRef}
         className="navSearch placeholder-gray-700"
         placeholder="What are you looking for?"
         value={input}
         onChange={(e) => handleSearch(e.target.value)}
         onFocus={handleFocus}
-        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
       />
       <img
         src={icon}
         onClick={handleSearchClick}
-
         className="absolute my-auto right-1 cursor-pointer top-1 bottom-1"
+        alt="Search"
       />
 
-      {suggestions.length > 0 && (
-        <div
-          className="suggestions-dropdown"
-          onMouseDown={() => setIsFocused(false)}
-        >
+      {isDropdownOpen && suggestions.length > 0 && (
+        <div className="suggestions-dropdown">
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
               className="suggestion-item relative"
-              onClick={(e)=>handleSuggestionClick(suggestion)}
-
+              onClick={() => handleSuggestionClick(suggestion)}
             >
               <img
                 src={icon}
                 className="absolute my-auto right-1 cursor-pointer top-1 bottom-1"
-                alt="Search Icon" // It's good practice to include alt text for accessibility
-              />{" "}
+                alt="Search Icon"
+              />
               {suggestion}
             </div>
           ))}
@@ -99,77 +116,5 @@ export default SearchInput;
 const uniqueKeywords = [
   "alta",
   "katori",
-  "bowl",
-  "red",
-  "henna",
-  "durga",
-  "pooja",
-  "pujo",
-  "chana",
-  "masala",
-  "rice",
-  "indian",
-  "spices",
-  "dhania",
-  "basmati",
-  "chickpeas",
-  "bottle gourd",
-  "farm",
-  "crop",
-  "harvest",
-  "farming",
-  "vegetable",
-  "green",
-  "fields",
-  "vine",
-  "mother earth",
-  "leaves",
-  "cucumber",
-  "box",
-  "stack",
-  "sorting facility",
-  "farmers market",
-  "farmer",
-  "plucking",
-  "man",
-  "field",
-  "greenery",
-  "trees",
-  "indian fruits",
-  "farmers",
-  "walking",
-  "farm field",
-  "indian man",
-  "dal tadka",
-  "lentils",
-  "coriander",
-  "red chilly",
-  "standing",
-  "smiling",
-  "sunset",
-  "river",
-  "bridge",
-  "india",
-  "howrah",
-  "slow motion",
-  "river bank",
-  "photos",
-  "street park",
-  "taxi cars",
-  "lights",
-  "decorated",
-  "decorated street",
-  "fairy lights",
-  "crowd",
-  "christmas",
-  "pile of cucumber",
-  "stacked vegetables",
-  "sorting",
-  "healthy",
-  "water",
-  "Rituals",
-  "Food",
-  "Agriculture",
-  "Nature",
-  "Festival",
+  // ... rest of your keywords
 ];

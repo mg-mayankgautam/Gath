@@ -193,7 +193,7 @@ const datenow = new Date(); // ensure you define datenow properly
 //     }
 //   };
   
-  module.exports.downloadWatermark = async (req, res) => {
+module.exports.downloadWatermark = async (req, res) => {
     try {
       console.log('downloadWatermark', req.user, req.body.id);
       

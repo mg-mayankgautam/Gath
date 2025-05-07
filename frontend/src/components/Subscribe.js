@@ -2,17 +2,18 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
+import { Link } from "react-router-dom";
 
 const Subscribe = () => {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
-    <div className="p-10 min-h-[calc(100vh-160px)] flex flex-col gap-[64px] justify-center">
+    <div className="p-10 min-h-[calc(100vh-80px)] flex flex-col gap-[64px] justify-center">
       <div className="flex items-center justify-center gap-10">
         {/* Premium Subscription Section */}
         <div className="w-full max-w-[360px] text-sm">
@@ -22,7 +23,7 @@ const Subscribe = () => {
           </h1>
 
           <div className="flex justify-start items-center mb-4">
-            <span className="text-[18px] font-semibold">$24/ month</span>
+            <span className="text-[18px] font-semibold">₹ 833/ month</span>
             <span className="text-[var(--grey)]">(billed annually)</span>
           </div>
 
@@ -51,7 +52,9 @@ const Subscribe = () => {
             ))}
           </ul>
 
-          <button className="button">Subscribe</button>
+          <Link to="/pricing">
+            <button className="button">View Plans</button>
+          </Link>
         </div>
 
         {/* Divider */}
@@ -60,17 +63,17 @@ const Subscribe = () => {
         {/* Watermarked Video Section */}
         <div className="w-full max-w-[360px] text-sm">
           <h1 className="text-3xl font-bold mb-6">
-            Want to download a watermarked video?
+            Get Exactly What You Need, Instantly!
           </h1>
           <div className="font-semibold mb-4">
-            Start discovering Shotkut - Download watermarked clips
+            Purchase the video, prices starting from ₹29
           </div>
 
           <ul className="space-y-3 mb-6 text-left">
             {[
-              "Download watermarked videos",
-              "Organize your personal footage page",
-              "Get the latest news & updates",
+              "Pay Once and Download Instantly",
+              "Licensed for personal & commercial use",
+              // ""
             ].map((item, index) => (
               <li key={index} className="flex items-start">
                 <svg
@@ -89,26 +92,42 @@ const Subscribe = () => {
                 <span className="text-[var(--grey)]">{item}</span>
               </li>
             ))}
+            <br />
           </ul>
 
+          {/* <Link to={`onetimepurchase/${video?._id}?type=none`}> */}
           <button
             className="greenButton"
-            onClick={() => setShowSignUpModal(true)}
+            onClick={() => setShowSignInModal(true)}
           >
-            Start Free Now
+            Sign in and Pay
           </button>
+          {/* </Link> */}
         </div>
       </div>
 
-      <p className="text-[var(--grey)] text-sm text-center mx-auto">
-        Already a member?{"  "}
-        <span
-          className="cursor-pointer text-[var(--primary)] hover:text-[var(--hover)] transition-all duration-250"
-          onClick={() => setShowSignInModal(true)}
-        >
-          Sign In
-        </span>
-      </p>
+      <div>
+        <p className="text-[var(--grey)] text-sm text-center mx-auto">
+          Want to download watermarked videos?{"  "}
+          <span
+            className="cursor-pointer text-[var(--primary)] hover:text-[var(--hover)] transition-all duration-250"
+            onClick={() => setShowSignUpModal(true)}
+          >
+            Create a free account {"  "}
+          </span>
+          now
+        </p>
+
+        {/* <p className="text-[var(--grey)] mt-2 text-sm text-center mx-auto">
+          Already a member?{"  "}
+          <span
+            className="cursor-pointer text-[var(--primary)] hover:text-[var(--hover)] transition-all duration-250"
+            onClick={() => setShowSignInModal(true)}
+          >
+            Sign In
+          </span>
+        </p> */}
+      </div>
 
       {showSignInModal && <SignIn setShowModal={setShowSignInModal} />}
       {showSignUpModal && <SignUp setShowModal={setShowSignUpModal} />}

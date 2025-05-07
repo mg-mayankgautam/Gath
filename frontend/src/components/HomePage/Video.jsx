@@ -240,8 +240,8 @@ const Video = ({ video }) => {
         {/* Hover Content */}
         <div className="absolute inset-1 md:inset-3 flex flex-col justify-between gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="flex flex-col justify-self-start gap-1 cursor-pointer">
-            <div className="text-[#fff] font-semibold">Name</div>
-            <div className="text-[#fff] text-sm">user_name</div>
+            {/* <div className="text-[#fff] font-semibold">Name</div>
+            <div className="text-[#fff] text-sm">user_name</div> */}
           </div>
 
           <div className="flex gap-4 items-center justify-end relative">
