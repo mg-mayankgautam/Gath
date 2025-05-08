@@ -414,7 +414,7 @@ module.exports.getVideos = async (req, res) => {
   const skip = (pageNumber - 1) * limitNumber;
 
   try {
-    const videos = await videosDB.find({}).skip(skip).limit(limitNumber);
+    const videos = await videosDB.find({}, '-hdVideoURL -URL').skip(skip).limit(limitNumber);
 
     const totalVideos = await videosDB.countDocuments({});
     const totalPages = Math.ceil(totalVideos / limitNumber);
@@ -551,3 +551,6 @@ module.exports.getOneVideo = async (req, res) => {
     res.status(500).json({ error: "Failed to get video" });
   }
 };
+
+
+

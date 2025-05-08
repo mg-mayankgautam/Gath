@@ -235,3 +235,50 @@ module.exports.downloadWatermark = async (req, res) => {
       res.status(500).json({ success: false, message: 'Server error' });
     }
   };
+
+module.exports.downloadMobile = async (req, res) => {
+    try {
+      console.log('download Mobile HD', req.user, req.body.id);
+      
+      // 1. First update user's download info
+      const email = req.user;
+      const videoID = req.body.id;
+
+
+
+      ////add subscription verification checks
+      
+      const user = await siteUsersDB.findOneAndUpdate(
+        { email, 'DownloadedVideosInfo.videoID': { $ne: videoID } },
+        { $push: { 
+          DownloadedVideosInfo: {
+            videoID,
+            date: new Date(),
+            type: 'Mobile-HD'
+          }
+        }},
+        { new: true }
+      );
+  
+      // 2. Get the actual video URL from your database
+      const video = await videosDB.findById(videoID); // Assuming you have a Video model
+      if (!video) {
+        return res.status(404).json({ success: false, message: 'Video not found' });
+      }
+  
+      // 3. Force download with proper headers
+      res.setHeader('Content-Disposition', `attachment; filename="watermarked_video_${videoID}.mp4"`);
+      res.setHeader('Content-Type', 'video/mp4');
+      
+      // 4. Stream the file from S3
+      const s3Response = await axios.get(video.URL, {
+        responseType: 'stream'
+      });
+      
+      s3Response.data.pipe(res);
+  
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  };  

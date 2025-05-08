@@ -3,8 +3,12 @@ import img from '../../assets/home/banner.webp'
 import img1 from '../../assets/login/login1.png'
 import { Link } from 'react-router-dom';
 import SearchInput from '../SearchPage/SearchInput';
+import SignUp from '../SignUp/SignUp';
 
 const Banner = () => {
+
+      const [showSignInModal, setShowSignInModal] = useState(false);
+      const [showSignUpModal, setShowSignUpModal] = useState(false);
 
     return (
         <div className='relative overflow-hidden'>
@@ -24,7 +28,11 @@ const Banner = () => {
             </div>
 
             <div className='absolute bottom-5 lg:bottom-10 right-5 lg:right-10 lg:left-[65%] flex items-center gap-8'>
-                <button className="greenButton flex-grow">Start free now</button>
+                <button className="greenButton flex-grow"
+                            onClick={() => setShowSignUpModal(true)}
+
+                >Start free now</button>
+                {showSignUpModal && <SignUp setShowModal={setShowSignUpModal} />}
                 <Link to='/pricing' className='flex-grow'><button className="button !w-full">Pricing</button></Link>
             </div>
         </div>

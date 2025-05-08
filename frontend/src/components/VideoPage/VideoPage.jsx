@@ -84,10 +84,10 @@ const VideoPage = ({ setShowModal, video }) => {
         return (
           <>
             <h2 className="text-lg font-semibold mb-4 capitalize">
-              Add to Collection
+             Save Video
             </h2>
             <p className="text-sm">
-              Are you sure you want to add this video to your Collection?
+              Are you sure you want to add this video to your Favorites?
             </p>
             <button className="greenButton">Add</button>
           </>
@@ -206,7 +206,7 @@ const VideoPage = ({ setShowModal, video }) => {
                   // },
                   {
                     icon: darkMode ? addwhite : add,
-                    label: "Add",
+                    label: "Save",
                     type: "add",
                   },
                   {

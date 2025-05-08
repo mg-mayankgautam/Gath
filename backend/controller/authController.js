@@ -98,6 +98,7 @@ module.exports.userLogIn = async (req, res) => {
     // 3. Generate tokens (Access and Refresh)
     const accessToken = jwt.sign(
       {
+        firstName:foundUser.firstName,
         _id: foundUser._id,
         username: foundUser.email,
         role: foundUser.role,
@@ -281,6 +282,7 @@ module.exports.userSignup = async (req, res) => {
       {
         userId: newSiteuser._id,
         username: newSiteuser.email,
+        firstName:newSiteuser.firstName,
         role: newSiteuser.role,
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -288,7 +290,7 @@ module.exports.userSignup = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      {
+      {firstName:newSiteuser.firstName,
         _id: newSiteuser._id,
         email: newSiteuser.email,
         role: newSiteuser.role,

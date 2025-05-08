@@ -7,7 +7,8 @@ import { MdDeleteForever } from "react-icons/md";
 
 const CustomerDashboard = () => {
   const { auth } = useAuth();
-  // console.log(auth);
+
+  console.log(auth);
   const [savedViewMode, setSavedViewMode] = useState("grid"); // 'grid' or 'list'
 
   const [savedClips, setSavedClips] = useState([]);
@@ -77,8 +78,11 @@ const CustomerDashboard = () => {
           </div>
 
           <div className="flex flex-col justify-center gap-2">
-            <div className="font-semibold text-2xl">Name</div>
-            <div className="text-[var(--grey)] text-xl">{auth.username}</div>
+            <div className="font-semibold text-2xl">
+            {auth?.firstName}
+            
+            </div>
+            <div className="text-[var(--grey)] text-xl">{auth?.username}</div>
           </div>
         </div>
 

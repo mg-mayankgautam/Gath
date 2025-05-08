@@ -24,7 +24,7 @@ import Subscribe from "./components/Subscribe";
 import ShipmentDelivery from "./components/PolicyPages/ShipmentDelivery";
 import ContactUs from "./components/ContactUs";
 import OneTimePaymentPage from "./components/Pricing/OneTimePaymentPage";
-
+import Chatbot from "./components/Chatbot";
 //
 import AdminCreate from "./AdminCreate";
 //
@@ -66,6 +66,8 @@ function App() {
           <Route path="refundpolicy" element={<Refund />} />
           <Route path="shipmentanddelivery" element={<ShipmentDelivery />} />
           <Route path="admincreate" element={<AdminCreate />} />
+          <Route path="chatbot" element={<Chatbot />} />
+
         </Route>
       </Routes>
     </ThemeProvider>

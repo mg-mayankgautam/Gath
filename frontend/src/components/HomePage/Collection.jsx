@@ -13,9 +13,20 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
   const [totalPages, setTotalPages] = useState(1); // New state for total pages
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [showShotType, setShowShotType] = useState(false);
   const [sortOrder, setSortOrder] = useState("Ascending");
   const [currentPage, setCurrentPage] = useState(1);
   const videosPerPage = 9;
+
+  const predefinedThemes = [
+    "food",
+    "indian",
+    "nature",
+    "vintage",
+    "rural",
+    "festival",
+  ];
+  const predefinedShots = ["close-up", "Aerial", "pan-shot"];
 
   useEffect(() => {
     const getData = async () => {
@@ -41,37 +52,38 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
         : [...prevFilters, category]
     );
   };
+  const [activeSidebar, setActiveSidebar] = useState(null); // null | 'themes' | 'shotTypes' | etc.
+  const sidebarItems = [
+    { id: "themes", label: "Video Themes", content: predefinedThemes },
+    { id: "shotTypes", label: "Shot Types", content: predefinedShots },
+    // Future items can be added here
+  ];
 
   return (
     <>
       <div className="Home">
-        <div className={showFilters ? "flex gap-4" : "flex gap-2"}>
+        <div className={activeSidebar == null ? "flex gap-2" : "flex gap-2"}>
           <div
             className={
               darkMode ? "FiltersDiv dark flex-grow" : "FiltersDiv flex-grow"
             }
           >
-            <div
-              className={`font-medium cursor-pointer hover:text-[var(--primary)] ${
-                showFilters && "text-[var(--primary)]"
-              }`}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              Video Themes
-            </div>
-            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
-              Shot Types
-            </div>
-            {/* <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
-              People
-            </div> */}
-            {/* <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
-              Collections
-            </div>
-            <div className="font-medium cursor-pointer hover:text-[var(--primary)]">
-              Filmmakers
-            </div> */}
+            {/* Main sidebar items */}
+            {sidebarItems.map((item) => (
+              <div
+                key={item.id}
+                className={`font-medium cursor-pointer hover:text-[var(--primary)] ${
+                  activeSidebar === item.id && "text-[var(--primary)]"
+                }`}
+                onClick={() =>
+                  setActiveSidebar(activeSidebar === item.id ? null : item.id)
+                }
+              >
+                {item.label}
+              </div>
+            ))}
 
+            {/* Static footer items */}
             <div className="mx-auto mt-auto flex flex-col">
               <button className="greenButton mb-4">Start free now</button>
               <Link to="/pricing" className="mx-auto">
@@ -82,17 +94,25 @@ const Collection = ({ searchQuery, setSearchQuery }) => {
             </div>
           </div>
 
+          {/* Sub-sidebars */}
           <div
-            className={`FiltersDiv  ${darkMode ? "dark" : ""} ${
-              showFilters ? "flex-grow" : "hide"
+            className={`FiltersDiv ${darkMode ? "dark" : ""} ${
+              activeSidebar ? "flex-grow" : "hide"
             }`}
           >
-            <Link
-              to="/category/one"
-              className="font-medium cursor-pointer text-[var(--grey)] text-sm hover:text-[var(--primary)]"
-            >
-              Category 1
-            </Link>
+            {sidebarItems
+              .find((item) => item.id === activeSidebar)
+              ?.content.map((contentItem) => (
+                <Link
+                  key={contentItem}
+                  to={`/search?term=${encodeURIComponent(contentItem)}`}
+                  className="font-medium cursor-pointer text-[var(--grey)] text-sm hover:text-[var(--primary)]"
+                >
+                  {/* navigate(`/search?term=${encodeURIComponent(suggestion)}`); */}
+
+                  {contentItem}
+                </Link>
+              ))}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full content-start">

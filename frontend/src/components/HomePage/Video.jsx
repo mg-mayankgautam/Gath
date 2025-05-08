@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import VideoPage from "../VideoPage/VideoPage";
 import icon1 from "../../assets/icons/icon1.svg";
-import icon2 from "../../assets/icons/add2.svg";
+import icon2 from "../../assets/icons/addwhite.svg";
 import icon3 from "../../assets/icons/download3.svg";
 import useAuth from "../../hooks/useAuth";
 import { useTheme } from "../../context/ThemeProvider";
@@ -37,6 +37,8 @@ const Video = ({ video }) => {
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
 
   const handleIconClick = (type) => {
+    console.log(video);
+
     console.log(type, auth);
 
     if (!type) {
@@ -80,6 +82,8 @@ const Video = ({ video }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
+
+  const [selectedQuality, setSelectedQuality] = useState("");
 
   const closeModal = () => {
     setActiveModal(null);
@@ -127,6 +131,33 @@ const Video = ({ video }) => {
     console.log(video);
   };
 
+  const downloadMobileHD = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/user/downloadmobile`,
+        { id: video._id },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.RawToken}`,
+          },
+          responseType: "blob", // Important for file downloads
+        }
+      );
+
+      // Create download link from the blob response
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${video._id}.mp4`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (e) {
+      console.error("Download failed:", e);
+      // Handle errors (show toast/notification)
+    }
+  };
+
   const renderModalContent = () => {
     if (!auth || Object.keys(auth).length === 0) {
       return (
@@ -152,11 +183,11 @@ const Video = ({ video }) => {
         return (
           <>
             <h2 className="text-lg font-semibold mb-4 capitalize">
-              Add to Collection
+              Save Video
             </h2>
             {!loading && !success && (
               <p className="text-sm">
-                Are you sure you want to add this video to your Collection?
+                Are you sure you want to add this video to your Favorites?
               </p>
             )}
 
@@ -207,10 +238,36 @@ const Video = ({ video }) => {
             <h2 className="text-lg font-semibold mb-4 capitalize">Download</h2>
             <p className="text-sm">Click below to download the video:</p>
             {/* <a href={video?.previewURL} download> */}
-            <button onClick={handleIconClick()} className="greenButton">
-              Download
-            </button>
-            {/* </a> */}
+
+            {video.shotonmobile ? (
+              <div className="flex items-center gap-2">
+                <button onClick={downloadMobileHD} className="greenButton">
+                  Download Mobile HD
+                </button>
+              </div>
+            ) : (
+              <div className="w-full">
+                <div className="whitespace-nowrap text-sm flex justify-center items-center gap-4">
+                  <div>Select Video Quality:</div>
+                  <select
+                    value={selectedQuality}
+                    onChange={(e) => setSelectedQuality(e.target.value)}
+                    className={`input min-w-fit border-b ${
+                      darkMode && "dark !border-[#333333]"
+                    } text-sm`}
+                  >
+                    <option value="" disabled hidden>
+                      Select quality
+                    </option>
+                    <option value="HD">HD</option>
+                    <option value="4K">4K</option>
+                  </select>
+                </div>
+                <button onClick={handleIconClick} className="greenButton mt-6">
+                  Download
+                </button>
+              </div>
+            )}
           </>
         );
       default:
@@ -247,7 +304,7 @@ const Video = ({ video }) => {
           <div className="flex gap-4 items-center justify-end relative">
             {[
               { icon: icon1, label: "Show Similar", type: "similar" },
-              { icon: icon2, label: "Add", type: "add" },
+              { icon: icon2, label: "Save", type: "add" },
               { icon: icon3, label: "Download", type: "download" },
             ].map(({ icon, label, type }) => (
               <div

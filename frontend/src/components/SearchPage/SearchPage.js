@@ -8,10 +8,14 @@ import TrendingSearch from "../HomePage/TrendingSearch";
 import { useSearchParams } from "react-router-dom";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { FaTimes } from "react-icons/fa"; // Import the delete icon
+import { useNavigate } from "react-router-dom";
+import { BsFilterLeft } from "react-icons/bs";
 
 const SearchPage = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState([]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -19,7 +23,7 @@ const SearchPage = () => {
   const { darkMode } = useTheme();
 
   const [filteredVideos, setFilteredVideos] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
+  // const [showFilters, setShowFilters] = useState(false);
   const [durationRange, setDurationRange] = useState([0, 30]);
   const [selectedThemes, setSelectedThemes] = useState([]);
   const [sortBy, setSortBy] = useState("relevance");
@@ -38,7 +42,15 @@ const SearchPage = () => {
     const term = searchParams.get("term");
     if (term) {
       console.log("Extracted keyword:", term);
-      setKeyword(term);
+
+      const keywordsArray = term
+        .split(" ")
+        .map((word) => word.trim())
+        .filter((word) => word !== "");
+
+      // Set the array of keywords
+      setKeyword(keywordsArray);
+      //   setKeyword(term);
       // Now, fetch videos based on this term
       const fetchFilteredVideos = async (searchTerm) => {
         try {
@@ -125,6 +137,39 @@ const SearchPage = () => {
     );
   };
 
+  const predefinedThemes = [
+    "food",
+    "indian",
+    "nature",
+    "vintage",
+    "rural",
+    "festival",
+  ];
+  const predefinedShots = ["close-up", "Aerial", "pan-shot"];
+
+  const [activeSidebar, setActiveSidebar] = useState(null); // null | 'themes' | 'shotTypes' | etc.
+  const sidebarItems = [
+    { id: "themes", label: "Video Themes", content: predefinedThemes },
+    { id: "shotTypes", label: "Shot Types", content: predefinedShots },
+    // Future items can be added here
+  ];
+
+  const handleThemeClick = (newTheme) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentTerm = currentParams.get("term") || "";
+
+    // Split existing terms and add new theme (avoid duplicates)
+    const terms = currentTerm.split(" ").filter((term) => term.trim() !== "");
+
+    if (!terms.includes(newTheme)) {
+      terms.push(newTheme);
+    }
+
+    // Reconstruct the search URL
+    const newTerm = terms.join(" ");
+    navigate(`/search?term=${encodeURIComponent(newTerm)}`);
+  };
+
   return (
     <div className="bigscreen p-10">
       <div className="flex flex-col gap-2 mb-20 text-center items-center">
@@ -135,20 +180,89 @@ const SearchPage = () => {
         <SearchInput />
       </div>
 
-      <div className={showFilters ? "flex gap-4" : "flex gap-2"}>
+      <div className="flex gap-2 my-2 items-center">
+        <div className="flex w-full max-w-full modalOverflowX gap-2 my-2">
+          {keyword.map((theme, index) => (
+            <span
+              key={index}
+              className={`${
+                darkMode ? "bg-[#284637]" : "bg-[#C9DBD2]"
+              } py-1 px-2 rounded text-sm mt-2 whitespace-nowrap flex gap-1 items-center text-xs`}
+            >
+              {theme}
+              <FaTimes
+                className="cursor-pointer"
+                // onClick={() => handleDeleteTheme(index)} // Handle delete on click
+              />
+            </span>
+          ))}
+        </div>
+        {keyword?.length > 0 && <button className="whitespace-nowrap hover:underline text-sm">Clear All</button>}
+      </div>
+
+      <div className={activeSidebar ? "flex gap-4" : "flex gap-2"}>
         <div
           className={
             darkMode ? "FiltersDiv dark flex-grow" : "FiltersDiv flex-grow"
           }
         >
           <div
-            className="font-medium cursor-pointer hover:text-[var(--primary)] mb-4"
-            onClick={() => setShowFilters(!showFilters)}
+            className={`font-semibold cursor-pointer hover:text-[var(--primary)] ${
+              activeSidebar == "filters" && "text-[var(--primary)]"
+            } flex gap-2 items-center mb-4`}
+            // onClick={() => setShowFilters(!showFilters)}
+            onClick={() =>
+              setActiveSidebar(activeSidebar == "filters" ? null : "filters")
+            }
           >
-            Filters & Sort
+            <BsFilterLeft /> Filters & Sort
           </div>
 
-          {showFilters && (
+          {/* here showfilters was there previously */}
+
+          {sidebarItems.map((item) => (
+            <div
+              key={item.id}
+              className={`font-medium cursor-pointer hover:text-[var(--primary)] ${
+                activeSidebar === item.id && "text-[var(--primary)]"
+              }`}
+              onClick={() =>
+                setActiveSidebar(activeSidebar === item.id ? null : item.id)
+              }
+            >
+              {item.label}
+            </div>
+          ))}
+
+          <div className="mx-auto mt-auto flex flex-col">
+            <button className="greenButton mb-4">Start free now</button>
+            <Link to="/pricing" className="mx-auto">
+              <button className="text-[var(--primary)] underline cursor-pointer text-center">
+                Pricing
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Sub-sidebars */}
+        <div
+          className={`FiltersDiv ${darkMode ? "dark" : ""} ${
+            activeSidebar ? "flex-grow" : "hide"
+          }`}
+        >
+          {sidebarItems
+            .find((item) => item.id === activeSidebar)
+            ?.content.map((contentItem) => (
+              <div
+                key={contentItem}
+                onClick={() => handleThemeClick(contentItem)}
+                className="font-medium cursor-pointer text-[var(--grey)] text-sm hover:text-[var(--primary)]"
+              >
+                {contentItem}
+              </div>
+            ))}
+
+          {activeSidebar == "filters" && (
             <div className="space-y-6">
               {/* Duration Slider */}
               <div>
@@ -240,15 +354,6 @@ const SearchPage = () => {
               </div>
             </div>
           )}
-
-          <div className="mx-auto mt-auto flex flex-col">
-            <button className="greenButton mb-4">Start free now</button>
-            <Link to="/pricing" className="mx-auto">
-              <button className="text-[var(--primary)] underline cursor-pointer text-center">
-                Pricing
-              </button>
-            </Link>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full content-start">
