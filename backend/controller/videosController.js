@@ -94,6 +94,7 @@ module.exports.postVideo = async (req, res) => {
     const duration = req.body.duration;
     const videoWidth = req.body.videoWidth;
     const videoHeight = req.body.videoHeight;
+    const orientation=req.body.orientation;
     const tags = JSON.parse(req.body.tags);
     const themes = JSON.parse(req.body.themes);
     const shots = JSON.parse(req.body.shots);
@@ -216,7 +217,7 @@ module.exports.postVideo = async (req, res) => {
       duration,
       videoWidth,
       videoHeight,
-      themes,shots,shotonmobile
+      themes,shots,shotonmobile,orientation
 
     });
 
@@ -266,6 +267,7 @@ try{
   const themes = JSON.parse(req.body.themes);
   const shots = JSON.parse(req.body.shots);
   const shotonmobile=req.body.shotonmobile;
+  const orientation=req.body.orientation;
   const video = req.files[0];
 
 
@@ -358,7 +360,7 @@ try{
     duration,
     videoWidth,
     videoHeight,
-    themes,shots,shotonmobile
+    themes,shots,shotonmobile,orientation
 
   });
 

@@ -21,7 +21,7 @@ const videoSchema = new Schema({
     duration: { type: String },
     videoWidth: { type: String },
     videoHeight: { type: String },
-
+    orientation:{type:String},
 });
 
 module.exports = mongoose.model('video', videoSchema);

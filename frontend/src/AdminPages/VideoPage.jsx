@@ -70,7 +70,11 @@ const VideoPage = ({ setShowModal, video }) => {
 
             </div>
 
-            <div className='cursor-pointer h-full' onClick={() => setShowModal(false)}>
+            <div className='cursor-pointer h-full' 
+            onClick={(e) => {setShowModal(false);console.log(e)}}
+            
+            
+            >
               <img src={cross} alt='close' className='h-full object-contain' />
             </div>
           </div>

@@ -4,6 +4,8 @@ import { toast, Toaster } from "sonner";
 import { FaTimes } from "react-icons/fa"; // Import the delete icon
 import VideoPage from "./VideoPage";
 import { useTheme } from "../context/ThemeProvider";
+import ManageVids from "./EmployeeComponents/ManageVids";
+
 
 const EmployeeDashboard = () => {
   const [file1, setFile1] = useState(null);
@@ -107,6 +109,19 @@ const EmployeeDashboard = () => {
       formData.append("videoWidth", videoElement.videoWidth);
       formData.append("videoHeight", videoElement.videoHeight);
       URL.revokeObjectURL(videoURL); // Clean up
+
+
+      let orientation;
+    
+      if (videoElement.videoWidth >  videoElement.videoHeight) {
+          orientation = 'horizontal';
+      } else if (videoElement.videoWidth <  videoElement.videoHeight) {
+          orientation = 'vertical';
+      } else {
+          orientation = 'square';
+      }
+      
+      formData.append('orientation', orientation);
 
       if (!shotOnMobile) {
         try {
@@ -510,62 +525,9 @@ const EmployeeDashboard = () => {
     ),
 
     "Manage Videos": (
-      <div className="p-2 rounded-2xl h-full mx-auto flex flex-col gap-6">
-        <h2 className="text-2xl font-semibold mb-4">Manage Videos</h2>
 
-        <div className="flex flex-col gap-4">
-          {videos.length > 0 ? (
-            videos?.map((video) => (
-              <div
-                key={video?._id}
-                className="flex items-center justify-between gap-4 p-4 border border-gray-300 rounded-lg"
-              >
-                <div className="grid grid-cols-[130px_auto] gap-4">
-                  <div className="!w-full w-auto h-20 bg-gray-200 rounded-[2px] overflow-hidden">
-                    <video
-                      src={
-                        video?.previewURL || "https://via.placeholder.com/80"
-                      }
-                      alt={video?.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  <div className="flex flex-col justify-between gap-2">
-                    <p className="font-semibold text-lg break-all">
-                      {video?.name}
-                    </p>
-                    <div className="flex gap-2 flex-wrap">
-                      {video?.tags?.map((tag, index) => (
-                        <span key={index} className="lightGreenButton">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 flex-col">
-                  <button
-                    className="greenButton !py-2 !px-5 !text-xs !w-full"
-                    onClick={() => {
-                      setSelectedVideo(video);
-                      setSelectedVideoModal(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button className="greenButton !py-2 !px-5 w-full !text-xs !bg-red-700 !text-white">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-500">No videos available</p>
-          )}
-        </div>
-      </div>
+    <  ManageVids videos={videos} />
+   
     ),
 
     Settings: <p>Settings content will appear here.</p>,
@@ -602,9 +564,7 @@ const EmployeeDashboard = () => {
 
       <Toaster position="top-center" richColors />
 
-      {setSelectedVideo && selectedVideoModal && (
-        <VideoPage setShowModal={setSelectedVideoModal} video={selectedVideo} />
-      )}
+  
 
       {isUploading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">

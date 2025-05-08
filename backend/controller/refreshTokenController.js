@@ -13,9 +13,9 @@ module.exports.handleRefreshToken = async (req, res) => {
 
   const decodedToken = jwt.decode(refreshToken);
   // console.log('decodedToken',decodedToken.role)
-  // console.log(refreshToken);
+  console.log(decodedToken);
 
-  if (decodedToken.role == "ADMIN" || decodedToken.role == "EMP") {
+  if (decodedToken.role == "ADMIN" || decodedToken.role == "EMPLOYEE") {
     const foundUser = adminDB
       .findOne({ refreshToken })
       .then((saved) => {
