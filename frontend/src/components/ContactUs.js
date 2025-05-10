@@ -58,16 +58,14 @@ const ContactUs = () => {
           {/* <button className="greenButton mt-6">Start Browsing</button> */}
           <div className="text-[18px] font-semibold my-4">
             <a href="mailto:support@shotkut.com">support@shotkut.com</a> <br />{" "}
-            +91 97179 14147
+            <a href="tel:+919717914147">+91 97179 14147</a>
           </div>
         </div>
-
-        {/* <div className="h-full max-h-full w-full rounded-2xl">
-          <img
-            src={img}
-            className="object-cover max-h-full h-[240px] w-full rounded-2xl opacity-90"
-          />
-        </div> */}
+        {/* helo
+        call when done, if not feeling sleepy
+okk,:) till when u up?3-4 okk same, will be waiting . u can call rn ...too, i ll do work later. u can push and go sleep, no need to stay on live share.
+i have some bug fixing to do. call me when its done.check tags clear all etc works. u want me to see the bug or just try what u have done? 2nd one okiiii dekhri hu.  */}
+        {/* niceeee, bs reset krne ke baad search results bhi reset krdo. */}
       </div>
 
       <div className="mt-[60px] flex flex-col gap-4 w-full max-w-[800px]">
@@ -81,7 +79,7 @@ const ContactUs = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-            //   placeholder="Full Name"
+              //   placeholder="Full Name"
               className={darkMode ? "input dark w-full" : "input w-full"}
             />
 
@@ -93,13 +91,13 @@ const ContactUs = () => {
           </div>
 
           <div className="relative">
-          <div className="mb-1 ml-1 text-sm">Email ID *</div>
+            <div className="mb-1 ml-1 text-sm">Email ID *</div>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-            //   placeholder="Email ID"
+              //   placeholder="Email ID"
               className={darkMode ? "input dark w-full" : "input w-full"}
             />
 
@@ -111,13 +109,13 @@ const ContactUs = () => {
           </div>
 
           <div className="relative">
-          <div className="mb-1 ml-1 text-sm">Phone Number *</div>
+            <div className="mb-1 ml-1 text-sm">Phone Number *</div>
             <input
               type="number"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-            //   placeholder="Phone Number"
+              //   placeholder="Phone Number"
               className={darkMode ? "input dark w-full" : "input w-full"}
             />
 
@@ -129,13 +127,13 @@ const ContactUs = () => {
           </div>
 
           <div className="relative">
-          <div className="mb-1 ml-1 text-sm">Your Query *</div>
+            <div className="mb-1 ml-1 text-sm">Your Query *</div>
             <input
               type="text"
               name="query"
               value={formData.query}
               onChange={handleChange}
-            //   placeholder="User Country"
+              //   placeholder="User Country"
               className={darkMode ? "input dark w-full" : "input w-full"}
             />
 
@@ -147,13 +145,15 @@ const ContactUs = () => {
           </div>
 
           <div className="relative">
-          <div className="mb-1 ml-1 text-sm">Kindly give full description of your concern</div>
+            <div className="mb-1 ml-1 text-sm">
+              Kindly give full description of your concern
+            </div>
             <textarea
               type="text"
               name="message"
               value={formData.message}
               onChange={handleChange}
-            //   placeholder="Message"
+              //   placeholder="Message"
               className={darkMode ? "input dark w-full" : "input w-full"}
             />
 

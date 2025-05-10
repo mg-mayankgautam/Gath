@@ -125,7 +125,8 @@ const AboutPage = () => {
         </div>
         <div className="text-[24px] font-bold my-6">
           <a href="mailto:support@shotkut.com">support@shotkut.com</a> <br />{" "}
-          +91 23452 56566
+          <a href="tel:+919717914147">+91 97179 14147</a>
+
         </div>
 
         <div className="grid grid-cols-2 !gap-8 w-full max-w-[700px] mx-auto">

@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import { BsFilterLeft } from "react-icons/bs";
 
 const SearchPage = () => {
-
   const [orientationFilter, setOrientationFilter] = useState("all");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -50,6 +49,8 @@ const SearchPage = () => {
         .map((word) => word.trim())
         .filter((word) => word !== "");
 
+      console.log(keywordsArray);
+
       // Set the array of keywords
       setKeyword(keywordsArray);
       //   setKeyword(term);
@@ -72,9 +73,13 @@ const SearchPage = () => {
       fetchFilteredVideos(term);
     } else {
       console.log("No search term in URL.");
+      setKeyword([]);
+
       setFilteredVideos([]);
     }
   }, [searchParams]);
+
+  console.log(keyword);
 
   // Apply filters to videos
   const applyFilters = () => {
@@ -109,7 +114,10 @@ const SearchPage = () => {
         }
       }
 
-      if (orientationFilter !== "all" && video.orientation !== orientationFilter) {
+      if (
+        orientationFilter !== "all" &&
+        video.orientation !== orientationFilter
+      ) {
         return false;
       }
 
@@ -176,6 +184,24 @@ const SearchPage = () => {
     navigate(`/search?term=${encodeURIComponent(newTerm)}`);
   };
 
+  const removetag = (themeToRemove) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentTerm = currentParams.get("term") || "";
+
+    // Split existing terms and filter out the theme to remove
+    const terms = currentTerm
+      .split(" ")
+      .filter((term) => term.trim() !== "" && term !== themeToRemove);
+
+    // Reconstruct the search URL
+    const newTerm = terms.join(" ");
+    navigate(`/search?term=${encodeURIComponent(newTerm)}`);
+  };
+
+  const removeAllTag = () => {
+    navigate(`/search`);
+  };
+
   return (
     <div className="bigscreen p-10">
       <div className="flex flex-col gap-2 mb-20 text-center items-center">
@@ -198,12 +224,19 @@ const SearchPage = () => {
               {theme}
               <FaTimes
                 className="cursor-pointer"
-                // onClick={() => handleDeleteTheme(index)} // Handle delete on click
+                onClick={() => removetag(theme)} // Handle delete on click
               />
             </span>
           ))}
         </div>
-        {keyword?.length > 0 && <button className="whitespace-nowrap hover:underline text-sm">Clear All</button>}
+        {keyword?.length > 0 && (
+          <button
+            onClick={() => removeAllTag()} // Handle delete on click
+            className="whitespace-nowrap hover:underline text-sm"
+          >
+            Clear All
+          </button>
+        )}
       </div>
 
       <div className={activeSidebar ? "flex gap-4" : "flex gap-2"}>
@@ -337,27 +370,29 @@ const SearchPage = () => {
                 </div>
               </div>
 
-            {/* Orientation Filter */}
-<div>
-  <div className="text-sm font-medium mb-2">Orientation</div>
-  <div className="space-y-2">
-    {["all", "horizontal", "vertical"].map((orientation) => (
-      <div key={orientation} className="flex items-center">
-        <button
-          onClick={() => setOrientationFilter(orientation)}
-          className={`w-4 h-4 rounded-full mr-2 border ${
-            orientationFilter === orientation
-              ? "bg-[var(--primary)] border-[var(--primary)]"
-              : "border-gray-400"
-          }`}
-        />
-        <span className="text-sm">
-          {orientation === "all" ? "All Orientations" : orientation}
-        </span>
-      </div>
-    ))}
-  </div>
-</div>
+              {/* Orientation Filter */}
+              <div>
+                <div className="text-sm font-medium mb-2">Orientation</div>
+                <div className="space-y-2">
+                  {["all", "horizontal", "vertical"].map((orientation) => (
+                    <div key={orientation} className="flex items-center">
+                      <button
+                        onClick={() => setOrientationFilter(orientation)}
+                        className={`w-4 h-4 rounded-full mr-2 border ${
+                          orientationFilter === orientation
+                            ? "bg-[var(--primary)] border-[var(--primary)]"
+                            : "border-gray-400"
+                        }`}
+                      />
+                      <span className="text-sm">
+                        {orientation === "all"
+                          ? "All Orientations"
+                          : orientation}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Sort By */}
               <div>
