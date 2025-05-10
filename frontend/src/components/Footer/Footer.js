@@ -44,6 +44,13 @@ const Footer = () => {
                 </div>
 
             </div>
+
+            {/* Copyright section */}
+            <div className={`py-4 text-center border-t ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+                <p className="text-sm">
+                    &copy; Gath Productions 2025. All rights reserved.
+                </p>
+            </div>
         </div>
     )
 }

@@ -70,7 +70,7 @@ const initialOrientation=video.orientation
   // Save changes and send to backend
   const handleSave = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/videos/editinfoz`,
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/videos/editinfo`,
         {
           _id: video._id,
           name,          // updated name

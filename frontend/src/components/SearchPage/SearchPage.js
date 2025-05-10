@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { BsFilterLeft } from "react-icons/bs";
 
 const SearchPage = () => {
+
+  const [orientationFilter, setOrientationFilter] = useState("all");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState([]);
@@ -105,6 +107,10 @@ const SearchPage = () => {
         if (parseInt(video.videoHeight) < minHeight) {
           return false;
         }
+      }
+
+      if (orientationFilter !== "all" && video.orientation !== orientationFilter) {
+        return false;
       }
 
       return true;
@@ -313,7 +319,7 @@ const SearchPage = () => {
               <div>
                 <div className="text-sm font-medium mb-2">Resolution</div>
                 <div className="space-y-2">
-                  {["all", "4k", "1080p", "720p"].map((res) => (
+                  {["all", "4k", "1080p"].map((res) => (
                     <div key={res} className="flex items-center">
                       <button
                         onClick={() => setResolutionFilter(res)}
@@ -330,6 +336,28 @@ const SearchPage = () => {
                   ))}
                 </div>
               </div>
+
+            {/* Orientation Filter */}
+<div>
+  <div className="text-sm font-medium mb-2">Orientation</div>
+  <div className="space-y-2">
+    {["all", "horizontal", "vertical"].map((orientation) => (
+      <div key={orientation} className="flex items-center">
+        <button
+          onClick={() => setOrientationFilter(orientation)}
+          className={`w-4 h-4 rounded-full mr-2 border ${
+            orientationFilter === orientation
+              ? "bg-[var(--primary)] border-[var(--primary)]"
+              : "border-gray-400"
+          }`}
+        />
+        <span className="text-sm">
+          {orientation === "all" ? "All Orientations" : orientation}
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
 
               {/* Sort By */}
               <div>

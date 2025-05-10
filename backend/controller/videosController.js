@@ -514,12 +514,13 @@ module.exports.addView = async (req, res) => {
 };
 
 module.exports.editInfo = async (req, res) => {
-  const { _id, name, tags } = req.body;
+  const { _id, name, tags,themes,shots ,shotonmobile,orientation} = req.body;
+  console.log('reached edit info',req.body)
 
   try {
     const updatedVideo = await videosDB.findOneAndUpdate(
       { _id },
-      { name, tags },
+      { name, tags,themes,shots,shotonmobile,orientation },
       { new: true, runValidators: true } // Return updated document & validate input
     );
 
