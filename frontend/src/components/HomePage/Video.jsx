@@ -95,7 +95,7 @@ const Video = ({ video }) => {
 
   const saveVideo = async () => {
     const token = auth.RawToken;
-
+    console.log(auth)
     setLoading(true);
     setSuccess(false);
     setError(false);

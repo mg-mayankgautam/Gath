@@ -109,7 +109,9 @@ module.exports.userLogIn = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { _id: foundUser._id, email: foundUser.email, role: foundUser.role },
+      { _id: foundUser._id, 
+        email: foundUser.email, 
+        role: foundUser.role },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "1d" }
     );

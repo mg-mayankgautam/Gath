@@ -88,9 +88,16 @@ const SignIn = ({ setShowModal }) => {
 
         const { accessToken } = response.data;
         const decodedToken = jwtDecode(accessToken);
-        console.log("Decoded JWT:", decodedToken); // ✅ Log 3
 
-        setAuth(decodedToken);
+        const tokenData = {
+          ...decodedToken, // Spread all properties from decodedToken
+          RawToken: accessToken, // Add the raw token as a new property
+        };
+
+
+        console.log("Decoded JWT:", tokenData); // ✅ Log 3
+
+        setAuth(tokenData);
         navigate("/dashboard");
         setShowModal(false);
       } catch (error) {

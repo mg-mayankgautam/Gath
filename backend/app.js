@@ -72,6 +72,7 @@ app.post('/auth/google', async (req, res) => {
                 email: email,
                 password: '', // Google user — no password
                 role: 'USER',
+                subscription:false,
             });
             console.log("Creating new user...");
         } else {
@@ -80,10 +81,12 @@ app.post('/auth/google', async (req, res) => {
         
         // Now generate your accessToken and refreshToken
         const accessToken = jwt.sign(
-            {        
-                userId: user._id,
+            {   firstName:user.firstName,   
+                _id: user._id,
                 username: user.email,
                 role: user.role,
+                subscription:user.subscription
+
             },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: "15m" }
