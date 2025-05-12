@@ -74,7 +74,7 @@ module.exports.handleRefreshToken = async (req, res) => {
               const accessToken = jwt.sign(
                 {
                   username: decoded.email,
-                   firstName:decoded.firstName,
+                   firstName:saved.firstName,
                   role: decoded.role,
                   _id: decoded._id,
                   subscription: subscribed,

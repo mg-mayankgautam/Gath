@@ -14,11 +14,12 @@ import { useTheme } from "../../context/ThemeProvider";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../SearchPage/SearchInput";
-
+import Video from "../HomePage/Video";
 const VideoPage = ({ setShowModal, video }) => {
   const navigate = useNavigate();
   console.log(video);
   const { darkMode } = useTheme();
+  const [related, setRelated] = useState([])
 
   useEffect(() => {
     // Disable background scroll
@@ -32,6 +33,7 @@ const VideoPage = ({ setShowModal, video }) => {
           { id: video._id }
         );
         console.log("Response:", response.data); // Handle success
+        setRelated(response.data.relatedVideos);
       } catch (error) {
         console.error("Error during viewadd:", error); // Handle errors
       }
@@ -130,6 +132,9 @@ const VideoPage = ({ setShowModal, video }) => {
       }
     }
   };
+
+
+console.log(related)
 
   return (
     <>
@@ -382,27 +387,47 @@ const VideoPage = ({ setShowModal, video }) => {
                 </div>
               </div>
 
-              <div className="text-xl font-semibold mt-6">
-                Similar Clips (not available yet)
-              </div>
+              <div className="flex justify-between text-xl font-semibold mt-6">
+              <div> Similar Clips </div> 
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                <Skeleton
-                  variant="rectangular"
-                  height={200}
-                  sx={darkMode ? { bgcolor: "grey.800" } : {}}
-                />
-                <Skeleton
-                  variant="rectangular"
-                  height={200}
-                  sx={darkMode ? { bgcolor: "grey.800" } : {}}
-                />
-                <Skeleton
-                  variant="rectangular"
-                  height={200}
-                  sx={darkMode ? { bgcolor: "grey.800" } : {}}
-                />
+                <button
+                            className="whitespace-nowrap hover:underline text-sm"
+
+                >View More</button>
+
+
+               
               </div>
+              
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                <Skeleton
+                  variant="rectangular"
+                  height={200}
+                  sx={darkMode ? { bgcolor: "grey.800" } : {}}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  height={200}
+                  sx={darkMode ? { bgcolor: "grey.800" } : {}}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  height={200}
+                  sx={darkMode ? { bgcolor: "grey.800" } : {}}
+                />
+              </div> */}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full content-start">
+            {related?.length > 0 &&
+              related?.map((video) => (
+                <div key={video._id} className="aspect-[16/9]">
+                  {" "}
+                  {/* Adjust aspect ratio as needed */}
+                  <Video video={video} />
+                </div>
+              ))}
+          </div>
+
             </div>
           </div>
         </div>

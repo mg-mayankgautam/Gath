@@ -72,7 +72,8 @@ app.post('/auth/google', async (req, res) => {
                 email: email,
                 password: '', // Google user — no password
                 role: 'USER',
-                subscription:false,
+                subscription: { subscriptionStatus: false, validityDate: "" },
+
             });
             console.log("Creating new user...");
         } else {

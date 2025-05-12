@@ -4,6 +4,7 @@ import img1 from "../../assets/about/about1.png";
 import img2 from "../../assets/about/about2.png";
 import img3 from "../../assets/about/about3.png";
 import { useTheme } from "../../context/ThemeProvider";
+import { Link } from "react-router-dom";
 
 const AboutPage = () => {
   useEffect(() => {
@@ -54,10 +55,11 @@ const AboutPage = () => {
             Unlimited Indian Footage for everyone
           </div>
           <div className="text-[20px] font-light max-w-[520px]">
-            Over 6 million free high-resolution videos brought to you by the
-            world’s most generous community of contributors.
+        A collection of over 10,000 high resolution Indian stock videos at an incredibly low cost
           </div>
-          <button className="greenButton mt-6">Start Browsing</button>
+                    <Link to='/' >
+
+          <button className="greenButton mt-6">Start Browsing</button></Link>
         </div>
 
         <div className="h-full max-h-full w-full rounded-2xl">
@@ -76,11 +78,9 @@ const AboutPage = () => {
               className="object-cover h-full w-full rounded-md opacity-90"
             />
           </div>
-          <div className="font-bold">Over six million curated footages</div>
+          <div className="font-bold">Find authentic Indian stock footage</div>
           <div className="text-sm font-light">
-            We hand-select every footage and accept only the best, so that no
-            matter what you need—you’ll find exactly what you’re looking for on
-            Shotkut.
+          Prioritize genuine portrayals of India by seeking footage that reflects real life, diverse cultures, and landscapes. 
           </div>
         </div>
 
@@ -91,11 +91,9 @@ const AboutPage = () => {
               className="object-cover h-full w-full rounded-md opacity-90"
             />
           </div>
-          <div className="font-bold">Over six million curated footages</div>
+          <div className="font-bold">Unlock over 10,000 high-res curated footages</div>
           <div className="text-sm font-light">
-            We hand-select every footage and accept only the best, so that no
-            matter what you need—you’ll find exactly what you’re looking for on
-            Shotkut.
+          Access a large library of quality visuals through our subscription. Benefit from a wealth of high-resolution Indian video clips readily available for your projects.
           </div>
         </div>
 
@@ -106,7 +104,7 @@ const AboutPage = () => {
               className="object-cover h-full w-full rounded-md opacity-90"
             />
           </div>
-          <div className="font-bold">Over six million curated footages</div>
+          <div className="font-bold">Elevate your projects with professional-grade Indian visuals</div>
           <div className="text-sm font-light">
             We hand-select every footage and accept only the best, so that no
             matter what you need—you’ll find exactly what you’re looking for on
@@ -118,10 +116,8 @@ const AboutPage = () => {
       <div className="mt-[72px] flex flex-col gap-4 text-center">
         <div className="text-3xl font-bold">Contact Us</div>
         <div className="text-[18px] max-w-[640px] mx-auto">
-          Lorem ipsum dolor sit amet consectetur. Proin facilisi lectus ac urna.
-          Sit dictum amet sollicitudin ultrices egestas orci. Viverra tristique
-          convallis ultrices vitae orci id. Sagittis non libero in erat
-          vestibulum.
+          Whether you have a question about subscription plans, 
+          pricing or anything else, our team has answers
         </div>
         <div className="text-[24px] font-bold my-6">
           <a href="mailto:support@shotkut.com">support@shotkut.com</a> <br />{" "}
