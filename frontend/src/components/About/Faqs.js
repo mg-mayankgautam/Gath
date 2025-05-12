@@ -36,23 +36,22 @@ const Faqs = () => {
                 <div className='font-semibold'>{item.question}</div>
 
                 {selected === i ?
-                    <IoIosArrowUp className='text-2xl font-semibold text-[var(--primary)]'/>
+                  <IoIosArrowUp className='text-2xl font-semibold text-[var(--primary)]' />
                   :
-                    <IoIosArrowDown className='text-2xl font-semibold text-[var(--primary)]'/>
+                  <IoIosArrowDown className='text-2xl font-semibold text-[var(--primary)]' />
                 }
               </div>
 
-              <div className={selected === i ? 'text-sm max-h-screen overflow-hidden transition-all duration-300 ease-in-out w-full max-w-[900px] mt-6' : 'text-sm max-h-0 overflow-hidden transition-all duration-300 ease-in-out w-full'}>
+              <div className={`text-sm overflow-hidden transition-all duration-300 ease-in-out w-full ${selected === i ? 'max-h-screen mt-6' : 'max-h-0 mt-0'}`}>
                 {item.answer}
               </div>
 
             </div>
 
-            <div className={`${
-                    darkMode
-                      ? "bg-[#333333]"
-                      : "bg-[#CBCBCB]"
-                  } h-[0.5px] max-w-[1000px] my-2`}></div>
+            <div className={`${darkMode
+                ? "bg-[#333333]"
+                : "bg-[#CBCBCB]"
+              } h-[0.5px] max-w-[1000px] my-2`}></div>
           </>
         ))}
       </div>
