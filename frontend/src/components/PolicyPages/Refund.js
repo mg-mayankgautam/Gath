@@ -70,8 +70,12 @@ const Refund = () => {
             </a>{" "}
             with your account information such as name, registered email and
             license number so that we can offer you the best solutions
-            available.
-          </p>
+            available. 
+            <br />
+            <strong><h3 className={`${
+            darkMode ? "bg-[#284637]" : "bg-[#C9DBD2]"
+          } py-1 px-2 rounded text-sm mt-2 w-fit`} >Please note: if you qualify, the refund will be processed within 5-7 working days.</h3></strong>
+            </p>
         </div>
       </div>
     </div>
