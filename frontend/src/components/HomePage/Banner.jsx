@@ -7,8 +7,8 @@ import SignUp from '../SignUp/SignUp';
 
 const Banner = () => {
 
-      const [showSignInModal, setShowSignInModal] = useState(false);
-      const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const [showSignInModal, setShowSignInModal] = useState(false);
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
 
     return (
         <div className='relative overflow-hidden'>
@@ -28,12 +28,19 @@ const Banner = () => {
             </div>
 
             <div className='absolute bottom-5 lg:bottom-10 right-5 lg:right-10 lg:left-[65%] flex items-center gap-2 sm:gap-8'>
-                <button className="greenButton flex-grow"
-                            onClick={() => setShowSignUpModal(true)}
+                <button
+                    className="greenButton flex-grow"
+                    onClick={() => setShowSignUpModal(true)}>
+                    Start free now
+                </button>
 
-                >Start free now</button>
                 {showSignUpModal && <SignUp setShowModal={setShowSignUpModal} />}
-                <Link to='/pricing' className='flex-grow'><button className="button !w-full">Pricing</button></Link>
+
+                <Link to='/pricing' className='flex-grow'>
+                    <button className="!border-white lg:!border-[var(--text)] !text-white lg:!text-[var(--text)] button !w-full">
+                        Pricing
+                    </button>
+                </Link>
             </div>
         </div>
     )

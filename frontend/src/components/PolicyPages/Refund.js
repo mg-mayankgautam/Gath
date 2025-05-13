@@ -10,9 +10,9 @@ const Refund = () => {
 
 
   return (
-    <div className="bigscreen p-10 flex flex-col gap-5">
+    <div className="bigscreen p-10 px-5 md:px-10 flex flex-col gap-5">
       <div>
-        <div className="font-bold text-4xl">Refund Policy</div>
+        <div className="font-bold text-3xl md:text-4xl">Refund Policy</div>
         <div
           className={`${
             darkMode ? "bg-[#284637]" : "bg-[#C9DBD2]"

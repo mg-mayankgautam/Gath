@@ -10,8 +10,8 @@ const Pricing = () => {
   const { darkMode } = useTheme();
 
   return (
-    <div className="bigscreen p-10 text-center bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(151,253,202,0.128)_0%,_rgba(151,253,202,0)_100%)]">
-      <div className="text-[32px] font-semibold">
+    <div className="bigscreen px-5 py-10 md:p-10 text-center bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(151,253,202,0.128)_0%,_rgba(151,253,202,0)_100%)]">
+      <div className="text-3xl sm:text-[32px] font-semibold">
         The best Indian footage license in the world
       </div>
       <div>
@@ -19,12 +19,11 @@ const Pricing = () => {
         and a lifetime license
       </div>
 
-      <div className="flex items-end justify-center gap-9 mt-8 text-left">
+      <div className="flex flex-col md:flex-row items-center md:items-end md:justify-center gap-9 mt-8 text-left">
         {/* Monthly Plan (unchanged except removed Early Access) */}
         <div
-          className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${
-            darkMode ? "bg-[#23262452]" : "bg-white"
-          } hover:shadow flex flex-col gap-6 w-full max-w-[240px]`}
+          className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${darkMode ? "bg-[#23262452]" : "bg-white"
+            } hover:shadow flex flex-col gap-6 w-full max-w-[400px] md:max-w-[240px]`}
           style={{ borderColor: "var(--primary)" }}
         >
           <div>Monthly Plan</div>
@@ -36,18 +35,16 @@ const Pricing = () => {
             Great for trying out Shotkut and for tiny teams.
           </div>
           <button
-            className={`greenButton mx-auto !bg-[transparent] border-2 ${
-              darkMode ? "border-white !text-white" : "border-black"
-            } !w-[90%]`}
+            className={`greenButton mx-auto !bg-[transparent] border-2 ${darkMode ? "border-white !text-white" : "border-black"
+              } !w-[90%]`}
           >
             Try Now
           </button>
           <div
-            className={`${
-              darkMode
+            className={`${darkMode
                 ? "bg-[#232624] text-[#666666]"
                 : "bg-[#C9DBD2] text-[#333333]"
-            } text-sm rounded-[4px] p-1 mx-auto`}
+              } text-sm rounded-[4px] p-1 mx-auto`}
           >
             Features
           </div>
@@ -68,21 +65,18 @@ const Pricing = () => {
 
         {/* Yearly Plan (enhanced) */}
         <div
-          className={`bg-[var(--primary)] p-2 rounded-[16px] ${
-            darkMode ? "gradientcustom dark" : "gradientcustom"
-          } hover:shadow flex flex-col gap-2 w-full max-w-[250px]`}
+          className={`bg-[var(--primary)] p-2 rounded-[16px] ${darkMode ? "gradientcustom dark" : "gradientcustom"
+            } hover:shadow flex flex-col gap-2 w-full max-w-[410px] md:max-w-[250px]`}
         >
           <div
-            className={`${
-              darkMode ? "text-[#333]" : "text-white"
-            } text-xs text-center font-semibold`}
+            className={`${darkMode ? "text-[#333]" : "text-white"
+              } text-xs text-center font-semibold`}
           >
             Most Popular
           </div>
           <div
-            className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${
-              darkMode ? "bg-[#232624]" : "bg-white"
-            } flex flex-col gap-6 w-full max-w-[240px]`}
+            className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${darkMode ? "bg-[#232624]" : "bg-white"
+              } flex flex-col gap-6 w-full max-w-[400px] md:max-w-[240px]`}
             style={{ borderColor: "var(--primary)" }}
           >
             <div>Yearly Plan</div>
@@ -98,18 +92,16 @@ const Pricing = () => {
               Best for growing startups and growth companies.
             </div>
             <button
-              className={`greenButton mx-auto ${
-                darkMode && "!bg-[#97FDCA]"
-              } !w-[90%]`}
+              className={`greenButton mx-auto ${darkMode && "!bg-[#97FDCA]"
+                } !w-[90%]`}
             >
               Try Now
             </button>
             <div
-              className={`${
-                darkMode
+              className={`${darkMode
                   ? "bg-[#232624] text-[#666666]"
                   : "bg-[#C9DBD2] text-[#333333]"
-              } text-sm rounded-[4px] p-1 mx-auto`}
+                } text-sm rounded-[4px] p-1 mx-auto`}
             >
               Features
             </div>
@@ -132,9 +124,8 @@ const Pricing = () => {
 
         {/* Enterprise Plan (unchanged) */}
         <div
-          className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${
-            darkMode ? "bg-[#23262452]" : "bg-white"
-          } hover:shadow flex flex-col gap-6 w-full max-w-[240px]`}
+          className={`cursor-pointer border-[0.5px] p-4 rounded-[16px] ${darkMode ? "bg-[#23262452]" : "bg-white"
+            } hover:shadow flex flex-col gap-6 w-full max-w-[400px] md:max-w-[240px]`}
           style={{ borderColor: "var(--primary)" }}
         >
           <div>Enterprise</div>
@@ -146,18 +137,16 @@ const Pricing = () => {
             Best for large companies & teams needing high security.
           </div>
           <button
-            className={`greenButton mx-auto !bg-[transparent] border-2 ${
-              darkMode ? "border-white !text-white" : "border-black"
-            } !w-[90%]`}
+            className={`greenButton mx-auto !bg-[transparent] border-2 ${darkMode ? "border-white !text-white" : "border-black"
+              } !w-[90%]`}
           >
             Try Now
           </button>
           <div
-            className={`${
-              darkMode
+            className={`${darkMode
                 ? "bg-[#232624] text-[#666666]"
                 : "bg-[#C9DBD2] text-[#333333]"
-            } text-sm rounded-[4px] p-1 mx-auto`}
+              } text-sm rounded-[4px] p-1 mx-auto`}
           >
             Features
           </div>

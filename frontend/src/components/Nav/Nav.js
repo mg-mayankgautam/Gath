@@ -11,6 +11,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { IoPerson } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -38,8 +39,8 @@ const Nav = () => {
   };
 
   const profileDropdownRef = useRef(null);
+  const mobileNavRef = useRef(null);
 
-  // Add this useEffect for click-outside detection
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -49,7 +50,21 @@ const Nav = () => {
         setShowProfileDropDown(false);
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        mobileNavRef.current &&
+        !mobileNavRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -59,7 +74,7 @@ const Nav = () => {
   return (
     <>
       <div className={darkMode ? "NavContainer dark" : "NavContainer"}>
-        <div className={"Nav bigscreen"}>
+        <div className="Nav bigscreen">
           {auth.role == "ADMIN" ? (
             <Link className="navLogo">
               <img
@@ -104,41 +119,97 @@ const Nav = () => {
             <ThemeToggle />
           </div>
 
-          <FiMenu
-            className="md:hidden text-2xl text-white cursor-pointer"
+          <div
+            className={`md:hidden text-2xl cursor-pointer`}
             onClick={() => setMenuOpen(!menuOpen)}
-          />
+          >
+            {menuOpen ? <RxCross2 /> : <FiMenu />}
+          </div>
 
           {/* Mobile Menu */}
-          {menuOpen && (
-            <div className="absolute top-12 left-0 w-full bg-black shadow-lg flex flex-col items-start p-4 space-y-2 md:hidden">
-              <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
-                Join
-              </button>
-              <button className="w-full text-left px-4 py-2 rounded-lg text-[rgba(255,255,255,0.541)] bg-transparent hover:text-white">
-                Contact
-              </button>
-              {/* Sign In Button */}
-              <button className="w-full text-left px-4 py-2 bg-[rgb(255,173,143)] text-black rounded-lg hover:bg-[rgb(252,185,161)]">
+          {/* {menuOpen && ( */}
+          <div
+            ref={mobileNavRef}
+            className={`absolute top-[60px] left-0 w-full flex flex-col px-4 gap-2 shadow-md transition-all duration-300 ease-in-out max-h-0 overflow-y-hidden rounded border
+                ${darkMode
+                ? "bg-[#1B1D1C] border-[#333333]"
+                : "bg-[#F1F1F1] border-[#CBCBCB]"
+              }
+                ${menuOpen
+                ? "opacity-100 h-auto max-h-[calc(100vh-80px)] pt-6 pb-8"
+                : "opacity-0 py-0"
+              }`}
+          >
+            {/* <div className="absolute top-12 left-0 w-full bg-black shadow-lg flex flex-col p-4 md:hidden"> */}
+            <Link to="/pricing">
+              <div className="navBtn hover:text-[var(--primary)] transition-all duration-250">
+                Pricing
+              </div>
+            </Link>
+
+            {auth.role ? (
+              <>
+                <div
+                  // ref={userButtonMobileRef}
+                  onClick={() => setShowProfileDropDown(!showProfileDropDown)}
+                  className="navBtn hover:text-[var(--primary)] transition-all duration-250 flex items-center gap-1"
+                >
+                  <IoPerson />
+                  {/* {auth.role} */}
+                  User
+                </div>
+
+                {/* {showProfileDropDown && ( */}
+                <div
+                  ref={profileDropdownRef}
+                  className={`md:hidden pl-4 flex flex-col gap-2 transition-all duration-300 ease-in-out max-h-0 overflow-y-hidden 
+                    ${showProfileDropDown
+                      ? "opacity-100 h-auto max-h-[999px] py-0"
+                      : "opacity-0 py-0"
+                    }`}
+                >
+                  <Link to="/dashboard" onClick={() => setShowProfileDropDown(false)}>
+                    <div className="navBtn hover:text-[var(--primary)] transition-all duration-250">
+                      Dashboard
+                    </div>
+                  </Link>
+                  <div
+                    onClick={() => {
+                      logout();
+                      setShowProfileDropDown(false);
+                    }}
+                    className="navBtn hover:text-[var(--primary)] transition-all duration-250"
+                  >
+                    Logout
+                  </div>
+                </div>
+                {/* )} */}
+              </>
+            ) : (
+              <div
+                className="navBtn hover:text-[var(--primary)] transition-all duration-250 mb-20"
+                onClick={() => { setShowSignInModal(true); setMenuOpen(false) }}
+              >
                 Sign In
-              </button>
-            </div>
-          )}
+              </div>
+            )}
+
+            <ThemeToggle />
+          </div>
+          {/* )} */}
 
           {/* {showProfileDropDown && ( */}
           <div
             ref={profileDropdownRef}
-            className={`absolute top-[60px] right-[124px] w-full max-w-[200px] px-2 flex flex-col gap-2 shadow-md transition-all duration-300 ease-in-out max-h-0 overflow-y-hidden rounded border
-                ${
-                  darkMode
-                    ? "bg-[#1B1D1C] border-[#333333]"
-                    : "bg-[#F1F1F1] border-[#CBCBCB]"
-                }
-                ${
-                  showProfileDropDown
-                    ? "opacity-100 h-auto max-h-[999px] py-2"
-                    : "opacity-0 py-0"
-                }`}
+            className={`hidden absolute top-[60px] right-[124px] w-full max-w-[200px] px-2 md:flex flex-col gap-2 shadow-md transition-all duration-300 ease-in-out max-h-0 overflow-y-hidden rounded border
+                ${darkMode
+                ? "bg-[#1B1D1C] border-[#333333]"
+                : "bg-[#F1F1F1] border-[#CBCBCB]"
+              }
+                ${showProfileDropDown
+                ? "opacity-100 h-auto max-h-[999px] py-2"
+                : "opacity-0 py-0"
+              }`}
           >
             <Link to="/dashboard" onClick={() => setShowProfileDropDown(false)}>
               <div className="navBtn hover:text-[var(--primary)] transition-all duration-250">
@@ -158,19 +229,6 @@ const Nav = () => {
           {/* )} */}
         </div>
       </div>
-
-      {/* {(location.pathname == '/dashboard' || location.pathname == '/employee/dashboard') ?
-        <div className='navStrip h-6 px-10 flex items-center justify-evenly text-white text-sm'>
-        </div>
-        :
-        <div className='navStrip h-10 px-10 flex items-center justify-evenly text-white text-sm'>
-          <div className='cursor-pointer'>Video Themes</div>
-          <div className='cursor-pointer'>Shot Types</div>
-          <div className='cursor-pointer'>People</div>
-          <div className='cursor-pointer'>Collections</div>
-          <div className='cursor-pointer'>Filmmakers</div>
-        </div>
-      } */}
 
       {showSignInModal && <SignIn setShowModal={setShowSignInModal} />}
     </>

@@ -122,44 +122,43 @@ const SignIn = ({ setShowModal }) => {
       className="bg-[#121212CC] h-screen fixed inset-0 z-50 modalOverflow"
       onClick={() => setShowModal(false)}
     >
-      <div className="bigscreen max-h-[100vh] h-[100vh] p-10">
+      <div className="bigscreen max-h-[100vh] h-[100vh] md:p-10">
         <div
-          className={`relative max-w-[1024px] mx-auto h-full max-h-full border p-8 ${
-            darkMode
+          className={`overflow-y-scroll relative max-w-[1024px] mx-auto h-full max-h-full border p-5 pt-14 md:p-8 ${darkMode
               ? "bg-[#10130D] border-[#1E1E1E]"
               : "bg-white border-[#CBCBCB]"
-          } shadow grid grid-cols-2 !gap-8`}
+            } shadow grid grid-cols-1 md:grid-cols-2 !gap-8`}
           onClick={(e) => e.stopPropagation()}
         >
           <div
-            className="cursor-pointer h-8 absolute top-4 right-4"
+            className="cursor-pointer h-8 absolute top-3 md:top-4 right-4"
             onClick={() => setShowModal(false)}
           >
             <img src={cross} alt="close" className="h-full object-contain" />
           </div>
 
-          <div className="h-full max-h-full w-full rounded-2xl">
+          <div className="h-full max-h-[150px] md:max-h-full w-full rounded-2xl">
             <img
               src={img}
-              className="object-cover max-h-full h-[calc(100vh-156px)] w-full rounded-2xl opacity-90"
+              className="object-cover h-full max-h-full md:max-h-[calc(100vh-156px)] w-full rounded-2xl opacity-90"
             />
           </div>
 
-          <div className="flex flex-col gap-8 py-12">
-            <div className="h-8">
+          <div className="flex flex-col gap-4 justify-between py-4 md:py-12">
+            <div className="h-6 md:h-8">
               <img
                 src={darkMode ? logowhite : logo}
                 className="object-contain h-full"
               />
             </div>
-            <div className="mt-8 text-2xl font-semibold">Sign In</div>
+            <div className="mt-2 md:mt-8 text-2xl font-semibold">Sign In</div>
             <button
               type="button"
               onClick={() => googleLogin()}
               className={
                 darkMode
-                  ? "input dark w-1/2 flex items-center justify-center gap-2"
-                  : "input w-1/2 flex items-center justify-center gap-2"
+                  ? "input dark w-full lg:w-1/2 flex items-center justify-center gap-2"
+                  : "input w-full lg:w-1/2 flex items-center justify-center gap-2"
               }
             >
               <FcGoogle className="text-xl" /> Continue with Google

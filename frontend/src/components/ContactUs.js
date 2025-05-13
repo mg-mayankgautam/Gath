@@ -47,12 +47,12 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="bigscreen p-10">
+    <div className="bigscreen p-10 px-5 md:px-10">
       {/* <div className="grid grid-cols-[3fr_2fr] !gap-10"> */}
       <div className="grid grid-cols-1 !gap-10">
         <div className="flex flex-col gap-4 justify-center">
-          <div className="font-bold text-5xl max-w-[600px]">Contact Us</div>
-          <div className="text-[18px] font-light max-w-[520px]">
+          <div className="font-bold text-4xl md:text-5xl max-w-[600px]">Contact Us</div>
+          <div className="md:text-[18px] font-light max-w-[520px]">
             Submit any request and we'll reach out to you as soon as possible!
           </div>
           {/* <button className="greenButton mt-6">Start Browsing</button> */}

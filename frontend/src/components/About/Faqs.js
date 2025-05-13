@@ -22,16 +22,16 @@ const Faqs = () => {
   }
 
   return (
-    <div className="bigscreen p-5 md:p-10">
-      <div className="font-bold text-4xl">Frequently Asked Questions</div>
+    <div className="bigscreen px-5 py-10 md:p-10">
+      <div className="font-bold text-3xl md:text-4xl">Frequently Asked Questions</div>
 
       <div className='text-left flex flex-col mt-8'>
 
         {data?.map((item, i) => (
           <>
-            <div className='max-w-[1000px] w-full p-6 flex flex-col'>
+            <div className='max-w-[1000px] w-full px-2 p-6 md:px-6 flex flex-col'>
 
-              <div className='flex justify-between items-center cursor-pointer'
+              <div className='grid grid-cols-[1fr_25px] justify-between gap-4 items-center cursor-pointer'
                 onClick={() => toggle(i)} key={i}>
                 <div className='font-semibold'>{item.question}</div>
 
