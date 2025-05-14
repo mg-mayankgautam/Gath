@@ -288,7 +288,7 @@ const PaymentPage = () => {
               </div>
               <div>
                 <span className="font-bold">₹{monthlyPrice.toFixed(2)}</span>
-                <span className="text-xs"> /year</span>
+                <span className="text-xs"> /month</span>
               </div>
             </label>
 
