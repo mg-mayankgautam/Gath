@@ -42,13 +42,15 @@ function App() {
 
           <Route element={<RequireAuth />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="payment" element={<PaymentPage />} />
             <Route
               path="onetimepurchase/:id"
               element={<OneTimePaymentPage />}
             />
-            ß
+            
           </Route>
+
+          <Route path="subscriptionpayment" element={<PaymentPage />} />
+
 
           {/* <Route path="user/:id" element={<CustomerDashboard />} /> */}
 

@@ -4,6 +4,9 @@ import img1 from "../assets/about/about1.png";
 import img2 from "../assets/about/about2.png";
 import img3 from "../assets/about/about3.png";
 import { useTheme } from "../context/ThemeProvider";
+import { IoMail } from "react-icons/io5";
+import { RiPhoneFill } from "react-icons/ri";
+import { FaLocationDot } from "react-icons/fa6";
 
 const ContactUs = () => {
   useEffect(() => {
@@ -51,14 +54,32 @@ const ContactUs = () => {
       {/* <div className="grid grid-cols-[3fr_2fr] !gap-10"> */}
       <div className="grid grid-cols-1 !gap-10">
         <div className="flex flex-col gap-4 justify-center">
-          <div className="font-bold text-4xl md:text-5xl max-w-[600px]">Contact Us</div>
+          <div className="font-bold text-4xl md:text-5xl max-w-[600px]">
+            Contact Us
+          </div>
           <div className="md:text-[18px] font-light max-w-[520px]">
             Submit any request and we'll reach out to you as soon as possible!
           </div>
           {/* <button className="greenButton mt-6">Start Browsing</button> */}
-          <div className="text-[18px] font-semibold my-4">
-            <a href="mailto:support@shotkut.com">support@shotkut.com</a> <br />{" "}
-            <a href="tel:+919717914147">+91 97179 14147</a>
+          <div className="text-[18px] font-semibold my-4 flex flex-col gap-2">
+            <a
+              href="mailto:support@shotkut.com"
+              className="flex items-center gap-2"
+            >
+              <IoMail />
+              support@shotkut.com
+            </a>
+            <a href="tel:+919717914147" className="flex items-center gap-2">
+              <RiPhoneFill />
+              +91 97179 14147
+            </a>
+            <div className="flex items-start gap-2">
+              <FaLocationDot />
+              <span>
+                2nd floor, A-6, Ring Road, South Extension-1,
+                New&nbsp;delhi-110049
+              </span>
+            </div>
           </div>
         </div>
         {/* helo

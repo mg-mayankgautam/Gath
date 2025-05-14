@@ -142,7 +142,7 @@ const SignUp = ({ setShowModal }) => {
           className={`overflow-y-scroll relative max-w-[1024px] mx-auto h-full max-h-full border p-5 pt-14 md:p-8 ${darkMode
               ? "bg-[#10130D] border-[#1E1E1E]"
               : "bg-white border-[#CBCBCB]"
-            } shadow grid grid-cols-1 md:grid-cols-2 !gap-8`}
+            } shadow md:grid grid-cols-1 md:grid-cols-2 !gap-8`}
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -160,7 +160,7 @@ const SignUp = ({ setShowModal }) => {
             />
           </div>
 
-          <div className="flex flex-col gap-4 justify-between py-4 md:py-12">
+          <div className="flex flex-col gap-4 py-4 md:py-12">
             <div className="h-6 md:h-8">
               <img
                 src={darkMode ? logowhite : logo}
@@ -174,7 +174,7 @@ const SignUp = ({ setShowModal }) => {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="flex gap-4">
+              <div className="flex flex-col lg:flex-row gap-4">
                 <button
                   type="button"
                   onClick={() => googleLogin()}
@@ -190,8 +190,8 @@ const SignUp = ({ setShowModal }) => {
                   type="button"
                   className={
                     darkMode
-                      ? "input dark w-1/2 flex items-center justify-center gap-2"
-                      : "input w-1/2 flex items-center justify-center gap-2"
+                      ? "input dark w-full lg:w-1/2 flex items-center justify-center gap-2"
+                      : "input w-full lg:w-1/2 flex items-center justify-center gap-2"
                   }
                   onClick={() => setShowEmailInputs(true)}
                 >

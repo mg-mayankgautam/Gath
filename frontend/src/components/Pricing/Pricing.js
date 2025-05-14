@@ -1,13 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import icon from "../../assets/icons/check2.svg";
 import { useTheme } from "../../context/ThemeProvider";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import SignIn from "../SignIn/SignIn";
+
+// import { subscribe } from "../../../../backend/routes/videos";
 
 const Pricing = () => {
+    const [showSignInModal, setShowSignInModal] = useState(false);
+  
+    const navigate = useNavigate();
+  
+  const {auth}=useAuth();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const { darkMode } = useTheme();
+
+
+  const subscribe = (plan)=>{
+
+    console.log('subscribe',plan,auth)
+    if(plan=='month'){
+    navigate('/subscriptionpayment?plan=month');}
+
+    if(plan=='year'){
+      navigate('/subscriptionpayment?plan=year');}
+    // onClick={() => }
+    // setShowSignInModal(true)
+
+  }
 
   return (
     <div className="bigscreen px-5 py-10 md:p-10 text-center bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(151,253,202,0.128)_0%,_rgba(151,253,202,0)_100%)]">
@@ -37,6 +61,7 @@ const Pricing = () => {
           <button
             className={`greenButton mx-auto !bg-[transparent] border-2 ${darkMode ? "border-white !text-white" : "border-black"
               } !w-[90%]`}
+              onClick={()=>subscribe('month')}
           >
             Try Now
           </button>
@@ -94,6 +119,8 @@ const Pricing = () => {
             <button
               className={`greenButton mx-auto ${darkMode && "!bg-[#97FDCA]"
                 } !w-[90%]`}
+                onClick={()=>subscribe('year')}
+
             >
               Try Now
             </button>
@@ -139,8 +166,10 @@ const Pricing = () => {
           <button
             className={`greenButton mx-auto !bg-[transparent] border-2 ${darkMode ? "border-white !text-white" : "border-black"
               } !w-[90%]`}
+              onClick={()=>{navigate('/contactus')}}
+              // onClick={() => navigate('/contactus')}
           >
-            Try Now
+          Get in touch
           </button>
           <div
             className={`${darkMode
@@ -166,6 +195,8 @@ const Pricing = () => {
           </div>
         </div>
       </div>
+            {showSignInModal && <SignIn setShowModal={setShowSignInModal} />}
+      
 
       {/*   <div className='flex items-end justify-center gap-9 mt-8 text-left'>
 
