@@ -138,7 +138,7 @@ const PaymentPage = () => {
 
   const monthlyPrice = 999;
   const yearlyPrice = 9999;
-  const selectedPrice = plan === "monthly" ? monthlyPrice : yearlyPrice;
+  const selectedPrice = plan === "month" ? monthlyPrice : yearlyPrice;
   const tax = selectedPrice * 0.18; // 18% GST
   const total = selectedPrice + tax;
 
