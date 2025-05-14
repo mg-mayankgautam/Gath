@@ -53,7 +53,7 @@ const Subscribe = () => {
           </ul>
 
           <Link to="/pricing">
-            <button className="button">View Plans</button>
+            <button className="button">View all Plans</button>
           </Link>
         </div>
 
