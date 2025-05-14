@@ -7,6 +7,7 @@ import { useTheme } from "../context/ThemeProvider";
 import { IoMail } from "react-icons/io5";
 import { RiPhoneFill } from "react-icons/ri";
 import { FaLocationDot } from "react-icons/fa6";
+import {toast, Toaster} from 'sonner';
 
 const ContactUs = () => {
   useEffect(() => {
@@ -57,6 +58,7 @@ const ContactUs = () => {
     }
 
     if (Object.keys(newErrors).length === 0 && agreedToPolicy) {
+      toast('Your Query Submitted')
     }
   };
 
@@ -225,6 +227,8 @@ const ContactUs = () => {
           Submit
         </button>
       </div>
+      <Toaster position="top-center" richColors />
+
     </div>
   );
 };
