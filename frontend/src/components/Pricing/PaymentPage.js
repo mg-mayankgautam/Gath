@@ -339,6 +339,37 @@ const PaymentPage = () => {
               </div>
             </div>
 
+            <div className="flex items-center gap-2 mt-8 mx-auto">
+              <input
+                type="checkbox"
+                id="agree"
+                className="form-checkbox text-[var(--primary)] focus:ring-[var(--primary)]"
+                checked={agreedToPolicy}
+                onChange={(e) => {
+                  setAgreedToPolicy(e.target.checked);
+                  setPolicyError("");
+                }}
+              />
+              <label htmlFor="agree" className="text-sm">
+                By subscribing to Shotkut, you confirm you are 18 or over, and
+                that you agree to our{" "}
+                <a
+                  href="/privacypolicy"
+                  className="text-[var(--primary)] underline hover:opacity-80"
+                >
+                  Privacy Policy
+                </a>{" "}
+                and{" "}
+                <a
+                  href="/termsandconditions"
+                  className="text-[var(--primary)] underline hover:opacity-80"
+                >
+                  Terms and Conditions
+                </a>
+                .
+              </label>
+            </div>
+
             {policyError && (
               <p className="text-red-500 text-sm mt-2">{policyError}</p>
             )}
@@ -348,41 +379,10 @@ const PaymentPage = () => {
                 !agreedToPolicy ? "opacity-50 cursor-not-allowed" : ""
               }`}
               onClick={handleSubmit}
-              disabled={!agreedToPolicy}
+              // disabled={!agreedToPolicy}
             >
               Complete Payment
             </button>
-          </div>
-
-          <div className="flex items-center gap-2 mt-8 mx-auto">
-            <input
-              type="checkbox"
-              id="agree"
-              className="form-checkbox text-[var(--primary)] focus:ring-[var(--primary)]"
-              checked={agreedToPolicy}
-              onChange={(e) => {
-                setAgreedToPolicy(e.target.checked);
-                setPolicyError("");
-              }}
-            />
-            <label htmlFor="agree" className="text-sm">
-              By subscribing to Shotkut, you confirm you are 18 or over, and
-              that you agree to our{" "}
-              <a
-                href="/privacypolicy"
-                className="text-[var(--primary)] underline hover:opacity-80"
-              >
-                Privacy Policy
-              </a>{" "}
-              and{" "}
-              <a
-                href="/termsandconditions"
-                className="text-[var(--primary)] underline hover:opacity-80"
-              >
-                Terms and Conditions
-              </a>
-              .
-            </label>
           </div>
         </div>
       </div>
