@@ -34,6 +34,9 @@ const ContactUs = () => {
     setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
   };
 
+  const [agreedToPolicy, setAgreedToPolicy] = useState(false);
+  const [policyError, setPolicyError] = useState("");
+
   const handleSubmit = () => {
     let newErrors = {};
 
@@ -44,8 +47,16 @@ const ContactUs = () => {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      // navigate("/dashboard");
+    if (!agreedToPolicy) {
+      setPolicyError(
+        "Please agree to the Terms & Conditions before proceeding."
+      );
+      // return; // Prevent further submission
+    } else {
+      setPolicyError(""); // Clear the error if they have agreed
+    }
+
+    if (Object.keys(newErrors).length === 0 && agreedToPolicy) {
     }
   };
 
@@ -82,11 +93,6 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
-        {/* helo
-        call when done, if not feeling sleepy
-okk,:) till when u up?3-4 okk same, will be waiting . u can call rn ...too, i ll do work later. u can push and go sleep, no need to stay on live share.
-i have some bug fixing to do. call me when its done.check tags clear all etc works. u want me to see the bug or just try what u have done? 2nd one okiiii dekhri hu.  */}
-        {/* niceeee, bs reset krne ke baad search results bhi reset krdo. */}
       </div>
 
       <div className="mt-[60px] flex flex-col gap-4 w-full max-w-[800px]">
@@ -191,6 +197,11 @@ i have some bug fixing to do. call me when its done.check tags clear all etc wor
             type="checkbox"
             id="agree"
             className="form-checkbox text-[var(--primary)] focus:ring-[var(--primary)]"
+            checked={agreedToPolicy}
+            onChange={(e) => {
+              setAgreedToPolicy(e.target.checked);
+              setPolicyError("");
+            }}
           />
           <label htmlFor="agree" className="text-sm">
             I agree to the{" "}
@@ -202,6 +213,10 @@ i have some bug fixing to do. call me when its done.check tags clear all etc wor
             </a>
           </label>
         </div>
+
+        {policyError && (
+          <p className="text-red-500 text-sm mt-2">{policyError}</p>
+        )}
 
         <button
           className="greenButton mt-6 mx-auto"

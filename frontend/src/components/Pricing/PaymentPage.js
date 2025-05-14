@@ -319,7 +319,7 @@ const PaymentPage = () => {
               <div className="font-semibold">Price</div>
               <div>
                 <span className="font-bold">₹{selectedPrice.toFixed(2)}</span>
-                <span className="text-xs"> /year</span>
+                <span className="text-xs"> </span>
               </div>
             </div>
 
@@ -327,7 +327,7 @@ const PaymentPage = () => {
               <div className="font-semibold">Tax (18% GST)</div>
               <div>
                 <span className="font-bold">₹{tax.toFixed(2)}</span>
-                <span className="text-xs"> /year</span>
+                <span className="text-xs"> </span>
               </div>
             </div>
 
