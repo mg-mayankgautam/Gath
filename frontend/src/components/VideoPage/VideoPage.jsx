@@ -15,11 +15,12 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../SearchPage/SearchInput";
 import Video from "../HomePage/Video";
+
 const VideoPage = ({ setShowModal, video }) => {
   const navigate = useNavigate();
   console.log(video);
   const { darkMode } = useTheme();
-  const [related, setRelated] = useState([])
+  const [related, setRelated] = useState([]);
 
   useEffect(() => {
     // Disable background scroll
@@ -50,9 +51,49 @@ const VideoPage = ({ setShowModal, video }) => {
 
   const { auth } = useAuth();
   const [activeModal, setActiveModal] = useState(null); // null | 'similar' | 'add' | 'download'
+  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
 
   const handleIconClick = (type) => {
-    setActiveModal(type);
+    console.log("handleclick");
+    console.log(video);
+
+    console.log(type, auth);
+
+    if (!type) {
+      console.error("Received undefined type", type);
+      return;
+    } else if (type == "add") {
+      console.log(auth);
+
+      if (!auth.role) {
+        console.log("no auth found");
+        navigate("/subscribe");
+      } else {
+        setActiveModal("add");
+      }
+    } else if (type == "download") {
+      if (!auth.role) {
+        console.log("no auth found");
+        navigate("/subscribe");
+      } else {
+        console.log("auth found");
+        console.log(auth.subscription);
+
+        if (auth.subscription === "false" || auth.subscription === false) {
+          console.log("not subscribed");
+          //   navigate("/subscribe");
+
+          setShowSubscribeModal(true);
+          //yaha pei call krrr idhrrrrrr
+        } else {
+          setActiveModal("download");
+        }
+      }
+
+      //   setActiveModal(type);
+    } else {
+      setActiveModal(type);
+    }
   };
 
   const closeModal = () => setActiveModal(null);
@@ -86,7 +127,7 @@ const VideoPage = ({ setShowModal, video }) => {
         return (
           <>
             <h2 className="text-lg font-semibold mb-4 capitalize">
-             Save Video
+              Save Video
             </h2>
             <p className="text-sm">
               Are you sure you want to add this video to your Favorites?
@@ -133,8 +174,7 @@ const VideoPage = ({ setShowModal, video }) => {
     }
   };
 
-
-console.log(related)
+  console.log(related);
 
   return (
     <>
@@ -198,26 +238,16 @@ console.log(related)
                     src={download}
                     alt="download"
                     className="h-full object-contain"
-                    onClick={() => setActiveModal("download")}
+                    onClick={() => handleIconClick("download")}
                   />
                   Download
                 </button>
 
                 {[
-                  // {
-                  //   icon: darkMode ? wishlistwhite : wishlist,
-                  //   label: "Wishlist",
-                  //   type: "wishlist",
-                  // },
                   {
                     icon: darkMode ? addwhite : add,
                     label: "Save",
                     type: "add",
-                  },
-                  {
-                    icon: darkMode ? sharewhite : share,
-                    label: "Share",
-                    type: "share",
                   },
                 ].map(({ icon, label, type }) => (
                   <div
@@ -245,6 +275,30 @@ console.log(related)
                     </span>
                   </div>
                 ))}
+
+                <div
+                  className="relative flex flex-col items-center cursor-pointer"
+                >
+                  <img
+                    src={darkMode ? sharewhite : share}
+                    alt="Share"
+                    className="h-8 object-contain peer"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent click from bubbling up to parent
+                      handleShare();
+                    }}
+                  />
+                  {/* Hover Label */}
+                  <span
+                    className={`absolute -top-6 whitespace-nowrap text-[11px] ${
+                      darkMode
+                        ? "bg-[#1B1D1C] text-white"
+                        : "bg-white text-gray-700"
+                    } opacity-0 peer-hover:opacity-100 transition px-2 py-1 rounded shadow absolute`}
+                  >
+                    Share
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -388,17 +442,13 @@ console.log(related)
               </div>
 
               <div className="flex justify-between text-xl font-semibold mt-6">
-              <div> Similar Clips </div> 
+                <div> Similar Clips </div>
 
-                <button
-                            className="whitespace-nowrap hover:underline text-sm"
-
-                >View More</button>
-
-
-               
+                <button className="whitespace-nowrap hover:underline text-sm">
+                  View More
+                </button>
               </div>
-              
+
               {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 <Skeleton
                   variant="rectangular"
@@ -418,16 +468,15 @@ console.log(related)
               </div> */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full content-start">
-            {related?.length > 0 &&
-              related?.map((video) => (
-                <div key={video._id} className="aspect-[16/9]">
-                  {" "}
-                  {/* Adjust aspect ratio as needed */}
-                  <Video video={video} />
-                </div>
-              ))}
-          </div>
-
+                {related?.length > 0 &&
+                  related?.map((video) => (
+                    <div key={video._id} className="aspect-[16/9]">
+                      {" "}
+                      {/* Adjust aspect  ratio as needed */}
+                      <Video video={video} />
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
